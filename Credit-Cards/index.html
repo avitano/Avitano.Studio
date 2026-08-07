@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Digital Loans, Case Study, Ofir Avitan</title>
-<meta name="description" content="Digital Loans case study: redesigning Bank Hapoalim's loan experience from a 15-option lobby into a 3-path, intent-based flow.">
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="assets/favicon.ico" sizes="any">
-<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
-<link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link rel="manifest" href="assets/site.webmanifest">
+<title>Credit Cards, Case Study, Ofir Avitan</title>
+<meta name="description" content="Credit Cards case study: redesigning Bank Hapoalim's credit card experience from a commodity trap into a visual-first, lifestyle-led selection flow.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon.ico" sizes="any">
+<link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="../assets/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="manifest" href="../assets/site.webmanifest">
 <meta name="theme-color" content="#022c22">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +20,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* ---- color primitives, copied verbatim from index.html so both pages stay in sync ---- */
+  /* ---- color primitives, copied verbatim from ../index.html so both pages stay in sync ---- */
   --color-green-50: #ecfdf5;
   --color-green-100: #d1fae5;
   --color-green-200: #a7f3d0;
@@ -98,7 +98,7 @@
 html { scroll-behavior: smooth; }
 body { background: var(--color-surface); color: var(--color-default); font-family: var(--font-plain); }
 
-/* type roles, copied verbatim from Design-Cortex August 2026 / my-dsm.theme.css, same as index.html */
+/* type roles, copied verbatim from Design-Cortex August 2026 / my-dsm.theme.css, same as ../index.html */
 .type-display-lg { font-family: var(--font-brand); font-weight: 700; font-size: 3rem; line-height: 1.1; letter-spacing: -0.025em; }
 .type-display-sm { font-family: var(--font-brand); font-weight: 700; font-size: 2.25rem; line-height: 1.15; letter-spacing: -0.025em; }
 .type-headline-lg { font-family: var(--font-brand); font-weight: 700; font-size: 1.875rem; line-height: 1.2; }
@@ -111,7 +111,7 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 .type-label-sm { font-family: var(--font-plain); font-weight: 500; font-size: 0.75rem; line-height: 1.33; letter-spacing: 0.1em; text-transform: uppercase; }
 .brand-dot { color: var(--color-primary); }
 
-/* sticky floating pill nav, same recipe as index.html (no on-load entrance animation here,
+/* sticky floating pill nav, same recipe as ../index.html (no on-load entrance animation here,
    this is a secondary page reached mid-scroll, not the very first thing a visitor sees) */
 .site-nav {
   position: fixed; top: 1.25rem; left: 50%; transform: translateX(-50%);
@@ -124,7 +124,7 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
      an auto-width fixed element's shrink-to-fit box is computed against the
      remaining space to the right of `left`, roughly 50vw, not the full
      viewport, so on mobile the flex items got compressed and "Let's talk"
-     wrapped to two lines. See index.html for the full writeup. */
+     wrapped to two lines. See ../index.html for the full writeup. */
   width: max-content;
 }
 .nav-link { position: relative; }
@@ -135,23 +135,23 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 }
 .nav-link:hover::after { transform: scaleX(1); }
 
-/* thin scroll-progress bar, same as index.html */
+/* thin scroll-progress bar, same as ../index.html */
 .scroll-progress {
   position: fixed; top: 0; left: 0; height: 3px; width: 0%;
   background: var(--color-primary); z-index: 60; transition: width 80ms linear;
 }
 
-/* scroll reveal, identical mechanics to index.html */
+/* scroll reveal, identical mechanics to ../index.html */
 .reveal { opacity: 0; transform: translateY(54px); transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft); will-change: opacity, transform; }
 .reveal.in-view { opacity: 1; transform: translateY(0); }
 .reveal-stagger > * { opacity: 0; transform: translateY(50px); transition: opacity 650ms var(--ease-soft), transform 650ms var(--ease-soft); will-change: opacity, transform; }
 .reveal-stagger > *.in-view { opacity: 1; transform: translateY(0); }
 
-/* arrow nudges right on hover, same as index.html */
+/* arrow nudges right on hover, same as ../index.html */
 .arrow { display: inline-block; transition: transform 200ms var(--ease-out); }
 a:hover .arrow { transform: translateX(4px); }
 
-/* hero gradient blob + scroll parallax wrapper, same recipe as index.html's contact section
+/* hero gradient blob + scroll parallax wrapper, same recipe as ../index.html's contact section
    (reused verbatim here since the contact/closing section below is copied unchanged) */
 .hero-blob {
   position: absolute; border-radius: 999px; filter: blur(60px); opacity: 0.55;
@@ -172,7 +172,7 @@ a:hover .arrow { transform: translateX(4px); }
 .btn-on-primary:hover { background: rgba(255, 255, 255, 0.1); }
 
 /* placeholder media block: flat neutral surface standing in for a real screenshot/video,
-   same visual language as the "Preview coming soon" tile on index.html, not a new pattern */
+   same visual language as the "Preview coming soon" tile on ../index.html, not a new pattern */
 .media-placeholder {
   display: flex; align-items: center; justify-content: center;
   background: var(--color-neutral-100); border: 1px solid var(--color-border-default);
@@ -188,36 +188,35 @@ a:hover .arrow { transform: translateX(4px); }
 
   <div class="scroll-progress" id="scrollProgress"></div>
 
-  <!-- NAV: identical to index.html, links point back to the homepage sections -->
+  <!-- NAV: identical to ../index.html, links point back to the homepage sections -->
   <nav class="site-nav">
-    <a href="index.html#top" class="flex items-center gap-2 pe-2">
+    <a href="../index.html#top" class="flex items-center gap-2 pe-2">
       <span class="flex size-8 items-center justify-center rounded-full bg-primary font-brand text-sm font-bold text-on-primary">OA</span>
     </a>
     <div class="hidden md:flex items-center gap-6 type-label-lg text-secondary">
-      <a href="index.html#about" class="nav-link hover:text-default transition-colors">About</a>
-      <a href="index.html#work" class="nav-link hover:text-default transition-colors">Work</a>
-      <a href="index.html#skills" class="nav-link hover:text-default transition-colors">Skills</a>
-      <a href="index.html#contact" class="nav-link hover:text-default transition-colors">Contact</a>
+      <a href="../index.html#about" class="nav-link hover:text-default transition-colors">About</a>
+      <a href="../index.html#work" class="nav-link hover:text-default transition-colors">Work</a>
+      <a href="../index.html#skills" class="nav-link hover:text-default transition-colors">Skills</a>
+      <a href="../index.html#contact" class="nav-link hover:text-default transition-colors">Contact</a>
     </div>
-    <a href="index.html#contact" class="inline-flex h-8 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-primary px-4 text-sm font-medium text-on-primary shadow-md transition-all duration-150 ease-out hover:bg-primary-hover hover:shadow-lg active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Let's talk</a>
+    <a href="../index.html#contact" class="inline-flex h-8 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-primary px-4 text-sm font-medium text-on-primary shadow-md transition-all duration-150 ease-out hover:bg-primary-hover hover:shadow-lg active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Let's talk</a>
   </nav>
 
   <!-- HERO -->
   <header id="top" class="px-4 pb-16 pt-32 lg:px-20 lg:pb-24 lg:pt-40">
     <div class="mx-auto max-w-7xl">
-      <a href="index.html#work" class="inline-flex items-center gap-2 type-label-lg text-secondary hover:text-default transition-colors">
+      <a href="../index.html#work" class="inline-flex items-center gap-2 type-label-lg text-secondary hover:text-default transition-colors">
         <svg aria-hidden="true" class="arrow size-4 rtl:-scale-x-100" style="transform:rotate(180deg)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         Back to work
       </a>
 
       <div class="mt-8 max-w-3xl">
-        <span class="type-label-sm text-muted">Case study 01 &middot; Digital Loans</span>
-        <h1 class="type-display-sm mt-4 sm:text-5xl">Digital Loans<span class="brand-dot">.</span></h1>
-        <p class="type-body-lg mt-6 max-w-2xl text-secondary">Redesigned Bank Hapoalim's loan experience: a single long scroll of 15+ raw options, spanning four distinct loan products, became a 3-path, intent-based flow.</p>
+        <span class="type-label-sm text-muted">Case study 02 &middot; Credit Cards</span>
+        <h1 class="type-display-sm mt-4 sm:text-5xl">Credit Cards<span class="brand-dot">.</span></h1>
+        <p class="type-body-lg mt-6 max-w-2xl text-secondary">Redesigned Bank Hapoalim's credit card experience: three functionally identical card products, sold on raw numbers and dense compliance text, became a visual-first, lifestyle-led selection flow.</p>
         <div class="mt-6 flex flex-wrap gap-2">
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Product design</span>
-          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Design system</span>
-          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Fintech</span>
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
         </div>
       </div>
 
@@ -230,30 +229,25 @@ a:hover .arrow { transform: translateX(4px); }
   <!-- CHALLENGE -->
   <section id="challenge" class="px-4 lg:px-20">
     <div class="reveal mx-auto max-w-7xl border-t border-border-default py-20 lg:py-28">
-      <span class="type-label-sm text-muted">Case study 01 &middot; Digital Loans</span>
+      <span class="type-label-sm text-muted">Case study 02 &middot; Credit Cards</span>
       <h2 class="type-headline-md mt-4 max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
-      <p class="type-body-lg mt-6 max-w-prose text-secondary">The digital loans experience wasn't one flow, it was four. A new loan request, a refinance, a car loan, and a universal loan open to any customer, each with its own dependencies, backend models, and layer of business and regulatory rules. All of it surfaced through the same legacy lobby: one long scroll of 15+ raw options with no hierarchy.</p>
+      <p class="type-body-lg mt-6 max-w-prose text-secondary">Leadership asked for higher conversion in the credit card application flow. The honest diagnosis came first: the bank's three card products, Visa Gold and Mastercard Gold among them, were functionally identical, just different brand skins on the same underlying product, while competitors offered real differentiation through loyalty perks and cashback. No amount of interface polish fixes a non-differentiated product, and that reframe shaped everything that followed.</p>
 
-      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2">
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
         <div>
           <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
-          <h3 class="type-headline-sm mt-2">Multi-Platform Friction</h3>
-          <p class="type-body-md mt-2 text-secondary">Built around internal banking structures, not user intent, driving high drop-offs.</p>
+          <h3 class="type-headline-sm mt-2">The Commodity Trap</h3>
+          <p class="type-body-md mt-2 text-secondary">Cards were treated as generic financial utilities, forcing users to compare raw numbers and dry terms instead of emotional value.</p>
         </div>
         <div>
           <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
-          <h3 class="type-headline-sm mt-2">Cognitive Overload</h3>
-          <p class="type-body-md mt-2 text-secondary">15+ raw, confusing options at once, with no hierarchy or differentiation.</p>
+          <h3 class="type-headline-sm mt-2">Compliance vs. Experience</h3>
+          <p class="type-body-md mt-2 text-secondary">Heavy regulatory disclosures overloaded the interface with dense, intimidating text blocks, creating heavy cognitive friction.</p>
         </div>
         <div>
           <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
-          <h3 class="type-headline-sm mt-2">The Core Dilemma</h3>
-          <p class="type-body-md mt-2 text-secondary">How many offers to show, in what order, and which metadata truly drives the decision.</p>
-        </div>
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">04</span>
-          <h3 class="type-headline-sm mt-2">The Transactional Gap</h3>
-          <p class="type-body-md mt-2 text-secondary">Dry, legalistic, intimidating: disconnected from the user's real milestone.</p>
+          <h3 class="type-headline-sm mt-2">The Aesthetic Deficit</h3>
+          <p class="type-body-md mt-2 text-secondary">The legacy interface lacked visual storytelling, failing to leverage the premium lifestyle appeal of high-tier cards, directly hurting conversion.</p>
         </div>
       </div>
 
@@ -266,25 +260,25 @@ a:hover .arrow { transform: translateX(4px); }
   <!-- STRATEGY -->
   <section id="strategy" class="bg-surface-alt px-4 lg:px-20">
     <div class="reveal mx-auto max-w-7xl py-20 lg:py-28">
-      <span class="type-label-sm text-muted">Case study 01 &middot; Digital Loans</span>
+      <span class="type-label-sm text-muted">Case study 02 &middot; Credit Cards</span>
       <h2 class="type-headline-md mt-4 max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
-      <p class="type-body-lg mt-6 max-w-prose text-secondary">The original ambition was bigger: cut the number of loan types bank-wide. That scope proved too complex to take on in one move, so the strategy narrowed deliberately to the digital channel, real impact within a scoped-down version of the vision, not the full one.</p>
+      <p class="type-body-lg mt-6 max-w-prose text-secondary">Design can't fix a business-strategy gap by itself, but it can raise the ceiling within one. He wouldn't commit to a conversion target unless the business side changed the product too, so the strategy focused on what was actually in reach: making the experience feel different even where the products weren't, and getting compliance out of the user's way.</p>
 
       <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
         <div>
           <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
-          <h3 class="type-headline-sm mt-2">Intent-Based Discovery</h3>
-          <p class="type-body-md mt-2 text-secondary">Invert the funnel: capture amount and purpose first, then present 3 tailored pathways instead of 15+.</p>
+          <h3 class="type-headline-sm mt-2">Visual-First Framework</h3>
+          <p class="type-body-md mt-2 text-secondary">When core banking terms are identical, immersive visual identity becomes the primary decision-driver.</p>
         </div>
         <div>
           <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
-          <h3 class="type-headline-sm mt-2">Emotional &amp; Human-Centric</h3>
-          <p class="type-body-md mt-2 text-secondary">Turn a dry transaction into an aspirational milestone with contextual visual worlds and reassuring microcopy.</p>
+          <h3 class="type-headline-sm mt-2">Lifestyle Immersion</h3>
+          <p class="type-body-md mt-2 text-secondary">Wrapping standard cards in rich contextual worlds, aviation, luxury travel, to evoke immediate emotional alignment.</p>
         </div>
         <div>
           <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
-          <h3 class="type-headline-sm mt-2">Continuous Iteration</h3>
-          <p class="type-body-md mt-2 text-secondary">Balance compliance with user psychology through testing: smart bundling resolves best rate versus full amount.</p>
+          <h3 class="type-headline-sm mt-2">Friction-Free Compliance</h3>
+          <p class="type-body-md mt-2 text-secondary">De-risked the regulatory overhead by moving dense legal disclaimers into progressive disclosure, keeping focus on the experience.</p>
         </div>
       </div>
 
@@ -297,36 +291,40 @@ a:hover .arrow { transform: translateX(4px); }
   <!-- PROOF -->
   <section id="proof" class="px-4 lg:px-20">
     <div class="reveal mx-auto max-w-7xl py-20 lg:py-28">
-      <span class="type-label-sm text-muted">Case study 01 &middot; Digital Loans</span>
+      <span class="type-label-sm text-muted">Case study 02 &middot; Credit Cards</span>
       <h2 class="type-headline-md mt-4 max-w-2xl">the proof<span class="brand-dot">.</span></h2>
+      <p class="type-body-lg mt-6 max-w-prose text-secondary">Now in active development. High-fidelity prototypes went through four rounds of usability testing to validate the visual-first approach against regulated constraints, here's what that testing showed.</p>
 
-      <div class="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-12">
-        <div class="lg:col-span-5">
-          <div class="type-display-lg text-primary" style="font-size:4.5rem;">+18%</div>
-          <p class="type-body-lg mt-3 max-w-xs text-secondary">Cumulative growth in digital loan adoption.</p>
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2">
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+          <h3 class="type-headline-sm mt-2">Validated Concepts &amp; Organizational Shift</h3>
+          <p class="type-body-md mt-2 text-secondary">High-fidelity prototypes underwent extensive usability testing to validate the visual-first approach against regulated constraints.</p>
         </div>
-        <div class="reveal-stagger lg:col-span-7">
-          <div class="mb-8">
-            <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
-            <h3 class="type-headline-sm mt-2">Self-Service Shift</h3>
-            <p class="type-body-md mt-2 text-secondary">Migrated <span class="font-medium text-primary">80%</span> of loan applications to digital self-service, cutting call-center dependency.</p>
-          </div>
-          <div class="mb-8">
-            <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
-            <h3 class="type-headline-sm mt-2">Streamlined Decision Making</h3>
-            <p class="type-body-md mt-2 text-secondary">Fewer drop-offs by removing choice paralysis and simplifying the metadata needed to pick an offer.</p>
-          </div>
-          <div>
-            <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
-            <h3 class="type-headline-sm mt-2">Cross-Squad Alignment</h3>
-            <p class="type-body-md mt-2 text-secondary">Unified design guidelines across <span class="font-medium text-primary">4 autonomous business lines</span>, a baseline for scale.</p>
-          </div>
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+          <h3 class="type-headline-sm mt-2">Cognitive Load Reduction</h3>
+          <p class="type-body-md mt-2 text-secondary">Usability testing showed a dramatic drop in choice paralysis, with participants navigating the selection flow seamlessly.</p>
         </div>
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+          <h3 class="type-headline-sm mt-2">Aspirational Alignment</h3>
+          <p class="type-body-md mt-2 text-secondary">Qualitative feedback confirmed lifestyle environments shifted user perception from a dry banking form to an elite experience.</p>
+        </div>
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">04</span>
+          <h3 class="type-headline-sm mt-2">De-Risked Compliance</h3>
+          <p class="type-body-md mt-2 text-secondary">Progressive disclosure satisfies legal requirements while maintaining high user engagement and flow velocity.</p>
+        </div>
+      </div>
+
+      <div class="media-placeholder reveal mt-12 h-40 w-full rounded-xl sm:h-48 lg:h-56">
+        <span class="type-label-sm text-muted">Coming soon</span>
       </div>
     </div>
   </section>
 
-  <!-- CONTACT / CLOSING: copied verbatim from index.html so every page shares one closing pattern -->
+  <!-- CONTACT / CLOSING: copied verbatim from ../index.html so every page shares one closing pattern -->
   <section id="contact" class="relative overflow-hidden px-4 lg:px-20" style="background:var(--color-primary); color:var(--color-on-primary);">
     <div class="blob-parallax" style="bottom:-12rem; left:-8rem;" data-parallax="-0.1">
       <div class="hero-blob" style="width:28rem; height:28rem; bottom:0; left:0; opacity:0.25; animation-duration:33s; animation-direction:reverse;"></div>
@@ -353,7 +351,7 @@ a:hover .arrow { transform: translateX(4px); }
   <script>
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // scroll-triggered reveals, same mechanics as index.html
+    // scroll-triggered reveals, same mechanics as ../index.html
     document.querySelectorAll('.reveal-stagger').forEach((group) => {
       Array.from(group.children).forEach((child, i) => {
         child.style.transitionDelay = `${i * 160}ms`;
@@ -370,7 +368,7 @@ a:hover .arrow { transform: translateX(4px); }
     document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
     document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
 
-    // thin progress bar tracking scroll position, same as index.html
+    // thin progress bar tracking scroll position, same as ../index.html
     const progressBar = document.getElementById('scrollProgress');
     const updateProgress = () => {
       const doc = document.documentElement;
@@ -381,7 +379,7 @@ a:hover .arrow { transform: translateX(4px); }
     window.addEventListener('scroll', updateProgress, { passive: true });
     updateProgress();
 
-    // scroll parallax on the contact section's decorative blob, same as index.html
+    // scroll parallax on the contact section's decorative blob, same as ../index.html
     if (!prefersReducedMotion) {
       const parallaxEls = Array.from(document.querySelectorAll('.blob-parallax[data-parallax]'));
       let ticking = false;
