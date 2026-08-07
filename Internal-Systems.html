@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Internal Systems, Case Study, Ofir Avitan</title>
+<meta name="description" content="Internal Systems case study: redesigning Bank Hapoalim's internal banking dashboard from dense, unprioritized tables into a guided, hierarchy-first workspace.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="assets/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="assets/site.webmanifest">
+<meta name="theme-color" content="#022c22">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">
+@import "tailwindcss";
+
+@theme {
+  /* ---- color primitives, copied verbatim from index.html so both pages stay in sync ---- */
+  --color-green-50: #ecfdf5;
+  --color-green-100: #d1fae5;
+  --color-green-200: #a7f3d0;
+  --color-green-300: #6ee7b7;
+  --color-green-400: #34d399;
+  --color-green-500: #10b981;
+  --color-green-600: #059669;
+  --color-green-700: #047857;
+  --color-green-800: #065f46;
+  --color-green-900: #064e3b;
+  --color-green-950: #022c22;
+
+  --color-neutral-50: #f7f8f7;
+  --color-neutral-100: #eff1ef;
+  --color-neutral-200: #dfe3df;
+  --color-neutral-300: #c4cac4;
+  --color-neutral-400: #a6aea6;
+  --color-neutral-500: #8a938a;
+  --color-neutral-600: #6f766f;
+  --color-neutral-700: #565b56;
+  --color-neutral-800: #4a4a4a;
+  --color-neutral-900: #2d2d2d;
+  --color-neutral-950: #1a1d1a;
+
+  --color-gold-100: #f0e6d2;
+  --color-gold-300: #ecc678;
+  --color-gold-500: #e0a52e;
+  --color-gold-700: #a87a1e;
+  --color-gold-900: #40310f;
+
+  /* ---- semantics ---- */
+  --color-primary: var(--color-green-950);
+  --color-primary-hover: var(--color-green-900);
+  --color-primary-active: var(--color-green-800);
+  --color-accent: var(--color-green-500);
+  --color-accent-contrast: var(--color-gold-700);
+
+  --color-default: var(--color-neutral-900);
+  --color-secondary: var(--color-neutral-800);
+  --color-muted: var(--color-neutral-500);
+  --color-disabled: var(--color-neutral-400);
+  --color-surface-disabled: var(--color-neutral-200);
+  --color-on-primary: #ffffff;
+  --color-on-primary-soft: var(--color-green-100);
+  --color-link: var(--color-green-800);
+
+  --color-surface: #ffffff;
+  --color-surface-alt: var(--color-neutral-50);
+  --color-card: #ffffff;
+  --color-inverse: var(--color-green-950);
+  --color-surface-pressed: var(--color-green-100);
+
+  --color-border-default: var(--color-neutral-200);
+  --color-border-strong: var(--color-neutral-400);
+  --color-focus: var(--color-green-950);
+
+  --font-brand: "Inter Tight", sans-serif;
+  --font-plain: "Inter", system-ui, sans-serif;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.75rem;
+
+  --shadow-sm: 0 1px 2px 0 rgb(2 44 34 / 0.06);
+  --shadow-md: 0 4px 6px -1px rgb(2 44 34 / 0.08), 0 2px 4px -2px rgb(2 44 34 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(2 44 34 / 0.10), 0 4px 6px -4px rgb(2 44 34 / 0.05);
+  --shadow-xl: 0 20px 25px -5px rgb(2 44 34 / 0.12), 0 8px 10px -6px rgb(2 44 34 / 0.05);
+
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--color-surface); color: var(--color-default); font-family: var(--font-plain); }
+
+/* type roles, copied verbatim from Design-Cortex August 2026 / my-dsm.theme.css, same as index.html */
+.type-display-lg { font-family: var(--font-brand); font-weight: 700; font-size: 3rem; line-height: 1.1; letter-spacing: -0.025em; }
+.type-display-sm { font-family: var(--font-brand); font-weight: 700; font-size: 2.25rem; line-height: 1.15; letter-spacing: -0.025em; }
+.type-headline-lg { font-family: var(--font-brand); font-weight: 700; font-size: 1.875rem; line-height: 1.2; }
+.type-headline-md { font-family: var(--font-brand); font-weight: 600; font-size: 1.5rem; line-height: 1.33; }
+.type-headline-sm { font-family: var(--font-brand); font-weight: 600; font-size: 1.25rem; line-height: 1.4; }
+.type-title-md { font-family: var(--font-brand); font-weight: 600; font-size: 1.125rem; line-height: 1.55; }
+.type-body-lg { font-family: var(--font-plain); font-weight: 400; font-size: 1rem; line-height: 1.5; }
+.type-body-md { font-family: var(--font-plain); font-weight: 400; font-size: 0.875rem; line-height: 1.43; }
+.type-label-lg { font-family: var(--font-plain); font-weight: 500; font-size: 0.875rem; line-height: 1.43; }
+.type-label-sm { font-family: var(--font-plain); font-weight: 500; font-size: 0.75rem; line-height: 1.33; letter-spacing: 0.1em; text-transform: uppercase; }
+.brand-dot { color: var(--color-primary); }
+
+/* sticky floating pill nav, same recipe as index.html (no on-load entrance animation here,
+   this is a secondary page reached mid-scroll, not the very first thing a visitor sees) */
+.site-nav {
+  position: fixed; top: 1.25rem; left: 50%; transform: translateX(-50%);
+  z-index: 50; display: flex; align-items: center; gap: 1.75rem;
+  background: rgba(255,255,255,0.85); backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border-default);
+  border-radius: 999px; padding: 0.5rem 0.5rem 0.5rem 1.25rem;
+  box-shadow: var(--shadow-lg);
+}
+.nav-link { position: relative; }
+.nav-link::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px;
+  background: var(--color-primary); transform: scaleX(0); transform-origin: left;
+  transition: transform 220ms var(--ease-out);
+}
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* thin scroll-progress bar, same as index.html */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: var(--color-primary); z-index: 60; transition: width 80ms linear;
+}
+
+/* scroll reveal, identical mechanics to index.html */
+.reveal { opacity: 0; transform: translateY(54px); transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft); will-change: opacity, transform; }
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+.reveal-stagger > * { opacity: 0; transform: translateY(50px); transition: opacity 650ms var(--ease-soft), transform 650ms var(--ease-soft); will-change: opacity, transform; }
+.reveal-stagger > *.in-view { opacity: 1; transform: translateY(0); }
+
+/* arrow nudges right on hover, same as index.html */
+.arrow { display: inline-block; transition: transform 200ms var(--ease-out); }
+a:hover .arrow { transform: translateX(4px); }
+
+/* hero gradient blob + scroll parallax wrapper, same recipe as index.html's contact section
+   (reused verbatim here since the contact/closing section below is copied unchanged) */
+.hero-blob {
+  position: absolute; border-radius: 999px; filter: blur(60px); opacity: 0.55;
+  background: conic-gradient(from 180deg, var(--color-green-200), var(--color-green-500), var(--color-gold-300), var(--color-green-200));
+  animation: blobshift 26s ease-in-out infinite;
+}
+.blob-parallax { position: absolute; will-change: transform; }
+@keyframes blobshift {
+  0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+  15%  { transform: translate(-9%, 12%) scale(1.1) rotate(4deg); }
+  32%  { transform: translate(12%, 20%) scale(0.92) rotate(-3deg); }
+  50%  { transform: translate(-16%, 5%) scale(1.06) rotate(5deg); }
+  68%  { transform: translate(7%, -14%) scale(0.95) rotate(-4deg); }
+  85%  { transform: translate(-11%, -7%) scale(1.12) rotate(2deg); }
+  100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+}
+
+.btn-on-primary:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* placeholder media block: flat neutral surface standing in for a real screenshot/video,
+   same visual language as the "Preview coming soon" tile on index.html, not a new pattern */
+.media-placeholder {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--color-neutral-100); border: 1px solid var(--color-border-default);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-stagger > * { transition: none; opacity: 1; transform: none; }
+  .blob-parallax { transform: none !important; }
+}
+</style>
+</head>
+<body class="antialiased">
+
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- NAV: identical to index.html, links point back to the homepage sections -->
+  <nav class="site-nav">
+    <a href="index.html#top" class="flex items-center gap-2 pe-2">
+      <span class="flex size-8 items-center justify-center rounded-full bg-primary font-brand text-sm font-bold text-on-primary">OA</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 type-label-lg text-secondary">
+      <a href="index.html#about" class="nav-link hover:text-default transition-colors">About</a>
+      <a href="index.html#work" class="nav-link hover:text-default transition-colors">Work</a>
+      <a href="index.html#skills" class="nav-link hover:text-default transition-colors">Skills</a>
+      <a href="index.html#contact" class="nav-link hover:text-default transition-colors">Contact</a>
+    </div>
+    <a href="index.html#contact" class="inline-flex h-8 items-center justify-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-on-primary shadow-md transition-all duration-150 ease-out hover:bg-primary-hover hover:shadow-lg active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Let's talk</a>
+  </nav>
+
+  <!-- HERO -->
+  <header id="top" class="px-4 pb-16 pt-32 lg:px-20 lg:pb-24 lg:pt-40">
+    <div class="mx-auto max-w-7xl">
+      <a href="index.html#work" class="inline-flex items-center gap-2 type-label-lg text-secondary hover:text-default transition-colors">
+        <svg aria-hidden="true" class="arrow size-4 rtl:-scale-x-100" style="transform:rotate(180deg)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        Back to work
+      </a>
+
+      <div class="mt-8 max-w-3xl">
+        <span class="type-label-sm text-muted">Case study 03 &middot; Internal Systems</span>
+        <h1 class="type-display-sm mt-4 sm:text-5xl">Internal Systems<span class="brand-dot">.</span></h1>
+        <p class="type-body-lg mt-6 max-w-2xl text-secondary">Redesigned Bank Hapoalim's internal banking dashboard: dense, unprioritized tables that forced bankers to jump between screens became a guided, hierarchy-first workspace built around what bankers and clients actually need.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Internal tools</span>
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
+        </div>
+      </div>
+
+      <div class="media-placeholder mt-12 h-40 w-full rounded-xl sm:h-48 lg:mt-16 lg:h-56">
+        <span class="type-label-sm text-muted">Coming soon</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CHALLENGE -->
+  <section id="challenge" class="px-4 lg:px-20">
+    <div class="reveal mx-auto max-w-7xl border-t border-border-default py-20 lg:py-28">
+      <span class="type-label-sm text-muted">Case study 03 &middot; Internal Systems</span>
+      <h2 class="type-headline-md mt-4 max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
+      <p class="type-body-lg mt-6 max-w-prose text-secondary">The internal banking dashboard bankers used every day spoke a different language than the clients they served. Dense, unprioritized tables and fragmented views meant no clear starting point, just a wall of data bankers had to manually cross-reference across screens, one login session at a time.</p>
+
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+          <h3 class="type-headline-sm mt-2">The Language Gap</h3>
+          <p class="type-body-md mt-2 text-secondary">Bankers and clients spoke different financial languages, causing high friction, manual errors, and prolonged session times.</p>
+        </div>
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+          <h3 class="type-headline-sm mt-2">Cognitive Load &amp; Data Density</h3>
+          <p class="type-body-md mt-2 text-secondary">Dense, unprioritized tabular data and fragmented views forced bankers to jump between screens to find critical metadata.</p>
+        </div>
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+          <h3 class="type-headline-sm mt-2">Operational Inefficiency</h3>
+          <p class="type-body-md mt-2 text-secondary">No clear information hierarchy or intuitive navigation, driving high drop-offs and limiting the bank's ability to scale service quality.</p>
+        </div>
+      </div>
+
+      <div class="media-placeholder reveal mt-12 h-40 w-full rounded-xl sm:h-48 lg:h-56">
+        <span class="type-label-sm text-muted">Coming soon</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRATEGY -->
+  <section id="strategy" class="bg-surface-alt px-4 lg:px-20">
+    <div class="reveal mx-auto max-w-7xl py-20 lg:py-28">
+      <span class="type-label-sm text-muted">Case study 03 &middot; Internal Systems</span>
+      <h2 class="type-headline-md mt-4 max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
+      <p class="type-body-lg mt-6 max-w-prose text-secondary">The fix wasn't more data, it was the right data in the right order. The dashboard was rebuilt around what a banker actually needs to know first, with everything else structured and available, not competing for attention.</p>
+
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+          <h3 class="type-headline-sm mt-2">Need-Based Discovery</h3>
+          <p class="type-body-md mt-2 text-secondary">Redesigned the dense tabular interface into an intuitive, guided dashboard prioritizing essential parameters for bankers and clients alike.</p>
+        </div>
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+          <h3 class="type-headline-sm mt-2">Information Hierarchy</h3>
+          <p class="type-body-md mt-2 text-secondary">Clear visual nesting and structured modules centralize critical indicators, cutting the need to toggle between fragmented screens.</p>
+        </div>
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+          <h3 class="type-headline-sm mt-2">Iterative Evolution</h3>
+          <p class="type-body-md mt-2 text-secondary">Refined through continuous feedback loops, balancing complex banking logic and regulation with clean, high-performance UI.</p>
+        </div>
+      </div>
+
+      <div class="media-placeholder reveal mt-12 h-40 w-full rounded-xl sm:h-48 lg:h-56">
+        <span class="type-label-sm text-muted">Coming soon</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT / CLOSING: copied verbatim from index.html so every page shares one closing pattern -->
+  <section id="contact" class="relative overflow-hidden px-4 lg:px-20" style="background:var(--color-primary); color:var(--color-on-primary);">
+    <div class="blob-parallax" style="bottom:-12rem; left:-8rem;" data-parallax="-0.1">
+      <div class="hero-blob" style="width:28rem; height:28rem; bottom:0; left:0; opacity:0.25; animation-duration:33s; animation-direction:reverse;"></div>
+    </div>
+    <div class="reveal relative mx-auto max-w-7xl py-24 text-center lg:py-32">
+      <span class="type-label-sm" style="color:var(--color-on-primary-soft)">Let's talk</span>
+      <h2 class="type-display-sm mt-4">Let's build the future<span style="color:var(--color-accent)">.</span></h2>
+      <p class="type-body-lg mx-auto mt-4 max-w-lg" style="color:var(--color-on-primary-soft)">Open to design leadership roles, partnerships, and ambitious product bets.</p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="mailto:avitano@gmail.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-sm font-medium shadow-md transition-all duration-150 ease-out hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">Email me</a>
+        <a href="https://linkedin.com/in/avitano" target="_blank" rel="noopener noreferrer" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="border-color:rgba(255,255,255,0.35); color:#fff;">LinkedIn</a>
+      </div>
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-3 type-body-md" style="color:var(--color-on-primary-soft)">
+        <span>avitano@gmail.com</span>
+        <span>&middot;</span>
+        <span>054-429-6353</span>
+      </div>
+      <div class="type-label-sm mt-16 border-t pt-6" style="color:var(--color-on-primary-soft); border-color:rgba(255,255,255,0.15); text-transform:none; letter-spacing:normal;">
+        Ofir Avitan &middot; 2026
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // scroll-triggered reveals, same mechanics as index.html
+    document.querySelectorAll('.reveal-stagger').forEach((group) => {
+      Array.from(group.children).forEach((child, i) => {
+        child.style.transitionDelay = `${i * 160}ms`;
+      });
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
+
+    // thin progress bar tracking scroll position, same as index.html
+    const progressBar = document.getElementById('scrollProgress');
+    const updateProgress = () => {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight;
+      const pct = max > 0 ? (doc.scrollTop / max) * 100 : 0;
+      progressBar.style.width = pct + '%';
+    };
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // scroll parallax on the contact section's decorative blob, same as index.html
+    if (!prefersReducedMotion) {
+      const parallaxEls = Array.from(document.querySelectorAll('.blob-parallax[data-parallax]'));
+      let ticking = false;
+      const applyParallax = () => {
+        const y = window.scrollY;
+        parallaxEls.forEach((el) => {
+          const factor = parseFloat(el.dataset.parallax) || 0;
+          el.style.transform = `translateY(${y * factor}px)`;
+        });
+        ticking = false;
+      };
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(applyParallax);
+          ticking = true;
+        }
+      }, { passive: true });
+      applyParallax();
+    }
+  </script>
+</body>
+</html>
