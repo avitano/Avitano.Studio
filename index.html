@@ -125,6 +125,15 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
   border-radius: 999px; padding: 0.5rem 0.5rem 0.5rem 1.25rem;
   box-shadow: var(--shadow-lg);
   animation: navEnter 800ms var(--ease-out) both;
+  /* width: max-content (2026-08-07): with only `left: 50%` set (no `right`),
+     an auto-width fixed element's shrink-to-fit box is computed against the
+     remaining space to the right of `left`, i.e. only ~50vw of available
+     width, not the full viewport. On narrow screens that's not enough room
+     for "OA + Let's talk", so the flex items got compressed and the button
+     text wrapped to two lines. Forcing max-content sizes the pill to its
+     actual content regardless of that calculation; translateX(-50%) still
+     centers it correctly since transform doesn't affect box sizing. */
+  width: max-content;
 }
 .nav-link { position: relative; }
 .nav-link::after {
@@ -170,6 +179,19 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 }
 #work .reveal-stagger > *.in-view {
   transform: translateY(0) scale(1);
+}
+
+/* mobile (2026-08-07): on a single-column phone layout each collage tile is
+   near full viewport width, so the same 6% scale change that reads subtle on
+   a wide desktop tile reads as an obvious "pops from small to full size"
+   jump here. Shrunk the travel distance/scale delta and cut the duration so
+   the tile is basically at rest by the time it's readable, instead of still
+   visibly growing after it's already in view. */
+@media (max-width: 639px) {
+  #work .reveal-stagger > * {
+    transform: translateY(28px) scale(0.98);
+    transition: opacity 420ms var(--ease-soft), transform 420ms var(--ease-soft);
+  }
 }
 
 /* hero: on-load entrance, staggered via inline animation-delay per element.
@@ -225,9 +247,22 @@ a:hover .arrow { transform: translateX(4px); }
   opacity: 0; transform: translateY(10px);
   transition: opacity 350ms var(--ease-soft), transform 350ms var(--ease-soft);
 }
-.case-tile:hover .case-scrim, .case-tile:focus-within .case-scrim, .case-tile.is-open .case-scrim,
-.case-tile:hover .case-content, .case-tile:focus-within .case-content, .case-tile.is-open .case-content {
+.case-tile.is-open .case-scrim, .case-tile.is-open .case-content {
   opacity: 1; transform: translateY(0);
+}
+/* hover/focus-driven reveal is scoped to real pointing devices only
+   (2026-08-07). Previously :hover and :focus-within fired on tap too, since
+   tapping a button both focuses it and, on iOS/Android, can trigger "sticky"
+   emulated hover that doesn't reliably clear until something else is tapped.
+   That fought with the JS-driven .is-open toggle below: a second tap looked
+   like it did nothing, and a previously-tapped tile could stay visibly open
+   after tapping a different one. Touch now relies on .is-open alone, set
+   only by the click handler in the script at the bottom of the page. */
+@media (hover: hover) and (pointer: fine) {
+  .case-tile:hover .case-scrim, .case-tile:focus-within .case-scrim,
+  .case-tile:hover .case-content, .case-tile:focus-within .case-content {
+    opacity: 1; transform: translateY(0);
+  }
 }
 
 /* FLAGGED GAP: the DSM's Button variants (Primary/Secondary/Ghost/Danger) are
@@ -299,7 +334,7 @@ a:hover .arrow { transform: translateX(4px); }
       <a href="#skills" class="nav-link hover:text-default transition-colors">Skills</a>
       <a href="#contact" class="nav-link hover:text-default transition-colors">Contact</a>
     </div>
-    <a href="#contact" class="inline-flex h-8 items-center justify-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-on-primary shadow-md transition-all duration-150 ease-out hover:bg-primary-hover hover:shadow-lg active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Let's talk</a>
+    <a href="#contact" class="inline-flex h-8 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-primary px-4 text-sm font-medium text-on-primary shadow-md transition-all duration-150 ease-out hover:bg-primary-hover hover:shadow-lg active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Let's talk</a>
   </nav>
 
   <!-- HERO -->
@@ -608,9 +643,13 @@ a:hover .arrow { transform: translateX(4px); }
     // Work section's 6-tile grid, revealed every child the moment any 15% of
     // the group entered the viewport, so later rows finished animating off-
     // screen and just sat there static by the time you scrolled to them).
+    const isMobile = window.matchMedia('(max-width: 639px)').matches;
     document.querySelectorAll('.reveal-stagger').forEach((group) => {
       Array.from(group.children).forEach((child, i) => {
-        child.style.transitionDelay = `${i * 160}ms`;
+        // shorter stagger on mobile: a single-column layout only ever shows
+        // one card entering at a time anyway, so the desktop-tuned 160ms/child
+        // just adds pure delay on top of an already-late trigger below.
+        child.style.transitionDelay = `${i * (isMobile ? 70 : 160)}ms`;
       });
     });
     const io = new IntersectionObserver((entries) => {
@@ -620,7 +659,13 @@ a:hover .arrow { transform: translateX(4px); }
           io.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.3 });
+    // 2026-08-07: threshold 0.3 meant an element needed to already be 30%
+    // inside the viewport before it started revealing, so on mobile (short
+    // viewport, tall tiles) it visibly triggered late into the scroll. A
+    // negative bottom rootMargin starts the reveal a bit before the element's
+    // bottom edge reaches the viewport's true bottom, so it's fading/settling
+    // in as it arrives rather than after.
+    }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
     document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
     document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
 
@@ -650,16 +695,38 @@ a:hover .arrow { transform: translateX(4px); }
       });
     }
 
-    // case-study tile reveal toggle: works for touch (tap to show, tap again
-    // to hide) and for a plain mouse click, harmless there since hover
-    // already reveals the scrim independently. Navigation only ever happens
-    // through the separate .case-cta link, never through this button.
+    // case-study tile reveal toggle.
+    // Touch/no-hover devices (2026-08-07 fix): tap opens the tile (content +
+    // CTA), a second tap on the same tile closes it, and tapping a different
+    // tile closes whatever was open before opening the new one, so only one
+    // tile is ever open at a time. The CSS now only shows content via
+    // .is-open here (hover/focus-within are scoped out under this media
+    // query above), so this handler is the single source of truth on touch.
+    // Fine-pointer devices (2026-08-07 addition): hover already reveals the
+    // content via CSS, so a click anywhere on the tile now behaves like
+    // clicking the real .case-cta link, the whole tile acts as the CTA
+    // instead of only the small pill button inside it. Disabled/placeholder
+    // tiles (aria-disabled CTA) still do nothing on click, same as clicking
+    // their real CTA would.
     document.querySelectorAll('.case-toggle').forEach((btn) => {
       btn.addEventListener('click', () => {
         const tile = btn.closest('.case-tile');
-        const open = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', String(!open));
-        tile.classList.toggle('is-open', !open);
+        if (hasFinePointer) {
+          const cta = tile.querySelector('.case-cta');
+          if (cta && cta.getAttribute('aria-disabled') !== 'true' && cta.href) {
+            window.location.href = cta.href;
+          }
+          return;
+        }
+        const wasOpen = tile.classList.contains('is-open');
+        document.querySelectorAll('.case-tile.is-open').forEach((openTile) => {
+          if (openTile !== tile) {
+            openTile.classList.remove('is-open');
+            openTile.querySelector('.case-toggle')?.setAttribute('aria-expanded', 'false');
+          }
+        });
+        tile.classList.toggle('is-open', !wasOpen);
+        btn.setAttribute('aria-expanded', String(!wasOpen));
       });
     });
 
