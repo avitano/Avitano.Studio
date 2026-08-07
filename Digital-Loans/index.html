@@ -151,6 +151,15 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 .arrow { display: inline-block; transition: transform 200ms var(--ease-out); }
 a:hover .arrow { transform: translateX(4px); }
 
+/* hero on-load entrance (2026-08-08): ../index.html's hero has always had this fadeUp
+   treatment, this page's hero never did, it just rendered static, so it read as "no
+   motion" until the first scroll-triggered section. Same keyframe/stagger pattern. */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.enter { opacity: 0; animation: fadeUp 900ms var(--ease-soft) both; }
+
 /* hero gradient blob + scroll parallax wrapper, same recipe as ../index.html's contact section
    (reused verbatim here since the contact/closing section below is copied unchanged) */
 .hero-blob {
@@ -179,6 +188,7 @@ a:hover .arrow { transform: translateX(4px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .enter { animation: none; opacity: 1; filter: none; }
   .reveal, .reveal-stagger > * { transition: none; opacity: 1; transform: none; }
   .blob-parallax { transform: none !important; }
 }
@@ -203,24 +213,24 @@ a:hover .arrow { transform: translateX(4px); }
   </nav>
 
   <!-- HERO -->
-  <header id="top" class="px-4 pb-16 pt-32 lg:px-20 lg:pb-24 lg:pt-40">
+  <header id="top" class="px-4 pb-8 pt-32 sm:pb-16 lg:px-20 lg:pb-24 lg:pt-40">
     <div class="mx-auto max-w-7xl">
-      <a href="../index.html#work" class="inline-flex items-center gap-2 type-label-lg text-secondary hover:text-default transition-colors">
+      <a href="../index.html#work" class="enter inline-flex items-center gap-2 type-label-lg text-secondary hover:text-default transition-colors" style="animation-delay:80ms">
         <svg aria-hidden="true" class="arrow size-4 rtl:-scale-x-100" style="transform:rotate(180deg)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         Back to work
       </a>
 
       <div class="mt-8 max-w-3xl">
-        <h1 class="type-display-sm sm:text-5xl">Digital Loans<span class="brand-dot">.</span></h1>
-        <p class="type-body-lg mt-6 max-w-2xl text-secondary">Redesigned Bank Hapoalim's loan experience: a single long scroll of 15+ raw options, spanning four distinct loan products, became a 3-path, intent-based flow.</p>
-        <div class="mt-6 flex flex-wrap gap-2">
+        <h1 class="enter type-display-sm sm:text-5xl" style="animation-delay:180ms">Digital Loans<span class="brand-dot">.</span></h1>
+        <p class="enter type-body-lg mt-6 max-w-2xl text-secondary" style="animation-delay:300ms">Redesigned Bank Hapoalim's loan experience: a single long scroll of 15+ raw options, spanning four distinct loan products, became a 3-path, intent-based flow.</p>
+        <div class="enter mt-6 flex flex-wrap gap-2" style="animation-delay:420ms">
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Product design</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Design system</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Fintech</span>
         </div>
       </div>
 
-      <div class="media-placeholder mt-12 h-40 w-full rounded-xl sm:h-48 lg:mt-16 lg:h-56">
+      <div class="enter media-placeholder mt-12 h-40 w-full rounded-xl sm:h-48 lg:mt-16 lg:h-56" style="animation-delay:540ms">
         <span class="type-label-sm text-muted">Coming soon</span>
       </div>
     </div>
@@ -228,7 +238,7 @@ a:hover .arrow { transform: translateX(4px); }
 
   <!-- CHALLENGE -->
   <section id="challenge" class="px-4 lg:px-20">
-    <div class="reveal mx-auto max-w-7xl border-t border-border-default py-20 lg:py-28">
+    <div class="reveal mx-auto max-w-7xl border-t border-border-default pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
       <h2 class="type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
       <p class="type-body-lg mt-6 max-w-prose text-secondary">The digital loans experience wasn't one flow, it was four. A new loan request, a refinance, a car loan, and a universal loan open to any customer, each with its own dependencies, backend models, and layer of business and regulatory rules. All of it surfaced through the same legacy lobby: one long scroll of 15+ raw options with no hierarchy.</p>
 
@@ -349,10 +359,15 @@ a:hover .arrow { transform: translateX(4px); }
   <script>
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // scroll-triggered reveals, same mechanics as ../index.html
+    // scroll-triggered reveals, same mechanics as ../index.html (2026-08-07 mobile fix,
+    // ported here 2026-08-08: this page still had the pre-fix version, threshold 0.3 with
+    // no rootMargin and a flat 160ms delay meant tall mobile sections needed to be 30%
+    // into view before animating, so by the time they did they were already scrolled past,
+    // reading as no animation at all)
+    const isMobile = window.matchMedia('(max-width: 639px)').matches;
     document.querySelectorAll('.reveal-stagger').forEach((group) => {
       Array.from(group.children).forEach((child, i) => {
-        child.style.transitionDelay = `${i * 160}ms`;
+        child.style.transitionDelay = `${i * (isMobile ? 70 : 160)}ms`;
       });
     });
     const io = new IntersectionObserver((entries) => {
@@ -362,7 +377,7 @@ a:hover .arrow { transform: translateX(4px); }
           io.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.3 });
+    }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
     document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
     document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
 
