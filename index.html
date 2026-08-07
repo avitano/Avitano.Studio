@@ -144,12 +144,17 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    2026-08-06 evening: moved from 650-700ms/~22px to 850-950ms/30-34px with ease-out,
    which fixed the speed but ease-out (fast leave, slow arrival) still snaps at the
    start on large elements. Switched to ease-soft, a symmetric accelerate/decelerate
-   curve with no sharp initial velocity, and added a soft blur-in so elements read as
-   settling into focus rather than sliding into place. */
-.reveal { opacity: 0; transform: translateY(54px); filter: blur(4px); transition: opacity 1400ms var(--ease-soft), transform 1400ms var(--ease-soft), filter 1400ms var(--ease-soft); }
-.reveal.in-view { opacity: 1; transform: translateY(0); filter: blur(0); }
-.reveal-stagger > * { opacity: 0; transform: translateY(50px); filter: blur(4px); transition: opacity 1300ms var(--ease-soft), transform 1300ms var(--ease-soft), filter 1300ms var(--ease-soft); }
-.reveal-stagger > *.in-view { opacity: 1; transform: translateY(0); filter: blur(0); }
+   curve with no sharp initial velocity.
+   2026-08-07: dropped the animated blur-in and cut durations way down (was
+   1300-1700ms with an animated filter: blur() on every element, up to 1700ms on
+   the Work section's video tiles). Animating filter is not GPU-composited like
+   transform/opacity, so the browser was repainting large blurred regions, videos
+   included, every frame for over a second per element, which is what read as
+   scroll stutter. Kept the same fade + rise motion, just cheap to run now. */
+.reveal { opacity: 0; transform: translateY(54px); transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft); will-change: opacity, transform; }
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+.reveal-stagger > * { opacity: 0; transform: translateY(50px); transition: opacity 650ms var(--ease-soft), transform 650ms var(--ease-soft); will-change: opacity, transform; }
+.reveal-stagger > *.in-view { opacity: 1; transform: translateY(0); }
 
 /* Work section case-study tiles specifically (2026-08-06): these are the tallest,
    heaviest elements using .reveal-stagger, so the distance/duration that reads fine
@@ -158,12 +163,10 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    Needs its own .in-view rule (fixed 2026-08-06): #work has higher specificity
    than .reveal-stagger > *.in-view no matter how many classes that has, an ID
    always outranks classes, so without this the tiles' transform stayed pinned
-   at the hidden-state value forever. Opacity and blur still resolved fine since
-   this block never touched them, which is why it looked like a fade with no
-   movement instead of a full break. */
+   at the hidden-state value forever. */
 #work .reveal-stagger > * {
   transform: translateY(70px) scale(0.94);
-  transition: opacity 1700ms var(--ease-soft), transform 1700ms var(--ease-soft), filter 1700ms var(--ease-soft);
+  transition: opacity 800ms var(--ease-soft), transform 800ms var(--ease-soft);
 }
 #work .reveal-stagger > *.in-view {
   transform: translateY(0) scale(1);
@@ -511,7 +514,7 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div>
           <span class="flex size-11 items-center justify-center rounded-lg bg-surface-alt text-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="5"/><circle cx="16" cy="8" r="4"/><circle cx="12" cy="16" r="4.5"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/></svg>
           </span>
           <h3 class="type-headline-sm mt-4">Figma, past the basics</h3>
           <p class="type-body-md mt-2 text-secondary">Variables, component APIs, the plugin and MCP ecosystem, I don't just design screens, I build the systems that let a team move fast.</p>
