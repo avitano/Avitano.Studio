@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ofir Avitan, Product Design Leader</title>
+<meta name="description" content="Ofir Avitan, Product Design Manager. Case studies in fintech and regulated banking product design.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">
+@import "tailwindcss";
+
+@theme {
+  /* ---- color primitives ---- */
+  --color-green-50: #ecfdf5;
+  --color-green-100: #d1fae5;
+  --color-green-200: #a7f3d0;
+  --color-green-300: #6ee7b7;
+  --color-green-400: #34d399;
+  --color-green-500: #10b981;
+  --color-green-600: #059669;
+  --color-green-700: #047857;
+  --color-green-800: #065f46;
+  --color-green-900: #064e3b;
+  --color-green-950: #022c22;
+
+  --color-neutral-50: #f7f8f7;
+  --color-neutral-100: #eff1ef;
+  --color-neutral-200: #dfe3df;
+  --color-neutral-300: #c4cac4;
+  --color-neutral-400: #a6aea6;
+  --color-neutral-500: #8a938a;
+  --color-neutral-600: #6f766f;
+  --color-neutral-700: #565b56;
+  --color-neutral-800: #4a4a4a;
+  --color-neutral-900: #2d2d2d;
+  --color-neutral-950: #1a1d1a;
+
+  --color-gold-100: #f0e6d2;
+  --color-gold-300: #ecc678;
+  --color-gold-500: #e0a52e;
+  --color-gold-700: #a87a1e;
+  --color-gold-900: #40310f;
+
+  /* ---- semantics ---- */
+  --color-primary: var(--color-green-950);
+  --color-primary-hover: var(--color-green-900);
+  --color-primary-active: var(--color-green-800);
+  --color-accent: var(--color-green-500);
+  --color-accent-contrast: var(--color-gold-700);
+
+  --color-default: var(--color-neutral-900);
+  --color-secondary: var(--color-neutral-800);
+  --color-muted: var(--color-neutral-500);
+  --color-disabled: var(--color-neutral-400);
+  --color-on-primary: #ffffff;
+  --color-on-primary-soft: var(--color-green-100);
+  --color-link: var(--color-green-800);
+
+  --color-surface: #ffffff;
+  --color-surface-alt: var(--color-neutral-50);
+  --color-card: #ffffff;
+  --color-inverse: var(--color-green-950);
+  --color-surface-pressed: var(--color-green-100);
+
+  --color-border-default: var(--color-neutral-200);
+  --color-border-strong: var(--color-neutral-400);
+  --color-focus: var(--color-green-950);
+
+  --font-brand: "Inter Tight", sans-serif;
+  --font-plain: "Inter", system-ui, sans-serif;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.75rem;
+
+  --shadow-sm: 0 1px 2px 0 rgb(2 44 34 / 0.06);
+  --shadow-md: 0 4px 6px -1px rgb(2 44 34 / 0.08), 0 2px 4px -2px rgb(2 44 34 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(2 44 34 / 0.10), 0 4px 6px -4px rgb(2 44 34 / 0.05);
+  --shadow-xl: 0 20px 25px -5px rgb(2 44 34 / 0.12), 0 8px 10px -6px rgb(2 44 34 / 0.05);
+
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--color-surface); color: var(--color-default); font-family: var(--font-plain); }
+
+/* type roles, copied verbatim from Design-Cortex August 2026 / my-dsm.theme.css
+   (tokens/typography/roles.md) instead of hand-rolled shortcuts */
+.type-display-lg { font-family: var(--font-brand); font-weight: 700; font-size: 3rem; line-height: 1.1; letter-spacing: -0.025em; }
+.type-display-sm { font-family: var(--font-brand); font-weight: 700; font-size: 2.25rem; line-height: 1.15; letter-spacing: -0.025em; }
+.type-headline-lg { font-family: var(--font-brand); font-weight: 700; font-size: 1.875rem; line-height: 1.2; }
+.type-headline-md { font-family: var(--font-brand); font-weight: 600; font-size: 1.5rem; line-height: 1.33; }
+.type-headline-sm { font-family: var(--font-brand); font-weight: 600; font-size: 1.25rem; line-height: 1.4; }
+.type-title-md { font-family: var(--font-brand); font-weight: 600; font-size: 1.125rem; line-height: 1.55; }
+.type-body-lg { font-family: var(--font-plain); font-weight: 400; font-size: 1rem; line-height: 1.5; }
+.type-body-md { font-family: var(--font-plain); font-weight: 400; font-size: 0.875rem; line-height: 1.43; }
+.type-label-lg { font-family: var(--font-plain); font-weight: 500; font-size: 0.875rem; line-height: 1.43; }
+.type-label-sm { font-family: var(--font-plain); font-weight: 500; font-size: 0.75rem; line-height: 1.33; letter-spacing: 0.1em; text-transform: uppercase; }
+.brand-dot { color: var(--color-primary); }
+
+/* sticky floating pill nav, animates in on load */
+@keyframes navEnter {
+  from { opacity: 0; transform: translate(-50%, -18px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+.site-nav {
+  position: fixed; top: 1.25rem; left: 50%;
+  z-index: 50; display: flex; align-items: center; gap: 1.75rem;
+  background: rgba(255,255,255,0.85); backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border-default);
+  border-radius: 999px; padding: 0.5rem 0.5rem 0.5rem 1.25rem;
+  box-shadow: var(--shadow-lg);
+  animation: navEnter 800ms var(--ease-out) both;
+}
+.nav-link { position: relative; }
+.nav-link::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px;
+  background: var(--color-primary); transform: scaleX(0); transform-origin: left;
+  transition: transform 220ms var(--ease-out);
+}
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* thin scroll-progress bar */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: var(--color-primary); z-index: 60; transition: width 80ms linear;
+}
+
+/* scroll reveal, per-child delay is assigned by JS so any child count staggers cleanly.
+   2026-08-06 evening: moved from 650-700ms/~22px to 850-950ms/30-34px with ease-out,
+   which fixed the speed but ease-out (fast leave, slow arrival) still snaps at the
+   start on large elements. Switched to ease-soft, a symmetric accelerate/decelerate
+   curve with no sharp initial velocity, and added a soft blur-in so elements read as
+   settling into focus rather than sliding into place. */
+.reveal { opacity: 0; transform: translateY(54px); filter: blur(4px); transition: opacity 1400ms var(--ease-soft), transform 1400ms var(--ease-soft), filter 1400ms var(--ease-soft); }
+.reveal.in-view { opacity: 1; transform: translateY(0); filter: blur(0); }
+.reveal-stagger > * { opacity: 0; transform: translateY(50px); filter: blur(4px); transition: opacity 1300ms var(--ease-soft), transform 1300ms var(--ease-soft), filter 1300ms var(--ease-soft); }
+.reveal-stagger > *.in-view { opacity: 1; transform: translateY(0); filter: blur(0); }
+
+/* Work section case-study tiles specifically (2026-08-06): these are the tallest,
+   heaviest elements using .reveal-stagger, so the distance/duration that reads fine
+   for a line of text or a small icon card reads as an abrupt shove here. Bigger
+   elements need less travel and more time to feel calm, not the same of both.
+   Needs its own .in-view rule (fixed 2026-08-06): #work has higher specificity
+   than .reveal-stagger > *.in-view no matter how many classes that has, an ID
+   always outranks classes, so without this the tiles' transform stayed pinned
+   at the hidden-state value forever. Opacity and blur still resolved fine since
+   this block never touched them, which is why it looked like a fade with no
+   movement instead of a full break. */
+#work .reveal-stagger > * {
+  transform: translateY(70px) scale(0.94);
+  transition: opacity 1700ms var(--ease-soft), transform 1700ms var(--ease-soft), filter 1700ms var(--ease-soft);
+}
+#work .reveal-stagger > *.in-view {
+  transform: translateY(0) scale(1);
+}
+
+/* hero: on-load entrance, staggered via inline animation-delay per element.
+   Blur-to-sharp added alongside the existing fade/move (2026-08-06) so the
+   headline and photo feel like they're pulling into focus, not just sliding in. */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@keyframes fadeScale {
+  from { opacity: 0; transform: scale(0.94); filter: blur(6px); }
+  to   { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+.enter { opacity: 0; animation: fadeUp 900ms var(--ease-soft) both; }
+.enter-scale { opacity: 0; animation: fadeScale 900ms var(--ease-soft) both; }
+
+/* card hover lift, image inside zooms slightly at the same time */
+.card-lift { position: relative; transition: transform 250ms var(--ease-out), box-shadow 250ms var(--ease-out); }
+.card-lift:hover { transform: translateY(-4px); box-shadow: var(--shadow-xl); }
+.card-lift img, .card-lift video { transition: transform 600ms var(--ease-out); }
+.card-lift:hover img, .card-lift:hover video { transform: scale(1.06); }
+
+/* cursor-tracked spotlight: a soft accent glow that follows the pointer across
+   the card, positioned via --spot-x/--spot-y set from JS on mousemove. Fine-
+   pointer only (gated in script), so it never runs on touch, and it's low-alpha
+   enough not to interfere with text or media underneath it. */
+.card-lift::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit;
+  background: radial-gradient(360px circle at var(--spot-x, 50%) var(--spot-y, 50%), rgb(16 185 129 / 0.10), transparent 70%);
+  opacity: 0; transition: opacity 400ms var(--ease-soft); pointer-events: none;
+}
+.card-lift:hover::after { opacity: 1; }
+
+/* arrow nudges right on hover, works on any element with .arrow inside a hovered ancestor */
+.arrow { display: inline-block; transition: transform 200ms var(--ease-out); }
+a:hover .arrow { transform: translateX(4px); }
+
+/* case-study tiles: collage fills the whole tile edge to edge, no visible card
+   chrome by default. A real button (not a div with a click handler, forbidden
+   by the DSM's own accessibility rules) covers the collage and is the hover
+   trigger on desktop and the reveal/hide toggle on touch and keyboard. A
+   separate real anchor is the only thing that navigates, so the two never
+   nest inside each other. Pattern signed off 2026-08-06, see the skill's
+   build log for the full reasoning. */
+.case-tile { box-shadow: var(--shadow-md); }
+.case-toggle { all: unset; position: absolute; inset: 0; display: block; cursor: pointer; }
+.case-toggle:focus-visible { box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 6px var(--color-primary); }
+.case-scrim {
+  background: linear-gradient(to top, rgb(2 44 34 / 0.92) 0%, rgb(2 44 34 / 0.55) 45%, rgb(2 44 34 / 0) 78%);
+  opacity: 0; transition: opacity 350ms var(--ease-soft); pointer-events: none;
+}
+.case-content {
+  opacity: 0; transform: translateY(10px);
+  transition: opacity 350ms var(--ease-soft), transform 350ms var(--ease-soft);
+}
+.case-tile:hover .case-scrim, .case-tile:focus-within .case-scrim, .case-tile.is-open .case-scrim,
+.case-tile:hover .case-content, .case-tile:focus-within .case-content, .case-tile.is-open .case-content {
+  opacity: 1; transform: translateY(0);
+}
+
+/* FLAGGED GAP: the DSM's Button variants (Primary/Secondary/Ghost/Danger) are
+   all designed for a light surface. The contact section sits on color.primary
+   as its background (inverse surface), which has no documented button
+   treatment yet. This keeps the real Button structure (h-10, rounded-full,
+   focus ring, motion) and only adapts the two colors needed for a dark
+   background, it is not a new invented component, just an unfilled gap. */
+.btn-on-primary:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* hero gradient blob: continuous, organic cloud-like drift (2026-08-06, replaced a
+   barely-visible back-and-forth pulse). Multiple stops on different paths so it
+   wanders rather than just pulsing in place; each instance can override
+   animation-duration inline so the two blobs on the page don't move in lockstep. */
+.hero-blob {
+  position: absolute; border-radius: 999px; filter: blur(60px); opacity: 0.55;
+  background: conic-gradient(from 180deg, var(--color-green-200), var(--color-green-500), var(--color-gold-300), var(--color-green-200));
+  animation: blobshift 26s ease-in-out infinite;
+}
+
+/* scroll parallax wrapper: keeps the organic blobshift keyframe on the inner
+   .hero-blob untouched, while this outer element gets a scroll-linked
+   translateY from JS. Split into two elements because a CSS animation and a
+   JS-driven inline transform can't coexist on the same property of the same
+   element without one clobbering the other. */
+.blob-parallax { position: absolute; will-change: transform; }
+@keyframes blobshift {
+  0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+  15%  { transform: translate(-9%, 12%) scale(1.1) rotate(4deg); }
+  32%  { transform: translate(12%, 20%) scale(0.92) rotate(-3deg); }
+  50%  { transform: translate(-16%, 5%) scale(1.06) rotate(5deg); }
+  68%  { transform: translate(7%, -14%) scale(0.95) rotate(-4deg); }
+  85%  { transform: translate(-11%, -7%) scale(1.12) rotate(2deg); }
+  100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+}
+
+/* respect reduced-motion: the DSM's own accessibility rules (CardGrid) already
+   call for no positional animation under prefers-reduced-motion, extended here
+   to on-load entrance and scroll reveals. Content stays visible (opacity 1, no
+   transform) instead of relying on an animation to reveal it. The hero blobs
+   are deliberately exempt: slow (26-33s), low-amplitude, purely decorative
+   background drift, not the kind of motion reduced-motion is meant to guard
+   against, and it's a requested effect, not incidental. */
+@media (prefers-reduced-motion: reduce) {
+  .enter, .enter-scale { animation: none; opacity: 1; filter: none; }
+  .reveal, .reveal-stagger > * { transition: none; opacity: 1; transform: none; filter: none; }
+  .card-lift, .card-lift img, .card-lift video { transition: none; }
+  .card-lift:hover { transform: none; }
+  .card-lift:hover img, .card-lift:hover video { transform: none; }
+  .card-lift::after { display: none; }
+  .blob-parallax { transform: none !important; }
+  .case-scrim, .case-content, .case-toggle { transition: none; }
+}
+
+</style>
+</head>
+<body class="antialiased">
+
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <a href="#top" class="flex items-center gap-2 pe-2">
+      <span class="flex size-8 items-center justify-center rounded-full bg-primary font-brand text-sm font-bold text-on-primary">OA</span>
+    </a>
+    <div class="hidden md:flex items-center gap-6 type-label-lg text-secondary">
+      <a href="#about" class="nav-link hover:text-default transition-colors">About</a>
+      <a href="#work" class="nav-link hover:text-default transition-colors">Work</a>
+      <a href="#skills" class="nav-link hover:text-default transition-colors">Skills</a>
+      <a href="#contact" class="nav-link hover:text-default transition-colors">Contact</a>
+    </div>
+    <a href="#contact" class="inline-flex h-8 items-center justify-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-on-primary shadow-md transition-all duration-150 ease-out hover:bg-primary-hover hover:shadow-lg active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Let's talk</a>
+  </nav>
+
+  <!-- HERO -->
+  <header id="top" class="relative overflow-hidden px-4 lg:px-20">
+    <div class="blob-parallax" style="top:-8rem; right:-10rem;" data-parallax="0.12">
+      <div class="hero-blob" style="width:32rem; height:32rem; top:0; right:0; animation-duration:26s;"></div>
+    </div>
+    <div class="relative mx-auto flex max-w-7xl flex-col items-start gap-10 pt-40 pb-24 lg:flex-row lg:items-center lg:pt-48 lg:pb-32">
+      <div class="max-w-2xl">
+        <span class="enter type-label-sm text-muted" style="animation-delay:80ms">Product Design Manager</span>
+        <h1 class="enter type-display-lg mt-4 sm:text-6xl" style="animation-delay:180ms">Design that moves<br>the work<span class="brand-dot">.</span></h1>
+        <p class="enter type-body-lg mt-6 max-w-lg text-secondary" style="animation-delay:300ms">A walk through process, craft and outcomes: case studies from 9 years shaping fintech and regulated banking products.</p>
+        <div class="enter mt-8 flex flex-wrap items-center gap-3" style="animation-delay:420ms">
+          <a href="#work" class="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-medium text-on-primary shadow-md transition-all duration-150 ease-out hover:bg-primary-hover hover:shadow-lg active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">
+            See the work
+            <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="#contact" class="inline-flex h-10 items-center justify-center gap-2 rounded-full border border-border-strong px-6 text-sm font-medium text-default transition-colors duration-150 ease-out hover:bg-surface-alt active:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Get in touch</a>
+        </div>
+        <div class="enter mt-8 inline-flex items-center gap-2 type-body-md text-muted" style="animation-delay:520ms">
+          <span class="size-2 rounded-full bg-green-500"></span>
+          Open to design leadership roles
+        </div>
+      </div>
+      <div class="enter-scale relative mx-auto lg:mx-0 lg:ms-auto" style="animation-delay:260ms">
+        <div class="size-56 overflow-hidden rounded-full border border-border-default shadow-xl sm:size-72">
+          <img src="assets/headshot.png" alt="Ofir Avitan" class="size-full object-cover">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section id="about" class="px-4 lg:px-20">
+    <div class="reveal mx-auto max-w-7xl border-t border-border-default py-20 lg:py-28">
+      <span class="type-label-sm text-muted">About</span>
+      <div class="mt-6 grid grid-cols-1 gap-12 lg:grid-cols-12">
+        <h2 class="type-headline-md lg:col-span-5">Product design leadership, hands-on<span class="brand-dot">.</span></h2>
+        <div class="lg:col-span-7">
+          <p class="type-body-lg max-w-prose text-secondary"><strong class="text-default">Strategic and hands-on.</strong> 9 years of UX expertise driving product strategy for high-scale fintech and regulated banking.</p>
+          <div class="reveal-stagger mt-10 grid grid-cols-1 gap-8 sm:grid-cols-3">
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+              <h3 class="type-headline-sm mt-2">Cross-Squad Design Leadership</h3>
+              <p class="type-body-md mt-2 text-secondary">Managing 7 designers across 4 autonomous business lines.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+              <h3 class="type-headline-sm mt-2">Unified Experience</h3>
+              <p class="type-body-md mt-2 text-secondary">Aligning squads and tech leads to eliminate product silos.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+              <h3 class="type-headline-sm mt-2">People &amp; Process Focused</h3>
+              <p class="type-body-md mt-2 text-secondary">Leveraging an educational background to mentor teams and workflows.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK / CASE STUDIES -->
+  <section id="work" class="bg-surface-alt px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl py-20 lg:py-28">
+      <div class="reveal">
+        <span class="type-label-sm text-muted">Selected work</span>
+        <h2 class="type-headline-md mt-4">Case studies<span class="brand-dot">.</span></h2>
+      </div>
+
+      <div class="reveal-stagger mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-6 lg:auto-rows-[22rem]">
+        <!-- Digital Loans -->
+        <div class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-3">
+          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-dl" aria-label="Preview Digital Loans">
+            <div class="absolute inset-0 overflow-hidden bg-neutral-200">
+              <video src="assets/digital%20loans.mp4" class="h-full w-full object-cover" autoplay muted loop playsinline></video>
+            </div>
+            <span class="case-scrim absolute inset-0"></span>
+          </button>
+          <div id="case-content-dl" class="case-content pointer-events-none absolute inset-0 flex flex-col justify-end p-6">
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Product design</span>
+              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Design system</span>
+              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Fintech</span>
+            </div>
+            <h3 class="type-title-md mt-3 text-white">Digital Loans</h3>
+            <a href="#" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">
+              View case study
+              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Credit Cards -->
+        <div class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-3">
+          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-cc" aria-label="Preview Credit Cards">
+            <div class="absolute inset-0 overflow-hidden bg-neutral-200">
+              <video src="assets/credit%20cards.mp4" class="h-full w-full object-cover" autoplay muted loop playsinline></video>
+            </div>
+            <span class="case-scrim absolute inset-0"></span>
+          </button>
+          <div id="case-content-cc" class="case-content pointer-events-none absolute inset-0 flex flex-col justify-end p-5">
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Product design</span>
+              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
+            </div>
+            <h3 class="type-title-md mt-3 text-white">Credit Cards</h3>
+            <a href="#" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">
+              View case study
+              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Sixth tile: placeholder, no name/content yet -->
+        <div class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-4">
+          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-6" aria-label="Preview upcoming project">
+            <div class="absolute inset-0 overflow-hidden bg-neutral-200">
+              <video src="assets/Poalim%20Wonder.mp4" class="h-full w-full object-cover" autoplay muted loop playsinline></video>
+            </div>
+            <span class="case-scrim absolute inset-0"></span>
+          </button>
+          <div id="case-content-6" class="case-content pointer-events-none absolute inset-0 flex flex-col justify-end p-5">
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
+            </div>
+            <h3 class="type-title-md mt-3 text-white">Poalim Wonder</h3>
+            <a href="#" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">
+              View case study
+              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Design System: placeholder, no real assets yet -->
+        <div class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-2">
+          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-dsys" aria-label="Preview Design System">
+            <div class="absolute inset-0 overflow-hidden bg-neutral-200">
+              <img src="assets/dsm.png" alt="" class="h-full w-full object-cover">
+            </div>
+            <span class="case-scrim absolute inset-0"></span>
+          </button>
+          <div id="case-content-dsys" class="case-content pointer-events-none absolute inset-0 flex flex-col justify-end p-5">
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Design system</span>
+            </div>
+            <h3 class="type-title-md mt-3 text-white">Design System</h3>
+            <a href="#" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">
+              View case study
+              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Poalim Wonder: placeholder, no real assets yet -->
+        <div class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-2">
+          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-pw" aria-label="Preview Poalim Wonder">
+            <div class="absolute inset-0 flex items-center justify-center bg-neutral-200">
+              <span class="type-label-sm text-muted">Preview coming soon</span>
+            </div>
+            <span class="case-scrim absolute inset-0"></span>
+          </button>
+          <div id="case-content-pw" class="case-content pointer-events-none absolute inset-0 flex flex-col justify-end p-5">
+            <h3 class="type-title-md mt-3 text-white">Coming soon</h3>
+            <a href="#" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">
+              View case study
+              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Internal Systems -->
+        <div class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-4">
+          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-is" aria-label="Preview Internal Systems">
+            <div class="absolute inset-0 overflow-hidden bg-neutral-200">
+              <img src="assets/internal%20systems.png" alt="" class="h-full w-full object-cover">
+            </div>
+            <span class="case-scrim absolute inset-0"></span>
+          </button>
+          <div id="case-content-is" class="case-content pointer-events-none absolute inset-0 flex flex-col justify-end p-5">
+            <div class="flex flex-wrap gap-2">
+              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Internal tools</span>
+              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
+            </div>
+            <h3 class="type-title-md mt-3 text-white">Internal Systems</h3>
+            <a href="#" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">
+              View case study
+              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="px-4 lg:px-20">
+    <div class="reveal mx-auto max-w-7xl py-20 lg:py-28">
+      <span class="type-label-sm text-muted">Capabilities</span>
+      <h2 class="type-headline-md mt-4 max-w-2xl">Fluent in more than Figma<span class="brand-dot">.</span></h2>
+      <p class="type-body-lg mt-4 max-w-prose text-secondary">Most design managers stop at the mockup. I don't, and in 2026, that gap is the whole point.</p>
+
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-10 sm:grid-cols-3">
+        <div>
+          <span class="flex size-11 items-center justify-center rounded-lg bg-surface-alt text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
+          </span>
+          <h3 class="type-headline-sm mt-4">AI-native, not AI-curious</h3>
+          <p class="type-body-md mt-2 text-secondary">I build with Claude Code daily, prototyping flows, debugging logic, shipping real surfaces. For a design manager, that's not a hobby, it's a competitive edge.</p>
+        </div>
+        <div>
+          <span class="flex size-11 items-center justify-center rounded-lg bg-surface-alt text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><path d="M6 9v6M18 9a9 9 0 0 1-9 9"/></svg>
+          </span>
+          <h3 class="type-headline-sm mt-4">Comfortable in the repo</h3>
+          <p class="type-body-md mt-2 text-secondary">Branches, diffs, pull requests, I read code the way I read Figma files. It closes the trust gap between design and engineering, for good.</p>
+        </div>
+        <div>
+          <span class="flex size-11 items-center justify-center rounded-lg bg-surface-alt text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="5"/><circle cx="16" cy="8" r="4"/><circle cx="12" cy="16" r="4.5"/></svg>
+          </span>
+          <h3 class="type-headline-sm mt-4">Figma, past the basics</h3>
+          <p class="type-body-md mt-2 text-secondary">Variables, component APIs, the plugin and MCP ecosystem, I don't just design screens, I build the systems that let a team move fast.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEADERSHIP IMPACT -->
+  <section class="bg-surface-alt px-4 lg:px-20">
+    <div class="reveal mx-auto max-w-7xl py-20 lg:py-28">
+      <span class="type-label-sm text-muted">Beyond the work</span>
+      <h2 class="type-headline-md mt-4">The work beyond the work<span class="brand-dot">.</span></h2>
+
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-2">
+        <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
+          <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </span>
+          <div>
+            <h3 class="type-headline-sm">Mentorship that ships careers</h3>
+            <p class="type-body-md mt-2 text-secondary">I actively mentor junior and aspiring product designers, helping them navigate the industry, accelerate their growth, and land their first real role.</p>
+          </div>
+        </div>
+        <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
+          <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5Z"/><path d="M6 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5"/></svg>
+          </span>
+          <div>
+            <h3 class="type-headline-sm">From classroom to production</h3>
+            <p class="type-body-md mt-2 text-secondary">Industry mentor for the Google &amp; Reichman University UX grad project, built on a real Hapoalim Bank challenge. One graduate joined my team; their concept now lives in our credit card workflow.</p>
+          </div>
+        </div>
+        <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
+          <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M21 3v6h-6"/></svg>
+          </span>
+          <div>
+            <h3 class="type-headline-sm">Agile without the theater</h3>
+            <p class="type-body-md mt-2 text-secondary">A strong advocate for Agile, embedding designers into Dailies, Planning, Demos and PIP to align stakeholders fast and remove delivery friction, not add process for its own sake.</p>
+          </div>
+        </div>
+        <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
+          <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>
+          </span>
+          <div>
+            <h3 class="type-headline-sm">Teaching the path I walked</h3>
+            <p class="type-body-md mt-2 text-secondary">Guest lecturer, Academic College of Tel Aviv-Yaffo, "Psychology &amp; UX." I share my path from junior designer to management, the learning curves and what actually sustains leadership.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT / CLOSING -->
+  <section id="contact" class="relative overflow-hidden px-4 lg:px-20" style="background:var(--color-primary); color:var(--color-on-primary);">
+    <div class="blob-parallax" style="bottom:-12rem; left:-8rem;" data-parallax="-0.1">
+      <div class="hero-blob" style="width:28rem; height:28rem; bottom:0; left:0; opacity:0.25; animation-duration:33s; animation-direction:reverse;"></div>
+    </div>
+    <div class="reveal relative mx-auto max-w-7xl py-24 text-center lg:py-32">
+      <span class="type-label-sm" style="color:var(--color-on-primary-soft)">Let's talk</span>
+      <h2 class="type-display-sm mt-4">Let's build the future<span style="color:var(--color-accent)">.</span></h2>
+      <p class="type-body-lg mx-auto mt-4 max-w-lg" style="color:var(--color-on-primary-soft)">Open to design leadership roles, partnerships, and ambitious product bets.</p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="mailto:avitano@gmail.com" class="inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-sm font-medium shadow-md transition-all duration-150 ease-out hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">Email me</a>
+        <a href="https://linkedin.com/in/avitano" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="border-color:rgba(255,255,255,0.35); color:#fff;">LinkedIn</a>
+      </div>
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-3 type-body-md" style="color:var(--color-on-primary-soft)">
+        <span>avitano@gmail.com</span>
+        <span>·</span>
+        <span>054-429-6353</span>
+      </div>
+      <div class="type-label-sm mt-16 border-t pt-6" style="color:var(--color-on-primary-soft); border-color:rgba(255,255,255,0.15); text-transform:none; letter-spacing:normal;">
+        Ofir Avitan · 2026
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    // scroll-triggered reveals. Per-child delay is set here so any number of
+    // children stagger cleanly (not limited to a fixed nth-child list). Each
+    // child is observed individually, not the group as a whole (fixed
+    // 2026-08-06: watching the group meant a tall multi-row group, like the
+    // Work section's 6-tile grid, revealed every child the moment any 15% of
+    // the group entered the viewport, so later rows finished animating off-
+    // screen and just sat there static by the time you scrolled to them).
+    document.querySelectorAll('.reveal-stagger').forEach((group) => {
+      Array.from(group.children).forEach((child, i) => {
+        child.style.transitionDelay = `${i * 160}ms`;
+      });
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
+
+    // thin progress bar tracking scroll position
+    const progressBar = document.getElementById('scrollProgress');
+    const updateProgress = () => {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight;
+      const pct = max > 0 ? (doc.scrollTop / max) * 100 : 0;
+      progressBar.style.width = pct + '%';
+    };
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // cursor-tracked spotlight on cards: sets --spot-x/--spot-y as percentages
+    // so the CSS radial-gradient in .card-lift::after follows the pointer.
+    // Fine-pointer only, skipped entirely under reduced motion.
+    if (hasFinePointer && !prefersReducedMotion) {
+      document.querySelectorAll('.card-lift').forEach((card) => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width) * 100;
+          const y = ((e.clientY - rect.top) / rect.height) * 100;
+          card.style.setProperty('--spot-x', `${x}%`);
+          card.style.setProperty('--spot-y', `${y}%`);
+        });
+      });
+    }
+
+    // case-study tile reveal toggle: works for touch (tap to show, tap again
+    // to hide) and for a plain mouse click, harmless there since hover
+    // already reveals the scrim independently. Navigation only ever happens
+    // through the separate .case-cta link, never through this button.
+    document.querySelectorAll('.case-toggle').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const tile = btn.closest('.case-tile');
+        const open = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!open));
+        tile.classList.toggle('is-open', !open);
+      });
+    });
+
+    // scroll parallax on the decorative hero blobs, rAF-throttled. Skipped
+    // entirely under reduced motion since vestibular-sensitive users are
+    // exactly who that media query exists for.
+    if (!prefersReducedMotion) {
+      const parallaxEls = Array.from(document.querySelectorAll('.blob-parallax[data-parallax]'));
+      let ticking = false;
+      const applyParallax = () => {
+        const y = window.scrollY;
+        parallaxEls.forEach((el) => {
+          const factor = parseFloat(el.dataset.parallax) || 0;
+          el.style.transform = `translateY(${y * factor}px)`;
+        });
+        ticking = false;
+      };
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(applyParallax);
+          ticking = true;
+        }
+      }, { passive: true });
+      applyParallax();
+    }
+  </script>
+</body>
+</html>
