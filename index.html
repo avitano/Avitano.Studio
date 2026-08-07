@@ -55,6 +55,7 @@
   --color-secondary: var(--color-neutral-800);
   --color-muted: var(--color-neutral-500);
   --color-disabled: var(--color-neutral-400);
+  --color-surface-disabled: var(--color-neutral-200);
   --color-on-primary: #ffffff;
   --color-on-primary-soft: var(--color-green-100);
   --color-link: var(--color-green-800);
@@ -306,6 +307,7 @@ a:hover .arrow { transform: translateX(4px); }
             See the work
             <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
+          <a href="https://www.figma.com/proto/yGqOfZP0qi3A5XuwaGYhzo/Portfolio?node-id=256-629&p=f&viewport=-25437%2C-149%2C0.65&t=ClEAHg6OvCQe6ddg-8&scaling=contain&content-scaling=fixed&page-id=56%3A17&hotspot-hints=0&hide-ui=1" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 items-center justify-center gap-2 rounded-full border border-border-strong px-6 text-sm font-medium text-default transition-colors duration-150 ease-out hover:bg-surface-alt active:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">View the deck</a>
           <a href="#contact" class="inline-flex h-10 items-center justify-center gap-2 rounded-full border border-border-strong px-6 text-sm font-medium text-default transition-colors duration-150 ease-out hover:bg-surface-alt active:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Get in touch</a>
         </div>
         <div class="enter mt-8 inline-flex items-center gap-2 type-body-md text-muted" style="animation-delay:520ms">
@@ -375,9 +377,8 @@ a:hover .arrow { transform: translateX(4px); }
               <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Fintech</span>
             </div>
             <h3 class="type-title-md mt-3 text-white">Digital Loans</h3>
-            <a href="#" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">
-              View case study
-              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            <a href="#" aria-disabled="true" tabindex="-1" class="case-cta pointer-events-none mt-4 inline-flex h-8 w-fit cursor-not-allowed items-center gap-2 rounded-full bg-surface-disabled px-4 text-sm font-medium text-disabled">
+              Coming Soon!
             </a>
           </div>
         </div>
@@ -396,9 +397,8 @@ a:hover .arrow { transform: translateX(4px); }
               <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
             </div>
             <h3 class="type-title-md mt-3 text-white">Credit Cards</h3>
-            <a href="#" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">
-              View case study
-              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            <a href="#" aria-disabled="true" tabindex="-1" class="case-cta pointer-events-none mt-4 inline-flex h-8 w-fit cursor-not-allowed items-center gap-2 rounded-full bg-surface-disabled px-4 text-sm font-medium text-disabled">
+              Coming Soon!
             </a>
           </div>
         </div>
@@ -416,9 +416,8 @@ a:hover .arrow { transform: translateX(4px); }
               <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
             </div>
             <h3 class="type-title-md mt-3 text-white">Poalim Wonder</h3>
-            <a href="#" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">
-              View case study
-              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            <a href="#" aria-disabled="true" tabindex="-1" class="case-cta pointer-events-none mt-4 inline-flex h-8 w-fit cursor-not-allowed items-center gap-2 rounded-full bg-surface-disabled px-4 text-sm font-medium text-disabled">
+              Coming Soon!
             </a>
           </div>
         </div>
@@ -436,9 +435,8 @@ a:hover .arrow { transform: translateX(4px); }
               <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Design system</span>
             </div>
             <h3 class="type-title-md mt-3 text-white">Design System</h3>
-            <a href="#" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">
-              View case study
-              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            <a href="#" aria-disabled="true" tabindex="-1" class="case-cta pointer-events-none mt-4 inline-flex h-8 w-fit cursor-not-allowed items-center gap-2 rounded-full bg-surface-disabled px-4 text-sm font-medium text-disabled">
+              Coming Soon!
             </a>
           </div>
         </div>
@@ -453,9 +451,8 @@ a:hover .arrow { transform: translateX(4px); }
           </button>
           <div id="case-content-pw" class="case-content pointer-events-none absolute inset-0 flex flex-col justify-end p-5">
             <h3 class="type-title-md mt-3 text-white">Coming soon</h3>
-            <a href="#" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">
-              View case study
-              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            <a href="#" aria-disabled="true" tabindex="-1" class="case-cta pointer-events-none mt-4 inline-flex h-8 w-fit cursor-not-allowed items-center gap-2 rounded-full bg-surface-disabled px-4 text-sm font-medium text-disabled">
+              Coming Soon!
             </a>
           </div>
         </div>
@@ -474,9 +471,8 @@ a:hover .arrow { transform: translateX(4px); }
               <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
             </div>
             <h3 class="type-title-md mt-3 text-white">Internal Systems</h3>
-            <a href="#" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">
-              View case study
-              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            <a href="#" aria-disabled="true" tabindex="-1" class="case-cta pointer-events-none mt-4 inline-flex h-8 w-fit cursor-not-allowed items-center gap-2 rounded-full bg-surface-disabled px-4 text-sm font-medium text-disabled">
+              Coming Soon!
             </a>
           </div>
         </div>
@@ -574,8 +570,8 @@ a:hover .arrow { transform: translateX(4px); }
       <h2 class="type-display-sm mt-4">Let's build the future<span style="color:var(--color-accent)">.</span></h2>
       <p class="type-body-lg mx-auto mt-4 max-w-lg" style="color:var(--color-on-primary-soft)">Open to design leadership roles, partnerships, and ambitious product bets.</p>
       <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <a href="mailto:avitano@gmail.com" class="inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-sm font-medium shadow-md transition-all duration-150 ease-out hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">Email me</a>
-        <a href="https://linkedin.com/in/avitano" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="border-color:rgba(255,255,255,0.35); color:#fff;">LinkedIn</a>
+        <a href="mailto:avitano@gmail.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-sm font-medium shadow-md transition-all duration-150 ease-out hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">Email me</a>
+        <a href="https://linkedin.com/in/avitano" target="_blank" rel="noopener noreferrer" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="border-color:rgba(255,255,255,0.35); color:#fff;">LinkedIn</a>
       </div>
       <div class="mt-10 flex flex-wrap items-center justify-center gap-3 type-body-md" style="color:var(--color-on-primary-soft)">
         <span>avitano@gmail.com</span>
