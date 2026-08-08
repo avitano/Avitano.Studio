@@ -337,6 +337,28 @@ a:hover .arrow { transform: translateX(4px); }
   }
 }
 
+/* Bottom info-bar tile pattern (2026-08-09, tested on Cal Application first,
+   then rolled out to all 6 case-study tiles same day): logo + name/company +
+   CTA row. Permanently visible on touch/coarse-pointer devices (no scrim,
+   rest of the image stays undimmed), revealed on hover/focus for
+   fine-pointer devices instead of the older full-scrim fade. On desktop
+   hover, the bar itself stays pointer-events:none so clicks fall through to
+   the same full-tile .case-toggle button the rest of the tile uses, only the
+   CTA anchor re-enables pointer-events so the whole visible strip acts as
+   one click target, matching "whole tile navigates" elsewhere. .case-content
+   / .case-scrim below are now unused by any tile but left in place as an
+   inert rollback (see skill: keep prior shared-chrome patterns reachable). */
+.case-bar {
+  background: rgb(20 20 20 / 0.85);
+  transition: opacity 300ms var(--ease-soft), transform 300ms var(--ease-soft);
+}
+@media (hover: hover) and (pointer: fine) {
+  .case-bar { opacity: 0; transform: translateY(6px); pointer-events: none; }
+  .case-tile:hover .case-bar, .case-tile:focus-within .case-bar {
+    opacity: 1; transform: translateY(0);
+  }
+}
+
 /* FLAGGED GAP: the DSM's Button variants (Primary/Secondary/Ghost/Danger) are
    all designed for a light surface. The contact section sits on color.primary
    as its background (inverse surface), which has no documented button
@@ -499,17 +521,15 @@ a:hover .arrow { transform: translateX(4px); }
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
               <video src="assets/digital%20loans.mp4" class="h-full w-full object-cover" autoplay muted loop playsinline></video>
             </div>
-            <span class="case-scrim absolute inset-0"></span>
           </button>
-          <div id="case-content-dl" class="case-content pointer-events-none absolute inset-0 flex flex-col justify-end p-6">
-            <div class="flex flex-wrap gap-2">
-              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Product design</span>
-              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Design system</span>
-              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Fintech</span>
+          <div id="case-content-dl" class="case-bar absolute inset-x-0 bottom-0 flex items-center gap-3 px-5 py-3">
+            <img src="assets/Poalim.png" alt="" class="h-10 w-10 shrink-0 rounded-lg object-cover">
+            <div class="min-w-0">
+              <h3 class="type-title-md text-white truncate">Digital Loans</h3>
+              <span class="type-label-sm block truncate" style="color:var(--color-on-primary-soft)">Bank Hapoalim</span>
             </div>
-            <h3 class="type-title-md mt-3 text-white">Digital Loans</h3>
-            <a href="Digital-Loans/" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2" style="background:#fff; color:var(--color-button);">
-              View case study
+            <a href="Digital-Loans/" class="case-cta pointer-events-auto ml-auto inline-flex h-8 w-fit shrink-0 items-center gap-2 rounded-full px-4 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2" style="background:#fff; color:var(--color-button);">
+              View
               <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </a>
           </div>
@@ -521,71 +541,75 @@ a:hover .arrow { transform: translateX(4px); }
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
               <video src="assets/credit%20cards.mp4" class="h-full w-full object-cover" autoplay muted loop playsinline></video>
             </div>
-            <span class="case-scrim absolute inset-0"></span>
           </button>
-          <div id="case-content-cc" class="case-content pointer-events-none absolute inset-0 flex flex-col justify-end p-5">
-            <div class="flex flex-wrap gap-2">
-              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Product design</span>
-              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
+          <div id="case-content-cc" class="case-bar absolute inset-x-0 bottom-0 flex items-center gap-3 px-5 py-3">
+            <img src="assets/Poalim.png" alt="" class="h-10 w-10 shrink-0 rounded-lg object-cover">
+            <div class="min-w-0">
+              <h3 class="type-title-md text-white truncate">Credit Cards</h3>
+              <span class="type-label-sm block truncate" style="color:var(--color-on-primary-soft)">Bank Hapoalim</span>
             </div>
-            <h3 class="type-title-md mt-3 text-white">Credit Cards</h3>
-            <a href="Credit-Cards/" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2" style="background:#fff; color:var(--color-button);">
-              View case study
+            <a href="Credit-Cards/" class="case-cta pointer-events-auto ml-auto inline-flex h-8 w-fit shrink-0 items-center gap-2 rounded-full px-4 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2" style="background:#fff; color:var(--color-button);">
+              View
               <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </a>
           </div>
         </div>
 
-        <!-- Sixth tile: placeholder, no name/content yet -->
+        <!-- Poalim Wonder: placeholder, no case-study page yet -->
         <div class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-4">
-          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-6" aria-label="Preview upcoming project">
+          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-6" aria-label="Preview Poalim Wonder">
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
               <video src="assets/Poalim%20Wonder.mp4" class="h-full w-full object-cover" autoplay muted loop playsinline></video>
             </div>
-            <span class="case-scrim absolute inset-0"></span>
           </button>
-          <div id="case-content-6" class="case-content pointer-events-none absolute inset-0 flex flex-col justify-end p-5">
-            <div class="flex flex-wrap gap-2">
-              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
+          <div id="case-content-6" class="case-bar absolute inset-x-0 bottom-0 flex items-center gap-3 px-5 py-3">
+            <img src="assets/Poalim.png" alt="" class="h-10 w-10 shrink-0 rounded-lg object-cover">
+            <div class="min-w-0">
+              <h3 class="type-title-md text-white truncate">Poalim Wonder</h3>
+              <span class="type-label-sm block truncate" style="color:var(--color-on-primary-soft)">Bank Hapoalim</span>
             </div>
-            <h3 class="type-title-md mt-3 text-white">Poalim Wonder</h3>
-            <a href="#" aria-disabled="true" tabindex="-1" class="case-cta pointer-events-none mt-4 inline-flex h-8 w-fit cursor-not-allowed items-center gap-2 rounded-full bg-surface-disabled px-4 text-sm font-medium text-disabled">
-              Coming Soon!
+            <a href="#" aria-disabled="true" tabindex="-1" class="case-cta pointer-events-none ml-auto inline-flex h-8 w-fit shrink-0 cursor-not-allowed items-center gap-2 rounded-full bg-surface-disabled px-4 text-sm font-medium text-disabled">
+              Soon!
             </a>
           </div>
         </div>
 
-        <!-- Design System: placeholder, no real assets yet -->
+        <!-- Design System: placeholder, no real assets yet. No logo (it's
+             Ofir's own DSM, not a client), second line reads "My personal
+             DSM" instead of a company name. -->
         <div class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-2">
           <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-dsys" aria-label="Preview Design System">
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
               <img src="assets/dsm.png" alt="" class="h-full w-full object-cover">
             </div>
-            <span class="case-scrim absolute inset-0"></span>
           </button>
-          <div id="case-content-dsys" class="case-content pointer-events-none absolute inset-0 flex flex-col justify-end p-5">
-            <div class="flex flex-wrap gap-2">
-              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Design system</span>
+          <div id="case-content-dsys" class="case-bar absolute inset-x-0 bottom-0 flex items-center gap-3 px-5 py-3">
+            <div class="min-w-0">
+              <h3 class="type-title-md text-white truncate">Design System</h3>
+              <span class="type-label-sm block truncate" style="color:var(--color-on-primary-soft)">My personal DSM</span>
             </div>
-            <h3 class="type-title-md mt-3 text-white">Design System</h3>
-            <a href="#" aria-disabled="true" tabindex="-1" class="case-cta pointer-events-none mt-4 inline-flex h-8 w-fit cursor-not-allowed items-center gap-2 rounded-full bg-surface-disabled px-4 text-sm font-medium text-disabled">
-              Coming Soon!
+            <a href="#" aria-disabled="true" tabindex="-1" class="case-cta pointer-events-none ml-auto inline-flex h-8 w-fit shrink-0 cursor-not-allowed items-center gap-2 rounded-full bg-surface-disabled px-4 text-sm font-medium text-disabled">
+              Soon!
             </a>
           </div>
         </div>
 
-        <!-- Poalim Wonder: placeholder, no real assets yet -->
+        <!-- Cal Application: placeholder, no case-study page yet -->
+
         <div class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-2">
-          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-pw" aria-label="Preview Poalim Wonder">
-            <div class="absolute inset-0 flex items-center justify-center bg-neutral-200">
-              <span class="type-label-sm text-muted">Preview coming soon</span>
+          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-cal" aria-label="Preview Cal Application">
+            <div class="absolute inset-0 overflow-hidden bg-neutral-200">
+              <img src="assets/Cal%20Application.png" alt="" class="h-full w-full object-cover">
             </div>
-            <span class="case-scrim absolute inset-0"></span>
           </button>
-          <div id="case-content-pw" class="case-content pointer-events-none absolute inset-0 flex flex-col justify-end p-5">
-            <h3 class="type-title-md mt-3 text-white">Coming soon</h3>
-            <a href="#" aria-disabled="true" tabindex="-1" class="case-cta pointer-events-none mt-4 inline-flex h-8 w-fit cursor-not-allowed items-center gap-2 rounded-full bg-surface-disabled px-4 text-sm font-medium text-disabled">
-              Coming Soon!
+          <div id="case-content-cal" class="case-bar absolute inset-x-0 bottom-0 flex items-center gap-3 px-5 py-3">
+            <img src="assets/Cal.png" alt="" class="h-10 w-10 shrink-0 rounded-lg object-cover">
+            <div class="min-w-0">
+              <h3 class="type-title-md text-white truncate">Cal Application</h3>
+              <span class="type-label-sm block truncate" style="color:var(--color-on-primary-soft)">Cal (Israel Credit Cards)</span>
+            </div>
+            <a href="#" aria-disabled="true" tabindex="-1" class="case-cta pointer-events-none ml-auto inline-flex h-8 w-fit shrink-0 cursor-not-allowed items-center gap-2 rounded-full bg-surface-disabled px-4 text-sm font-medium text-disabled">
+              Soon!
             </a>
           </div>
         </div>
@@ -596,16 +620,15 @@ a:hover .arrow { transform: translateX(4px); }
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
               <img src="assets/internal%20systems.png" alt="" class="h-full w-full object-cover">
             </div>
-            <span class="case-scrim absolute inset-0"></span>
           </button>
-          <div id="case-content-is" class="case-content pointer-events-none absolute inset-0 flex flex-col justify-end p-5">
-            <div class="flex flex-wrap gap-2">
-              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Internal tools</span>
-              <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
+          <div id="case-content-is" class="case-bar absolute inset-x-0 bottom-0 flex items-center gap-3 px-5 py-3">
+            <img src="assets/Poalim.png" alt="" class="h-10 w-10 shrink-0 rounded-lg object-cover">
+            <div class="min-w-0">
+              <h3 class="type-title-md text-white truncate">Internal Systems</h3>
+              <span class="type-label-sm block truncate" style="color:var(--color-on-primary-soft)">Bank Hapoalim</span>
             </div>
-            <h3 class="type-title-md mt-3 text-white">Internal Systems</h3>
-            <a href="Internal-Systems/" class="case-cta pointer-events-auto mt-4 inline-flex h-8 w-fit items-center gap-2 rounded-full px-4 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2" style="background:#fff; color:var(--color-button);">
-              View case study
+            <a href="Internal-Systems/" class="case-cta pointer-events-auto ml-auto inline-flex h-8 w-fit shrink-0 items-center gap-2 rounded-full px-4 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2" style="background:#fff; color:var(--color-button);">
+              View
               <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </a>
           </div>
@@ -708,9 +731,7 @@ a:hover .arrow { transform: translateX(4px); }
         <a href="https://linkedin.com/in/avitano" target="_blank" rel="noopener noreferrer" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="border-color:rgba(255,255,255,0.35); color:#fff;">LinkedIn</a>
       </div>
       <div class="mt-10 flex flex-wrap items-center justify-center gap-3 type-body-md" style="color:var(--color-on-primary-soft)">
-        <span>avitano@gmail.com</span>
-        <span>·</span>
-        <span>054-429-6353</span>
+        <span>+972-54-429-6353</span>
       </div>
       <div class="type-label-sm mt-16 border-t pt-6" style="color:var(--color-on-primary-soft); border-color:rgba(255,255,255,0.15); text-transform:none; letter-spacing:normal;">
         Ofir Avitan · 2026
