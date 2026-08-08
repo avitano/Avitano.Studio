@@ -145,6 +145,57 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 }
 .nav-link:hover::after { transform: scaleX(1); }
 
+/* 2026-08-08: bigger "signature" nav variant on the homepage, replaces the
+   logo + 4 tab links with just the name, a scroll-driven phrase in the
+   center (see the IntersectionObserver in the script below), and the same
+   Let's talk CTA. Layered on top of .site-nav rather than replacing any of
+   its rules, so rolling back to the old nav needs zero CSS changes, only
+   swapping the HTML comment block back in (see the NAV section markup).
+   Reuses --color-primary/--color-button, the same dark-surface-plus-white-
+   button pairing already used in the Contact section and case-tile CTAs. */
+.site-nav.site-nav-dark {
+  background: var(--color-primary);
+  border: none;
+  padding: 0.85rem 2rem;
+  gap: 2rem;
+}
+.site-nav-name {
+  font-family: var(--font-brand); font-weight: 700; font-size: 1.05rem;
+  letter-spacing: -0.02em; word-spacing: -0.15em;
+  color: var(--color-on-primary); white-space: nowrap; text-decoration: none;
+}
+.site-nav-name:focus-visible {
+  outline: none; border-radius: 4px;
+  box-shadow: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(255,255,255,0.6);
+}
+.site-nav-phrase {
+  display: none;
+  font-family: var(--font-plain); font-weight: 600; font-size: 0.7rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--color-on-primary-soft); text-align: center; min-width: 200px;
+  transition: opacity 350ms var(--ease-soft);
+}
+@media (min-width: 768px) {
+  .site-nav-phrase { display: inline-block; }
+}
+.site-nav-cta {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff; color: var(--color-button); font-weight: 600;
+  font-size: 0.85rem; padding: 0.6rem 1.35rem; border-radius: 999px;
+  white-space: nowrap; text-decoration: none;
+  transition: box-shadow 300ms var(--ease-soft);
+}
+/* glow reuses .btn-glow-accent's brighter accent-green halo (defined further
+   down, same rule the Contact section and case-tile CTAs use), not the
+   button-toned one .btn-glow uses: a dark-green glow on a white button
+   sitting on this same dark-green nav background just vanishes into it,
+   the accent green is bright enough to actually read. Bug caught 2026-08-08,
+   see class list on the <a> in the NAV markup. */
+.site-nav-cta:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(255,255,255,0.6);
+}
+
 /* thin scroll-progress bar */
 .scroll-progress {
   position: fixed; top: 0; left: 0; height: 3px; width: 0%;
@@ -345,6 +396,13 @@ a:hover .arrow { transform: translateX(4px); }
   <div class="scroll-progress" id="scrollProgress"></div>
 
   <!-- NAV -->
+  <!--
+    ROLLBACK (2026-08-08 nav redesign): this is the previous nav (light glass
+    pill, logo, 4 tab links). To restore it: delete the "site-nav-dark" nav
+    below and uncomment this block instead. No CSS cleanup needed either
+    way, .site-nav's own base rules were never touched, the redesign only
+    adds new classes alongside them (see .site-nav-dark and friends above).
+
   <nav class="site-nav">
     <a href="#top" class="flex items-center gap-2 pe-2">
       <img src="assets/logo-nav.png" alt="Ofir Avitan" class="size-8 object-contain">
@@ -356,6 +414,12 @@ a:hover .arrow { transform: translateX(4px); }
       <a href="#contact" class="nav-link hover:text-default transition-colors">Contact</a>
     </div>
     <a href="#contact" class="inline-flex h-8 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-border-strong px-4 text-sm font-medium text-default btn-glow-nav transition-all duration-150 ease-out max-md:hover:bg-surface-alt active:border-button md:border-0 md:bg-button md:text-on-primary md:shadow-md md:active:bg-button-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Let's talk</a>
+  </nav>
+  -->
+  <nav class="site-nav site-nav-dark">
+    <a href="#" class="site-nav-name">Ofir Avitan</a>
+    <span class="site-nav-phrase" id="navPhrase">Hi, glad you're here</span>
+    <a href="#contact" class="site-nav-cta btn-glow-accent">Let's talk</a>
   </nav>
 
   <!-- HERO -->
@@ -714,6 +778,51 @@ a:hover .arrow { transform: translateX(4px); }
     }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
     document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
     document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
+
+    // nav phrase scrollspy (2026-08-08): swaps the center nav text to match
+    // whichever section is currently crossing the vertical middle of the
+    // viewport. Separate observer from the reveal one above, different job:
+    // that one asks "has this element been seen yet", this one asks "which
+    // section is the visitor in right now". Watches the same 5 sections the
+    // old nav's tab links used to point to. PLACEHOLDER TEXT ONLY, Ofir is
+    // writing the real copy later, swap the navPhrases values below when
+    // that's ready, nothing else needs to change.
+    const navPhraseEl = document.getElementById('navPhrase');
+    if (navPhraseEl) {
+      const navPhrases = {
+        top: 'Hi, glad you\'re here',
+        about: 'This part is about me',
+        work: 'A few things I\'ve shaped',
+        skills: 'What\'s in the toolbox',
+        contact: 'Okay, let\'s talk'
+      };
+      const navSections = Object.keys(navPhrases)
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+      const setNavPhrase = (id) => {
+        const next = navPhrases[id];
+        if (!next || navPhraseEl.textContent === next) return;
+        if (prefersReducedMotion) {
+          navPhraseEl.textContent = next;
+          return;
+        }
+        navPhraseEl.style.opacity = 0;
+        setTimeout(() => {
+          navPhraseEl.textContent = next;
+          navPhraseEl.style.opacity = 1;
+        }, 200);
+      };
+      // threshold 0 + a -45%/-45% rootMargin shrinks the observed viewport
+      // down to a thin band across the vertical center, so a section counts
+      // as "current" once it's crossing the middle of the screen, regardless
+      // of how tall it is, standard scrollspy trick.
+      const navIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setNavPhrase(entry.target.id);
+        });
+      }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
+      navSections.forEach((el) => navIo.observe(el));
+    }
 
     // thin progress bar tracking scroll position
     const progressBar = document.getElementById('scrollProgress');

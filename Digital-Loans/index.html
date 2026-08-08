@@ -137,6 +137,48 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 }
 .nav-link:hover::after { transform: scaleX(1); }
 
+/* 2026-08-08: recolored to match the homepage nav redesign (dark pill, name
+   as text instead of the logo image), but this page keeps its own 4 tab
+   links rather than adopting the homepage's scroll-driven phrase, so only
+   the colors and the logo swap change here, not the structure. */
+.site-nav.site-nav-dark { background: var(--color-primary); border: none; }
+.site-nav-name {
+  font-family: var(--font-brand); font-weight: 700; font-size: 1.05rem;
+  letter-spacing: -0.02em; word-spacing: -0.15em;
+  color: var(--color-on-primary); white-space: nowrap; text-decoration: none;
+}
+.site-nav-dark .nav-link { color: var(--color-on-primary-soft); }
+.site-nav-dark .nav-link:hover { color: var(--color-on-primary); }
+.site-nav-dark .nav-link::after { background: var(--color-accent); }
+.site-nav-cta {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff; color: var(--color-button); font-weight: 600;
+  font-size: 0.85rem; height: 2rem; padding: 0 1.1rem; border-radius: 999px;
+  white-space: nowrap; text-decoration: none;
+}
+.site-nav-cta:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(255,255,255,0.6);
+}
+/* 2026-08-08: same in-page nav treatment trialed on ../Credit-Cards/index.html
+   and approved by Ofir, rolled out here. Tabs point to this page's own
+   sections instead of the homepage, plus a compact icon-only "back to other
+   projects" link (no tooltip, aria-label covers screen readers), plus a
+   scroll-linked "current section" highlight. */
+.site-nav-back {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2rem; height: 2rem; border-radius: 999px; flex-shrink: 0;
+  color: var(--color-on-primary-soft);
+  transition: color 150ms var(--ease-soft), background 150ms var(--ease-soft);
+}
+.site-nav-back:hover { color: var(--color-on-primary); background: rgba(255,255,255,0.1); }
+.site-nav-back:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(255,255,255,0.6);
+}
+.site-nav-dark .nav-link.is-active { color: var(--color-on-primary); }
+.site-nav-dark .nav-link.is-active::after { transform: scaleX(1); }
+
 /* thin scroll-progress bar, same as ../index.html */
 .scroll-progress {
   position: fixed; top: 0; left: 0; height: 3px; width: 0%;
@@ -213,18 +255,19 @@ a:hover .arrow { transform: translateX(4px); }
 
   <div class="scroll-progress" id="scrollProgress"></div>
 
-  <!-- NAV: identical to ../index.html, links point back to the homepage sections -->
-  <nav class="site-nav">
-    <a href="../index.html#top" class="flex items-center gap-2 pe-2">
-      <img src="../assets/logo-nav.png" alt="Ofir Avitan" class="size-8 object-contain">
+  <!-- NAV: 2026-08-08, in-page tabs matching this page's own sections, see the CSS comment above -->
+  <nav class="site-nav site-nav-dark">
+    <a href="../index.html#work" class="site-nav-back" aria-label="Back to work">
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
     </a>
-    <div class="hidden md:flex items-center gap-6 type-label-lg text-secondary">
-      <a href="../index.html#about" class="nav-link hover:text-default transition-colors">About Me</a>
-      <a href="../index.html#work" class="nav-link hover:text-default transition-colors">Work</a>
-      <a href="../index.html#skills" class="nav-link hover:text-default transition-colors">Skills</a>
-      <a href="../index.html#contact" class="nav-link hover:text-default transition-colors">Contact</a>
+    <a href="../#" class="site-nav-name">Ofir Avitan</a>
+    <div class="hidden md:flex items-center gap-6 type-label-lg" id="navTabs">
+      <a href="#top" class="nav-link" data-nav-target="top">Digital Loans</a>
+      <a href="#challenge" class="nav-link" data-nav-target="challenge">Challenge</a>
+      <a href="#strategy" class="nav-link" data-nav-target="strategy">Strategy</a>
+      <a href="#proof" class="nav-link" data-nav-target="proof">Proof</a>
     </div>
-    <a href="../index.html#contact" class="inline-flex h-8 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-border-strong px-4 text-sm font-medium text-default btn-glow-nav transition-all duration-150 ease-out max-md:hover:bg-surface-alt active:border-button md:border-0 md:bg-button md:text-on-primary md:shadow-md md:active:bg-button-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Let's talk</a>
+    <a href="../index.html#contact" class="site-nav-cta btn-glow-accent">Let's talk</a>
   </nav>
 
   <!-- HERO -->
@@ -418,6 +461,30 @@ a:hover .arrow { transform: translateX(4px); }
     }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
     document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
     document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
+
+    // nav tab scrollspy (2026-08-08): highlights whichever tab matches the
+    // section currently crossing the vertical middle of the viewport, same
+    // technique as ../Credit-Cards/index.html.
+    const navTabs = document.querySelectorAll('#navTabs .nav-link');
+    if (navTabs.length) {
+      const navTabMap = {};
+      navTabs.forEach((a) => { navTabMap[a.dataset.navTarget] = a; });
+      const setActiveTab = (id) => {
+        const next = navTabMap[id];
+        if (!next || next.classList.contains('is-active')) return;
+        navTabs.forEach((a) => a.classList.remove('is-active'));
+        next.classList.add('is-active');
+      };
+      const tabSections = Object.keys(navTabMap)
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+      const tabIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveTab(entry.target.id);
+        });
+      }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
+      tabSections.forEach((el) => tabIo.observe(el));
+    }
 
     // thin progress bar tracking scroll position, same as ../index.html
     const progressBar = document.getElementById('scrollProgress');
