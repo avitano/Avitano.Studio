@@ -55,6 +55,8 @@
   --color-primary: var(--color-green-950);
   --color-primary-hover: var(--color-green-900);
   --color-primary-active: var(--color-green-800);
+  --color-button: var(--color-green-900);
+  --color-button-active: var(--color-green-800);
   --color-accent: var(--color-green-500);
   --color-accent-contrast: var(--color-gold-700);
 
@@ -109,7 +111,7 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 .type-body-md { font-family: var(--font-plain); font-weight: 400; font-size: 0.875rem; line-height: 1.43; }
 .type-label-lg { font-family: var(--font-plain); font-weight: 500; font-size: 0.875rem; line-height: 1.43; }
 .type-label-sm { font-family: var(--font-plain); font-weight: 500; font-size: 0.75rem; line-height: 1.33; letter-spacing: 0.1em; text-transform: uppercase; }
-.brand-dot { color: var(--color-primary); }
+.brand-dot { color: var(--color-button); }
 
 /* sticky floating pill nav, same recipe as ../index.html (no on-load entrance animation here,
    this is a secondary page reached mid-scroll, not the very first thing a visitor sees) */
@@ -130,7 +132,7 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 .nav-link { position: relative; }
 .nav-link::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px;
-  background: var(--color-primary); transform: scaleX(0); transform-origin: left;
+  background: var(--color-button); transform: scaleX(0); transform-origin: left;
   transition: transform 220ms var(--ease-out);
 }
 .nav-link:hover::after { transform: scaleX(1); }
@@ -138,7 +140,7 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 /* thin scroll-progress bar, same as ../index.html */
 .scroll-progress {
   position: fixed; top: 0; left: 0; height: 3px; width: 0%;
-  background: var(--color-primary); z-index: 60; transition: width 80ms linear;
+  background: var(--color-button); z-index: 60; transition: width 80ms linear;
 }
 
 /* scroll reveal, identical mechanics to ../index.html */
@@ -150,6 +152,19 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 /* arrow nudges right on hover, same as ../index.html */
 .arrow { display: inline-block; transition: transform 200ms var(--ease-out); }
 a:hover .arrow { transform: translateX(4px); }
+
+/* button hover glow (2026-08-08), same as ../index.html: replaces the old flat
+   color-swap-on-hover with a soft colored halo. .btn-glow-accent is for buttons on an
+   already-dark backdrop (Contact section), where a --color-button-toned glow would
+   nearly vanish, so it borrows the brighter --color-accent green instead. .btn-glow-nav
+   is the nav's "Let's talk" pill, filled/glowing only at md and up (mobile stays the
+   plain outline style). */
+.btn-glow, .btn-glow-nav, .btn-glow-accent { transition: box-shadow 300ms var(--ease-soft); }
+.btn-glow:hover { box-shadow: var(--shadow-lg), 0 0 20px 4px rgb(6 78 59 / 0.35); }
+.btn-glow-accent:hover { box-shadow: var(--shadow-lg), 0 0 20px 4px rgb(16 185 129 / 0.45); }
+@media (min-width: 768px) {
+  .btn-glow-nav:hover { box-shadow: var(--shadow-lg), 0 0 20px 4px rgb(6 78 59 / 0.35); }
+}
 
 /* hero on-load entrance (2026-08-08): ../index.html's hero has always had this fadeUp
    treatment, this page's hero never did, it just rendered static, so it read as "no
@@ -209,7 +224,7 @@ a:hover .arrow { transform: translateX(4px); }
       <a href="../index.html#skills" class="nav-link hover:text-default transition-colors">Skills</a>
       <a href="../index.html#contact" class="nav-link hover:text-default transition-colors">Contact</a>
     </div>
-    <a href="../index.html#contact" class="inline-flex h-8 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-border-strong px-4 text-sm font-medium text-default transition-all duration-150 ease-out hover:bg-surface-alt active:border-primary md:border-0 md:bg-primary md:text-on-primary md:shadow-md md:hover:bg-primary-hover md:hover:shadow-lg md:active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Let's talk</a>
+    <a href="../index.html#contact" class="inline-flex h-8 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-border-strong px-4 text-sm font-medium text-default btn-glow-nav transition-all duration-150 ease-out max-md:hover:bg-surface-alt active:border-button md:border-0 md:bg-button md:text-on-primary md:shadow-md md:active:bg-button-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Let's talk</a>
   </nav>
 
   <!-- HERO -->
@@ -340,7 +355,7 @@ a:hover .arrow { transform: translateX(4px); }
       <h2 class="reveal type-display-sm mt-4">Let's build the future<span style="color:var(--color-accent)">.</span></h2>
       <p class="reveal type-body-lg mx-auto mt-4 max-w-lg" style="color:var(--color-on-primary-soft)">Open to design leadership roles, partnerships, and ambitious product bets.</p>
       <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-3">
-        <a href="mailto:avitano@gmail.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-sm font-medium shadow-md transition-all duration-150 ease-out hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-primary);">Email me</a>
+        <a href="mailto:avitano@gmail.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-button);">Email me</a>
         <a href="https://linkedin.com/in/avitano" target="_blank" rel="noopener noreferrer" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="border-color:rgba(255,255,255,0.35); color:#fff;">LinkedIn</a>
       </div>
       <div class="mt-10 flex flex-wrap items-center justify-center gap-3 type-body-md" style="color:var(--color-on-primary-soft)">
