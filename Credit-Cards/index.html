@@ -291,68 +291,92 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
       </div>
 
-      <div class="enter media-placeholder mt-12 h-40 w-full rounded-xl sm:h-48 lg:mt-16 lg:h-56" style="animation-delay:540ms">
-        <span class="type-label-sm text-muted">Coming soon</span>
+      <div class="enter mt-12 w-full overflow-hidden rounded-xl lg:mt-16" style="animation-delay:540ms">
+        <video id="cardsHeroVideo" class="block h-auto w-full" src="cards.mp4" muted playsinline preload="auto"></video>
       </div>
     </div>
   </header>
 
   <!-- CHALLENGE -->
+  <!-- 2026-08-09: text-left / single-phone-right split, matching the same pattern used for
+       Digital Loans in the July deck (credit-cards-challenge.html: text = cols 1-6, phone
+       mock = cols 7-12), reusing the site's existing 12-col grid utility (see ../index.html
+       About section) rather than a new layout. Second legacy screen (old_credit_cards2.mp4,
+       the compliance/rates breakdown) deliberately held back, it maps to Strategy's
+       "Friction-Free Compliance" point once there's an "after" to pair it with. -->
   <section id="challenge" class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl border-t border-border-default pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
-      <h2 class="reveal type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
-      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Leadership asked for higher conversion in the credit card application flow. The honest diagnosis came first: the bank's three card products, Visa Gold and Mastercard Gold among them, were functionally identical, just different brand skins on the same underlying product, while competitors offered real differentiation through loyalty perks and cashback. No amount of interface polish fixes a non-differentiated product, and that reframe shaped everything that followed.</p>
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+        <div class="lg:col-span-6">
+          <h2 class="reveal type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
+          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Leadership asked for higher conversion in the credit card application flow. The honest diagnosis came first: the bank's three card products, Visa Gold and Mastercard Gold among them, were functionally identical, just different brand skins on the same underlying product, while competitors offered real differentiation through loyalty perks and cashback. No amount of interface polish fixes a non-differentiated product, and that reframe shaped everything that followed.</p>
 
-      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
-          <h3 class="type-headline-sm mt-2">The Commodity Trap</h3>
-          <p class="type-body-md mt-2 text-secondary">Cards were treated as generic financial utilities, forcing users to compare raw numbers and dry terms instead of emotional value.</p>
+          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+              <h3 class="type-headline-sm mt-2">The Commodity Trap</h3>
+              <p class="type-body-md mt-2 text-secondary">Cards were treated as generic financial utilities, forcing users to compare raw numbers and dry terms instead of emotional value.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+              <h3 class="type-headline-sm mt-2">Compliance vs. Experience</h3>
+              <p class="type-body-md mt-2 text-secondary">Heavy regulatory disclosures overloaded the interface with dense, intimidating text blocks, creating heavy cognitive friction.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+              <h3 class="type-headline-sm mt-2">The Aesthetic Deficit</h3>
+              <p class="type-body-md mt-2 text-secondary">The legacy interface lacked visual storytelling, failing to leverage the premium lifestyle appeal of high-tier cards, directly hurting conversion.</p>
+            </div>
+          </div>
         </div>
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
-          <h3 class="type-headline-sm mt-2">Compliance vs. Experience</h3>
-          <p class="type-body-md mt-2 text-secondary">Heavy regulatory disclosures overloaded the interface with dense, intimidating text blocks, creating heavy cognitive friction.</p>
-        </div>
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
-          <h3 class="type-headline-sm mt-2">The Aesthetic Deficit</h3>
-          <p class="type-body-md mt-2 text-secondary">The legacy interface lacked visual storytelling, failing to leverage the premium lifestyle appeal of high-tier cards, directly hurting conversion.</p>
-        </div>
-      </div>
 
-      <div class="media-placeholder reveal mt-12 h-40 w-full rounded-xl sm:h-48 lg:h-56">
-        <span class="type-label-sm text-muted">Coming soon</span>
+        <div class="lg:col-span-6">
+          <div id="challengeMedia" class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
+            <video class="h-auto w-full" src="old_credit_cards1.mp4" muted loop playsinline preload="auto"></video>
+            <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">before</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- STRATEGY -->
+  <!-- 2026-08-09: phone-left / text-right, mirrored from Challenge's text-left/phone-right
+       so the page alternates as you scroll, same 12-col grid utility, not a new pattern.
+       new_credit_cards.mp4 is the redesigned "after" screen (personalized offer, benefits,
+       simplified pricing), pairs with the "before" phone in Challenge. -->
   <section id="strategy" class="bg-surface-alt px-4 lg:px-20">
     <div class="mx-auto max-w-7xl py-20 lg:py-28">
-      <h2 class="reveal type-headline-md max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
-      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Design can't fix a business-strategy gap by itself, but it can raise the ceiling within one. He wouldn't commit to a conversion target unless the business side changed the product too, so the strategy focused on what was actually in reach: making the experience feel different even where the products weren't, and getting compliance out of the user's way.</p>
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+        <div class="order-2 lg:order-1 lg:col-span-6">
+          <div id="strategyMedia" class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
+            <video class="h-auto w-full" src="new_credit_cards.mp4" muted loop playsinline preload="auto"></video>
+            <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">after</span>
+          </div>
+        </div>
 
-      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
-          <h3 class="type-headline-sm mt-2">Visual-First Framework</h3>
-          <p class="type-body-md mt-2 text-secondary">When core banking terms are identical, immersive visual identity becomes the primary decision-driver.</p>
-        </div>
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
-          <h3 class="type-headline-sm mt-2">Lifestyle Immersion</h3>
-          <p class="type-body-md mt-2 text-secondary">Wrapping standard cards in rich contextual worlds, aviation, luxury travel, to evoke immediate emotional alignment.</p>
-        </div>
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
-          <h3 class="type-headline-sm mt-2">Friction-Free Compliance</h3>
-          <p class="type-body-md mt-2 text-secondary">De-risked the regulatory overhead by moving dense legal disclaimers into progressive disclosure, keeping focus on the experience.</p>
-        </div>
-      </div>
+        <div class="order-1 lg:order-2 lg:col-span-6">
+          <h2 class="reveal type-headline-md max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
+          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Design can't fix a business-strategy gap by itself, but it can raise the ceiling within one. He wouldn't commit to a conversion target unless the business side changed the product too, so the strategy focused on what was actually in reach: making the experience feel different even where the products weren't, and getting compliance out of the user's way.</p>
 
-      <div class="media-placeholder reveal mt-12 h-40 w-full rounded-xl sm:h-48 lg:h-56">
-        <span class="type-label-sm text-muted">Coming soon</span>
+          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+              <h3 class="type-headline-sm mt-2">Visual-First Framework</h3>
+              <p class="type-body-md mt-2 text-secondary">When core banking terms are identical, immersive visual identity becomes the primary decision-driver.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+              <h3 class="type-headline-sm mt-2">Lifestyle Immersion</h3>
+              <p class="type-body-md mt-2 text-secondary">Wrapping standard cards in rich contextual worlds, aviation, luxury travel, to evoke immediate emotional alignment.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+              <h3 class="type-headline-sm mt-2">Friction-Free Compliance</h3>
+              <p class="type-body-md mt-2 text-secondary">De-risked the regulatory overhead by moving dense legal disclaimers into progressive disclosure, keeping focus on the experience.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -384,10 +408,6 @@ a:hover .arrow { transform: translateX(4px); }
           <h3 class="type-headline-sm mt-2">De-Risked Compliance</h3>
           <p class="type-body-md mt-2 text-secondary">Progressive disclosure satisfies legal requirements while maintaining high user engagement and flow velocity.</p>
         </div>
-      </div>
-
-      <div class="media-placeholder reveal mt-12 h-40 w-full rounded-xl sm:h-48 lg:h-56">
-        <span class="type-label-sm text-muted">Coming soon</span>
       </div>
     </div>
   </section>
@@ -461,6 +481,47 @@ a:hover .arrow { transform: translateX(4px); }
     }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
     document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
     document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
+
+    // hero video: the bottom-to-top card reveal is baked into the mp4 itself
+    // (not CSS-driven), so it's held paused on its first frame and started
+    // via JS after a short delay rather than autoplaying immediately, so it
+    // doesn't race the hero's own .enter fade-in and plays once, not looped.
+    const cardsHeroVideo = document.getElementById('cardsHeroVideo');
+    if (cardsHeroVideo && !prefersReducedMotion) {
+      setTimeout(() => cardsHeroVideo.play(), 1000);
+    }
+
+    // challenge section: single "before" phone recording (old_credit_cards1.mp4), sits
+    // well below the fold, so unlike the hero video a fixed page-load delay doesn't make
+    // sense, start it (and let it loop) once it actually scrolls into view instead.
+    const challengeMedia = document.getElementById('challengeMedia');
+    if (challengeMedia && !prefersReducedMotion) {
+      const challengeVideos = challengeMedia.querySelectorAll('video');
+      const challengeIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            challengeIo.unobserve(entry.target);
+            challengeVideos.forEach((v) => v.play());
+          }
+        });
+      }, { threshold: 0.3 });
+      challengeIo.observe(challengeMedia);
+    }
+
+    // strategy section: same play-once-in-view treatment as challengeMedia above.
+    const strategyMedia = document.getElementById('strategyMedia');
+    if (strategyMedia && !prefersReducedMotion) {
+      const strategyVideos = strategyMedia.querySelectorAll('video');
+      const strategyIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            strategyIo.unobserve(entry.target);
+            strategyVideos.forEach((v) => v.play());
+          }
+        });
+      }, { threshold: 0.3 });
+      strategyIo.observe(strategyMedia);
+    }
 
     // nav tab scrollspy (2026-08-08 trial): highlights whichever tab matches
     // the section currently crossing the vertical middle of the viewport.
