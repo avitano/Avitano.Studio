@@ -253,14 +253,55 @@ a:hover .arrow { transform: translateX(4px); }
   background: var(--color-neutral-100); border: 1px solid var(--color-border-default);
 }
 
+/* B24: pull-past-top sky strip, rolled out from ../index.html (built there
+   2026-08-10, confirmed working) to every page for consistency, since
+   someone landing directly on a case study never sees a homepage-only
+   easter egg. Same CSS/JS on all 4 pages, no shared component system on
+   this site, see the skill notes on ../index.html for the full mechanics
+   writeup. */
+.sky-strip {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--sky-strip-height, 10rem);
+  background: linear-gradient(180deg, #05070d 0%, #0b1220 62%, #131d33 100%);
+  overflow: hidden; z-index: 0; pointer-events: none;
+}
+.sky-strip__star {
+  position: absolute; border-radius: 999px; background: #fff;
+  animation: skyTwinkle var(--star-duration, 3.2s) ease-in-out infinite;
+  animation-delay: var(--star-delay, 0s);
+}
+@keyframes skyTwinkle {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: var(--star-max, 0.85); }
+}
+.sky-strip__slogan {
+  position: absolute; left: 50%; top: 3.75rem; transform: translateX(-50%);
+  font-family: var(--font-plain); font-weight: 500; font-size: 0.8rem;
+  letter-spacing: 0.05em; color: rgba(255,255,255,0.6); white-space: nowrap;
+}
+.page-shift {
+  position: relative; background: var(--color-surface); z-index: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .enter { animation: none; opacity: 1; filter: none; }
   .reveal, .reveal-stagger > * { transition: none; opacity: 1; transform: none; }
   .blob-parallax { transform: none !important; }
+  .sky-strip__star { animation: none; opacity: 0.4; }
 }
 </style>
 </head>
 <body class="antialiased">
+
+  <!-- B24: hidden pull-past-top sky strip, sits behind everything below.
+       See the CSS comment above .sky-strip and the script block near the
+       end of body for the mechanics. -->
+  <div class="sky-strip" id="skyStrip" aria-hidden="true">
+    <div class="sky-strip__slogan">not even the sky is the limit :)</div>
+  </div>
+
+  <!-- Everything else lives inside .page-shift so it can translate as one
+       sheet during the pull gesture. Closed right before </body>. -->
+  <div class="page-shift" id="pageShift">
 
   <div class="scroll-progress" id="scrollProgress"></div>
 
@@ -486,6 +527,106 @@ a:hover .arrow { transform: translateX(4px); }
       }, { passive: true });
       applyParallax();
     }
+
+    // B24: pull-past-top sky strip, same mechanics as ../index.html
+    if (!prefersReducedMotion) {
+      const pageShift = document.getElementById('pageShift');
+      const skyStrip = document.getElementById('skyStrip');
+
+      const STAR_COUNT = 46;
+      for (let i = 0; i < STAR_COUNT; i++) {
+        const star = document.createElement('div');
+        star.className = 'sky-strip__star';
+        const size = Math.random() < 0.82 ? 1 : 2;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = (Math.random() * 100) + '%';
+        star.style.top = (8 + Math.random() * 68) + '%';
+        star.style.setProperty('--star-duration', (2.2 + Math.random() * 2.6) + 's');
+        star.style.setProperty('--star-delay', (Math.random() * 4) + 's');
+        star.style.setProperty('--star-max', (0.55 + Math.random() * 0.4).toFixed(2));
+        skyStrip.appendChild(star);
+      }
+
+      const MAX_PULL = 150;
+      const OPEN_THRESHOLD = 0.8 * MAX_PULL;
+      const HOLD_MS = 1700;
+
+      let state = 'idle';
+      let startY = 0;
+      let holdTimer = null;
+
+      function resistance(raw) {
+        if (raw <= 0) return 0;
+        return MAX_PULL * (1 - Math.exp(-raw / MAX_PULL));
+      }
+
+      function setPull(px, animate) {
+        pageShift.style.transition = animate ? 'transform 480ms var(--ease-soft)' : 'none';
+        pageShift.style.transform = `translateY(${px}px)`;
+      }
+
+      function close() {
+        clearTimeout(holdTimer);
+        holdTimer = null;
+        state = 'idle';
+        setPull(0, true);
+        setTimeout(() => {
+          if (state === 'idle') {
+            pageShift.style.transition = 'none';
+            pageShift.style.transform = 'none';
+          }
+        }, 500);
+      }
+
+      function lockOpen(px) {
+        state = 'locked';
+        setPull(px, true);
+        holdTimer = setTimeout(close, HOLD_MS);
+      }
+
+      document.addEventListener('touchstart', (e) => {
+        if (window.scrollY > 0 || state === 'locked') return;
+        startY = e.touches[0].clientY;
+        state = 'pulling';
+      }, { passive: true });
+
+      document.addEventListener('touchmove', (e) => {
+        if (state !== 'pulling' || window.scrollY > 0) return;
+        const raw = e.touches[0].clientY - startY;
+        if (raw <= 0) return;
+        e.preventDefault();
+        const pull = resistance(raw);
+        if (pull >= OPEN_THRESHOLD) { lockOpen(pull); return; }
+        setPull(pull, false);
+      }, { passive: false });
+
+      document.addEventListener('touchend', () => {
+        if (state === 'pulling') close();
+      }, { passive: true });
+
+      let wheelPull = 0;
+      let wheelReleaseTimer = null;
+      document.addEventListener('wheel', (e) => {
+        if (state === 'locked') return;
+        if (window.scrollY > 0 || e.deltaY >= 0) {
+          if (state === 'pulling') { wheelPull = 0; close(); }
+          return;
+        }
+        e.preventDefault();
+        state = 'pulling';
+        wheelPull += -e.deltaY * 0.6;
+        const pull = resistance(wheelPull);
+        if (pull >= OPEN_THRESHOLD) { lockOpen(pull); return; }
+        setPull(pull, false);
+        clearTimeout(wheelReleaseTimer);
+        wheelReleaseTimer = setTimeout(() => {
+          if (state === 'pulling') { wheelPull = 0; close(); }
+        }, 160);
+      }, { passive: false });
+    }
   </script>
+
+  </div><!-- /.page-shift -->
 </body>
 </html>
