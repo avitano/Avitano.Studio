@@ -24,6 +24,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<!-- 2026-08-10: lottie-web, first use on the site, renders the hero conveyor's 6 loader
+     animations (source: Bank Hapoalim digital-loans After Effects export, see
+     Digital-Loans/*.json). -->
+<script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
 <style type="text/tailwindcss">
 @import "tailwindcss";
 
@@ -281,11 +285,163 @@ a:hover .arrow { transform: translateX(4px); }
   position: relative; background: var(--color-surface); z-index: 1;
 }
 
+/* 2026-08-10c: hero strip, sized and spaced from Ofir's own mockup (his composited reference
+   screenshot, measured against the nav pill's known 3rem height to convert his screenshot's
+   px to real rem: strip height ~13.5rem at desktop, icons ~82% of strip height, bottom-anchored
+   with a small margin (not flush), gap ~58% of strip height between icons). Colors sampled from
+   his app screenshot (sky #eef4fd, ground #fdf8f6, ~60/40 split). No boxes/cards: icons sit
+   directly on the strip at their natural portrait ratio (780x1630, source Lottie canvas), not
+   cropped. Clouds are hand-built CSS blobs, not the עננים.json export: that file is also
+   portrait and cropping/scaling it to a short wide strip warped badly. Icons fit comfortably
+   within the strip at these proportions (measured top margin ~12-14%), so no need for the
+   overflow-above treatment tried in the previous pass. */
+/* 2026-08-10f: reverted the overflow-above treatment, Ofir's call: nothing should exit the
+   frame on any side, top included. Plain clipped box again. Icons are still sized taller than
+   the strip (per his "increase 50%, then 10% more" instructions), so their tops now simply get
+   cropped by this box, same as any oversized image inside a fixed frame. */
+.hero-strip {
+  position: relative;
+  height: 9rem;
+  border-radius: var(--radius-xl, 1.75rem);
+  overflow: hidden;
+  background: linear-gradient(to bottom, #eef4fd 0%, #eef4fd 60%, #fdf8f6 60%, #fdf8f6 100%);
+}
+@media (min-width: 640px) { .hero-strip { height: 11rem; } }
+@media (min-width: 1024px) { .hero-strip { height: 13.5rem; } }
+
+/* two altitudes per Ofir's reference: a bigger/lower cloud track close to the ground line,
+   a smaller/higher one nearer the top edge. Lives inside .hero-strip__bg so it gets
+   clipped/rounded with the background. */
+.hero-strip__clouds { position: absolute; inset: 0; height: 60%; overflow: hidden; }
+.hero-strip__clouds-track {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  width: max-content;
+  animation: cloudDrift 80s linear infinite;
+}
+.hero-strip__clouds-track--back { bottom: 13%; animation-duration: 110s; }
+.hero-strip__clouds-track--front { top: 26%; animation-duration: 70s; animation-direction: reverse; }
+/* cloud-sprite.png: cropped straight out of Ofir's real loader screenshot (the actual cloud
+   graphic, not a CSS approximation), background keyed to transparent, source ratio 300:134. */
+.cloud-shape { flex: none; height: auto; display: block; }
+.hero-strip__clouds-track--back .cloud-shape { width: 2.75rem; opacity: 0.55; }
+.hero-strip__clouds-track--front .cloud-shape { width: 5rem; opacity: 0.9; }
+
+/* 2026-08-10o: reverted to the track-level drift as the main motion (2026-08-10n's fully
+   per-cloud independent animation read as "everyone slowed down" to Ofir, the ±2.5rem wobble
+   over similar durations was a much smaller distance per second than the old full-row -50%
+   sweep, even though the numbers "looked" comparable). Per Ofir: most clouds should look
+   exactly like the original shared speed above, only a couple should drift very slightly
+   faster/slower than the pack. Solved by layering a *small* extra animation on just a few
+   .cloud-drift wrappers, transforms compose, so the track's own translateX still carries
+   every cloud at the original pace, and the couple of wobbling ones just gain/lose a hair
+   relative to their neighbors instead of getting their own independent full-speed drift. */
+.cloud-drift { flex: none; display: block; }
+.cloud-drift:nth-child(8n+1) .cloud-shape { transform: translateY(0.3rem); }
+.cloud-drift:nth-child(8n+2) .cloud-shape { transform: scale(1.35) translateY(-0.4rem); }
+.cloud-drift:nth-child(8n+3) { margin-left: -0.75rem; }
+.cloud-drift:nth-child(8n+3) .cloud-shape { transform: translateY(0.2rem); }
+.cloud-drift:nth-child(8n+4) .cloud-shape { transform: scale(0.68) translateY(-0.3rem); }
+.cloud-drift:nth-child(8n+5) .cloud-shape { transform: translateY(-0.2rem); }
+.cloud-drift:nth-child(8n+6) { margin-left: -1.25rem; }
+.cloud-drift:nth-child(8n+6) .cloud-shape { transform: scale(1.15) translateY(0.4rem); }
+.cloud-drift:nth-child(8n+7) .cloud-shape { transform: translateY(-0.3rem); }
+.cloud-drift:nth-child(8n) .cloud-shape { transform: translateY(0.25rem); }
+
+/* only these three of the sixteen per track get the extra wobble, "some", not "most" */
+.cloud-drift:nth-child(8n+3), .cloud-drift:nth-child(8n+7) { animation: cloudWobble 58s ease-in-out infinite; }
+.cloud-drift:nth-child(8n+6) { animation: cloudWobble 74s ease-in-out infinite reverse; }
+@keyframes cloudWobble {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-0.8rem); }
+}
+
+@keyframes cloudDrift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.conveyor-track {
+  position: absolute;
+  left: 0; bottom: 0;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: 2.5rem;
+  width: max-content;
+  animation: conveyorScroll 34s linear infinite;
+  animation-delay: 2.1s;
+}
+@media (min-width: 640px) { .conveyor-track { gap: 3rem; } }
+@media (min-width: 1024px) { .conveyor-track { gap: 3.5rem; } }
+/* fixed rem (not percentage): a flex item's percentage height didn't reliably resolve against
+   the container here. Sized 50% bigger than the previous pass per Ofir's direct call, and
+   anchored lower (smaller margin-bottom) so they sit closer to the true bottom edge. */
+.conveyor-card {
+  flex: none;
+  height: 13.42rem;
+  aspect-ratio: 780 / 1630;
+  margin-bottom: -0.61rem;
+  overflow: hidden;
+}
+@media (min-width: 640px) { .conveyor-card { height: 16.34rem; margin-bottom: -0.7425rem; } }
+@media (min-width: 1024px) { .conveyor-card { height: 19.97rem; margin-bottom: -0.9075rem; } }
+/* the "finish" exports have a taller native canvas (780x1724) than the "loader" ones
+   (780x1630), forcing them into the loader ratio squeezed/mis-anchored their content toward
+   the top instead of sitting bottom-anchored like every other card. Give them their own ratio
+   so each family scales correctly; height/margin-bottom (the bottom anchor line) stay shared. */
+.conveyor-card[data-lottie$="-finish.json"] { aspect-ratio: 780 / 1724; }
+/* belt-and-suspenders: force the lottie-injected svg to actually fill its container instead of
+   trusting whatever inline width/height it sets on its own */
+.conveyor-card svg { display: block; width: 100% !important; height: 100% !important; }
+/* fixing the aspect ratio alone didn't fix "stuck to top": checked the actual source files,
+   the finish characters are drawn centered in their own canvas (~50% down) while the loader
+   characters are drawn low (~72% down), a real ~22% difference in the source art itself, not
+   a scaling bug. Shifting the finish svg down by that same amount and relying on the card's
+   own overflow:hidden (added above) to crop the resulting excess compensates for it. */
+/* finish icons also read smaller than the loaders, per Ofir: kept on the svg (not the card)
+   since the card carries the .land entrance animation, whose held end-state transform silently
+   wins over any plain (non-!important) rule on that same element, animations outrank normal
+   author rules in the cascade regardless of specificity. scale(1.5) confirmed good by Ofir
+   2026-08-10, kept as the new baseline (was 1.177 before that comparison test). Tried splitting
+   this into 6 per-file rules for DevTools tuning, Ofir saw it break visually, reverted back to
+   one shared rule, don't reintroduce the split without checking why first. */
+.conveyor-card[data-lottie$="-finish.json"] svg { transform: translateY(27%) scale(1.5) !important; }
+/* car and loan-request raised 2 points (27% -> 25%), rest stay on the shared rule above. */
+.conveyor-card[data-lottie="car-finish.json"] svg { transform: translateY(25%) scale(1.5) !important; }
+.conveyor-card[data-lottie="loan-request-finish.json"] svg { transform: translateY(25%) scale(1.5) !important; }
+
+/* loader per-file nudges from Ofir's list: on the svg (not the card) for the same .land
+   animation-precedence reason as the finish overrides above. debt-coverage-loader not listed,
+   no change. */
+.conveyor-card[data-lottie="car-loader.json"] svg { transform: translateY(1%) !important; }
+.conveyor-card[data-lottie="loan-request-loader.json"] svg { transform: translateY(3%) !important; }
+.conveyor-card[data-lottie="medical-loader.json"] svg { transform: translateY(3%) !important; }
+.conveyor-card[data-lottie="studies-loader.json"] svg { transform: translateY(1%) !important; }
+.conveyor-card[data-lottie="vacation-loader.json"] svg { transform: translateY(1%) scale(1.05) !important; }
+
+.conveyor-card.land {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: fadeUp 700ms var(--ease-soft) both;
+}
+@keyframes conveyorScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .enter { animation: none; opacity: 1; filter: none; }
   .reveal, .reveal-stagger > * { transition: none; opacity: 1; transform: none; }
   .blob-parallax { transform: none !important; }
   .sky-strip__star { animation: none; opacity: 0.4; }
+  .conveyor-track { animation: none; }
+  .conveyor-card.land { animation: none; opacity: 1; transform: none; }
+  .hero-strip__clouds-track { animation: none; }
+  .cloud-drift { animation: none; }
 }
 </style>
 </head>
@@ -337,43 +493,125 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
       </div>
 
-      <div class="enter media-placeholder mt-12 h-40 w-full rounded-xl sm:h-48 lg:mt-16 lg:h-56" style="animation-delay:540ms">
-        <span class="type-label-sm text-muted">Coming soon</span>
+      <!-- 2026-08-10: hero strip. Sky/ground two-tone background matches the app's own loader
+           screens (colors sampled from Ofir's reference screenshot), CSS cloud blobs drift
+           slowly in the sky band, and 12 animations (each product's "loader" + "finish" state,
+           see Digital-Loans/*-loader.json and *-finish.json) sit on the strip at their natural
+           portrait ratio, bottom-anchored, no card/border. Icon track A carries the staggered
+           "landing" entrance, track B is an unanimated duplicate so the sideways loop wraps
+           seamlessly, both fed the same 12 files. Added 2026-08-10j: the original 6 loaders
+           alone read as repetitive on a loop this long, per Ofir. -->
+      <div class="enter hero-strip mt-12 w-full lg:mt-16" style="animation-delay:540ms">
+        <div class="hero-strip__clouds" aria-hidden="true">
+          <div class="hero-strip__clouds-track hero-strip__clouds-track--back">
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+          </div>
+          <div class="hero-strip__clouds-track hero-strip__clouds-track--front">
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+          </div>
+        </div>
+        <div class="conveyor-track">
+          <div class="conveyor-card land" data-lottie="car-loader.json" style="animation-delay:1.5s"></div>
+          <div class="conveyor-card land" data-lottie="car-finish.json" style="animation-delay:1.6s"></div>
+          <div class="conveyor-card land" data-lottie="debt-coverage-loader.json" style="animation-delay:1.7s"></div>
+          <div class="conveyor-card land" data-lottie="debt-coverage-finish.json" style="animation-delay:1.8s"></div>
+          <div class="conveyor-card land" data-lottie="loan-request-loader.json" style="animation-delay:1.9s"></div>
+          <div class="conveyor-card land" data-lottie="loan-request-finish.json" style="animation-delay:2.0s"></div>
+          <div class="conveyor-card land" data-lottie="medical-loader.json" style="animation-delay:2.1s"></div>
+          <div class="conveyor-card land" data-lottie="medical-finish.json" style="animation-delay:2.2s"></div>
+          <div class="conveyor-card land" data-lottie="studies-loader.json" style="animation-delay:2.3s"></div>
+          <div class="conveyor-card land" data-lottie="studies-finish.json" style="animation-delay:2.4s"></div>
+          <div class="conveyor-card land" data-lottie="vacation-loader.json" style="animation-delay:2.5s"></div>
+          <div class="conveyor-card land" data-lottie="vacation-finish.json" style="animation-delay:2.6s"></div>
+          <div class="conveyor-card" data-lottie="car-loader.json"></div>
+          <div class="conveyor-card" data-lottie="car-finish.json"></div>
+          <div class="conveyor-card" data-lottie="debt-coverage-loader.json"></div>
+          <div class="conveyor-card" data-lottie="debt-coverage-finish.json"></div>
+          <div class="conveyor-card" data-lottie="loan-request-loader.json"></div>
+          <div class="conveyor-card" data-lottie="loan-request-finish.json"></div>
+          <div class="conveyor-card" data-lottie="medical-loader.json"></div>
+          <div class="conveyor-card" data-lottie="medical-finish.json"></div>
+          <div class="conveyor-card" data-lottie="studies-loader.json"></div>
+          <div class="conveyor-card" data-lottie="studies-finish.json"></div>
+          <div class="conveyor-card" data-lottie="vacation-loader.json"></div>
+          <div class="conveyor-card" data-lottie="vacation-finish.json"></div>
+        </div>
       </div>
     </div>
   </header>
 
   <!-- CHALLENGE -->
+  <!-- 2026-08-10: text-left / single-phone-right split, old_loans.mp4 is the legacy "before"
+       lobby screen recording. Same 12-col grid utility as Credit Cards' challenge section
+       (../Credit-Cards/index.html), not a new pattern. Numbered points drop to a single column
+       since the text side is narrower now. -->
   <section id="challenge" class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl border-t border-border-default pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
-      <h2 class="reveal type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
-      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The digital loans experience wasn't one flow, it was four. A new loan request, a refinance, a car loan, and a universal loan open to any customer, each with its own dependencies, backend models, and layer of business and regulatory rules. All of it surfaced through the same legacy lobby: one long scroll of 15+ raw options with no hierarchy.</p>
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+        <div class="lg:col-span-6">
+          <h2 class="reveal type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
+          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The digital loans experience wasn't one flow, it was four. A new loan request, a refinance, a car loan, and a universal loan open to any customer, each with its own dependencies, backend models, and layer of business and regulatory rules. All of it surfaced through the same legacy lobby: one long scroll of 15+ raw options with no hierarchy.</p>
 
-      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2">
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
-          <h3 class="type-headline-sm mt-2">Multi-Platform Friction</h3>
-          <p class="type-body-md mt-2 text-secondary">Built around internal banking structures, not user intent, driving high drop-offs.</p>
+          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+              <h3 class="type-headline-sm mt-2">Multi-Platform Friction</h3>
+              <p class="type-body-md mt-2 text-secondary">Built around internal banking structures, not user intent, driving high drop-offs.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+              <h3 class="type-headline-sm mt-2">Cognitive Overload</h3>
+              <p class="type-body-md mt-2 text-secondary">15+ raw, confusing options at once, with no hierarchy or differentiation.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+              <h3 class="type-headline-sm mt-2">The Core Dilemma</h3>
+              <p class="type-body-md mt-2 text-secondary">How many offers to show, in what order, and which metadata truly drives the decision.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">04</span>
+              <h3 class="type-headline-sm mt-2">The Transactional Gap</h3>
+              <p class="type-body-md mt-2 text-secondary">Dry, legalistic, intimidating: disconnected from the user's real milestone.</p>
+            </div>
+          </div>
         </div>
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
-          <h3 class="type-headline-sm mt-2">Cognitive Overload</h3>
-          <p class="type-body-md mt-2 text-secondary">15+ raw, confusing options at once, with no hierarchy or differentiation.</p>
-        </div>
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
-          <h3 class="type-headline-sm mt-2">The Core Dilemma</h3>
-          <p class="type-body-md mt-2 text-secondary">How many offers to show, in what order, and which metadata truly drives the decision.</p>
-        </div>
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">04</span>
-          <h3 class="type-headline-sm mt-2">The Transactional Gap</h3>
-          <p class="type-body-md mt-2 text-secondary">Dry, legalistic, intimidating: disconnected from the user's real milestone.</p>
-        </div>
-      </div>
 
-      <div class="media-placeholder reveal mt-12 h-40 w-full rounded-xl sm:h-48 lg:h-56">
-        <span class="type-label-sm text-muted">Coming soon</span>
+        <div class="lg:col-span-6">
+          <div id="challengeMedia" class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
+            <video class="h-auto w-full" src="old_loans.mp4" muted loop playsinline preload="auto"></video>
+            <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">before</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -381,29 +619,36 @@ a:hover .arrow { transform: translateX(4px); }
   <!-- STRATEGY -->
   <section id="strategy" class="bg-surface-alt px-4 lg:px-20">
     <div class="mx-auto max-w-7xl py-20 lg:py-28">
-      <h2 class="reveal type-headline-md max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
-      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The original ambition was bigger: cut the number of loan types bank-wide. That scope proved too complex to take on in one move, so the strategy narrowed deliberately to the digital channel, real impact within a scoped-down version of the vision, not the full one.</p>
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+        <div class="order-2 lg:order-1 lg:col-span-6">
+          <div id="strategyMedia" class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
+            <video class="h-auto w-full" src="new_loans.mp4" muted loop playsinline preload="auto"></video>
+            <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">after</span>
+          </div>
+        </div>
 
-      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
-          <h3 class="type-headline-sm mt-2">Intent-Based Discovery</h3>
-          <p class="type-body-md mt-2 text-secondary">Invert the funnel: capture amount and purpose first, then present 3 tailored pathways instead of 15+.</p>
-        </div>
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
-          <h3 class="type-headline-sm mt-2">Emotional &amp; Human-Centric</h3>
-          <p class="type-body-md mt-2 text-secondary">Turn a dry transaction into an aspirational milestone with contextual visual worlds and reassuring microcopy.</p>
-        </div>
-        <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
-          <h3 class="type-headline-sm mt-2">Continuous Iteration</h3>
-          <p class="type-body-md mt-2 text-secondary">Balance compliance with user psychology through testing: smart bundling resolves best rate versus full amount.</p>
-        </div>
-      </div>
+        <div class="order-1 lg:order-2 lg:col-span-6">
+          <h2 class="reveal type-headline-md max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
+          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The original ambition was bigger: cut the number of loan types bank-wide. That scope proved too complex to take on in one move, so the strategy narrowed deliberately to the digital channel, real impact within a scoped-down version of the vision, not the full one.</p>
 
-      <div class="media-placeholder reveal mt-12 h-40 w-full rounded-xl sm:h-48 lg:h-56">
-        <span class="type-label-sm text-muted">Coming soon</span>
+          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+              <h3 class="type-headline-sm mt-2">Intent-Based Discovery</h3>
+              <p class="type-body-md mt-2 text-secondary">Invert the funnel: capture amount and purpose first, then present 3 tailored pathways instead of 15+.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+              <h3 class="type-headline-sm mt-2">Emotional &amp; Human-Centric</h3>
+              <p class="type-body-md mt-2 text-secondary">Turn a dry transaction into an aspirational milestone with contextual visual worlds and reassuring microcopy.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+              <h3 class="type-headline-sm mt-2">Continuous Iteration</h3>
+              <p class="type-body-md mt-2 text-secondary">Balance compliance with user psychology through testing: smart bundling resolves best rate versus full amount.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -411,28 +656,32 @@ a:hover .arrow { transform: translateX(4px); }
   <!-- PROOF -->
   <section id="proof" class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl py-20 lg:py-28">
-      <h2 class="reveal type-headline-md max-w-2xl">the proof<span class="brand-dot">.</span></h2>
-
-      <div class="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-12">
-        <div class="reveal lg:col-span-5">
-          <div class="type-display-lg text-primary" style="font-size:4.5rem;">+18%</div>
-          <p class="type-body-lg mt-3 max-w-xs text-secondary">Cumulative growth in digital loan adoption.</p>
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+        <div class="lg:col-span-6">
+          <h2 class="reveal type-headline-md max-w-2xl">the proof<span class="brand-dot">.</span></h2>
+          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+              <h3 class="type-headline-sm mt-2">Self-Service Shift</h3>
+              <p class="type-body-md mt-2 text-secondary">Migrated <span class="font-medium text-primary">80%</span> of loan applications to digital self-service, cutting call-center dependency.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+              <h3 class="type-headline-sm mt-2">Streamlined Decision Making</h3>
+              <p class="type-body-md mt-2 text-secondary">Fewer drop-offs by removing choice paralysis and simplifying the metadata needed to pick an offer.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+              <h3 class="type-headline-sm mt-2">Cross-Squad Alignment</h3>
+              <p class="type-body-md mt-2 text-secondary">Unified design guidelines across <span class="font-medium text-primary">4 autonomous business lines</span>, a baseline for scale.</p>
+            </div>
+          </div>
         </div>
-        <div class="reveal-stagger lg:col-span-7">
-          <div class="mb-8">
-            <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
-            <h3 class="type-headline-sm mt-2">Self-Service Shift</h3>
-            <p class="type-body-md mt-2 text-secondary">Migrated <span class="font-medium text-primary">80%</span> of loan applications to digital self-service, cutting call-center dependency.</p>
-          </div>
-          <div class="mb-8">
-            <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
-            <h3 class="type-headline-sm mt-2">Streamlined Decision Making</h3>
-            <p class="type-body-md mt-2 text-secondary">Fewer drop-offs by removing choice paralysis and simplifying the metadata needed to pick an offer.</p>
-          </div>
-          <div>
-            <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
-            <h3 class="type-headline-sm mt-2">Cross-Squad Alignment</h3>
-            <p class="type-body-md mt-2 text-secondary">Unified design guidelines across <span class="font-medium text-primary">4 autonomous business lines</span>, a baseline for scale.</p>
+
+        <div class="lg:col-span-6">
+          <div class="reveal mx-auto flex w-full flex-col items-center gap-3 text-center">
+            <div class="type-display-lg" style="font-size:4.5rem; color:var(--color-button);">+18%</div>
+            <p class="type-body-lg max-w-xs text-secondary">Cumulative growth in digital loan adoption.</p>
           </div>
         </div>
       </div>
@@ -508,6 +757,58 @@ a:hover .arrow { transform: translateX(4px); }
     }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
     document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
     document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
+
+    // hero Lottie conveyor: loads each card's JSON (co-located in this folder, filenames
+    // set via data-lottie) and autoplays it looping. The sideways drift and per-card
+    // "landing" fade are pure CSS (see .conveyor-track / .conveyor-card.land), this just
+    // renders the animations themselves.
+    if (window.lottie) {
+      document.querySelectorAll('.conveyor-card').forEach((card) => {
+        window.lottie.loadAnimation({
+          container: card,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: card.dataset.lottie,
+          // default 'xMidYMid meet': shows the whole portrait canvas uncropped, scaled to
+          // the card's own height (see .conveyor-card's aspect-ratio in CSS)
+        });
+      });
+    }
+
+    // challenge section: single "before" phone recording (old_loans.mp4), sits well below the
+    // fold, so unlike a hero video a fixed page-load delay doesn't make sense, start it (and
+    // let it loop) once it actually scrolls into view instead. Same pattern as
+    // ../Credit-Cards/index.html's challengeMedia.
+    const challengeMedia = document.getElementById('challengeMedia');
+    if (challengeMedia && !prefersReducedMotion) {
+      const challengeVideos = challengeMedia.querySelectorAll('video');
+      const challengeIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            challengeIo.unobserve(entry.target);
+            challengeVideos.forEach((v) => v.play());
+          }
+        });
+      }, { threshold: 0.3 });
+      challengeIo.observe(challengeMedia);
+    }
+
+    // strategy section: same play-once-in-view treatment as challengeMedia above, "after"
+    // phone recording (new_loans.mp4) pairing with challenge's "before" one.
+    const strategyMedia = document.getElementById('strategyMedia');
+    if (strategyMedia && !prefersReducedMotion) {
+      const strategyVideos = strategyMedia.querySelectorAll('video');
+      const strategyIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            strategyIo.unobserve(entry.target);
+            strategyVideos.forEach((v) => v.play());
+          }
+        });
+      }, { threshold: 0.3 });
+      strategyIo.observe(strategyMedia);
+    }
 
     // nav tab scrollspy (2026-08-08): highlights whichever tab matches the
     // section currently crossing the vertical middle of the viewport, same
