@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V1HNVYX124"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-V1HNVYX124');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design System, Case Study, Ofir Avitan</title>
+<meta name="description" content="Design System case study: building My DSM, a personal design system built token-first with Claude Code and a live Figma connection.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon.ico" sizes="any">
+<link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="../assets/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="manifest" href="../assets/site.webmanifest">
+<meta name="theme-color" content="#022c22">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">
+@import "tailwindcss";
+
+@theme {
+  /* ---- color primitives, copied verbatim from ../index.html so both pages stay in sync ---- */
+  --color-green-50: #ecfdf5;
+  --color-green-100: #d1fae5;
+  --color-green-200: #a7f3d0;
+  --color-green-300: #6ee7b7;
+  --color-green-400: #34d399;
+  --color-green-500: #10b981;
+  --color-green-600: #059669;
+  --color-green-700: #047857;
+  --color-green-800: #065f46;
+  --color-green-900: #064e3b;
+  --color-green-950: #022c22;
+
+  --color-neutral-50: #f7f8f7;
+  --color-neutral-100: #eff1ef;
+  --color-neutral-200: #dfe3df;
+  --color-neutral-300: #c4cac4;
+  --color-neutral-400: #a6aea6;
+  --color-neutral-500: #8a938a;
+  --color-neutral-600: #6f766f;
+  --color-neutral-700: #565b56;
+  --color-neutral-800: #4a4a4a;
+  --color-neutral-900: #2d2d2d;
+  --color-neutral-950: #1a1d1a;
+
+  --color-gold-100: #f0e6d2;
+  --color-gold-300: #ecc678;
+  --color-gold-500: #e0a52e;
+  --color-gold-700: #a87a1e;
+  --color-gold-900: #40310f;
+
+  /* ---- semantics ---- */
+  --color-primary: var(--color-green-950);
+  --color-primary-hover: var(--color-green-900);
+  --color-primary-active: var(--color-green-800);
+  --color-button: var(--color-green-900);
+  --color-button-active: var(--color-green-800);
+  --color-accent: var(--color-green-500);
+  --color-accent-contrast: var(--color-gold-700);
+
+  --color-default: var(--color-neutral-900);
+  --color-secondary: var(--color-neutral-800);
+  --color-muted: var(--color-neutral-500);
+  --color-disabled: var(--color-neutral-400);
+  --color-surface-disabled: var(--color-neutral-200);
+  --color-on-primary: #ffffff;
+  --color-on-primary-soft: var(--color-green-100);
+  --color-link: var(--color-green-800);
+
+  --color-surface: #ffffff;
+  --color-surface-alt: var(--color-neutral-50);
+  --color-card: #ffffff;
+  --color-inverse: var(--color-green-950);
+  --color-surface-pressed: var(--color-green-100);
+
+  --color-border-default: var(--color-neutral-200);
+  --color-border-strong: var(--color-neutral-400);
+  --color-focus: var(--color-green-950);
+  /* two tokens from the original My DSM theme that this site's duplicate never needed until now:
+     used only by the live Card markup pasted straight from Design Cortex's own component doc
+     (see the "in practice" section), added here rather than rewriting his real recipe */
+  --color-neutral-bg: var(--color-neutral-100);
+  --shadow-glow-accent: 0 10px 24px -6px rgb(2 44 34 / 0.12), 0 4px 8px -2px rgb(2 44 34 / 0.06);
+
+  --font-brand: "Inter Tight", sans-serif;
+  --font-plain: "Inter", system-ui, sans-serif;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.75rem;
+
+  --shadow-sm: 0 1px 2px 0 rgb(2 44 34 / 0.06);
+  --shadow-md: 0 4px 6px -1px rgb(2 44 34 / 0.08), 0 2px 4px -2px rgb(2 44 34 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(2 44 34 / 0.10), 0 4px 6px -4px rgb(2 44 34 / 0.05);
+  --shadow-xl: 0 20px 25px -5px rgb(2 44 34 / 0.12), 0 8px 10px -6px rgb(2 44 34 / 0.05);
+
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--color-surface); color: var(--color-default); font-family: var(--font-plain); }
+
+/* type roles, copied verbatim from Design-Cortex August 2026 / my-dsm.theme.css, same as ../index.html */
+.type-display-lg { font-family: var(--font-brand); font-weight: 700; font-size: 3rem; line-height: 1.1; letter-spacing: -0.025em; }
+.type-display-sm { font-family: var(--font-brand); font-weight: 700; font-size: 2.25rem; line-height: 1.15; letter-spacing: -0.025em; }
+.type-headline-lg { font-family: var(--font-brand); font-weight: 700; font-size: 1.875rem; line-height: 1.2; }
+.type-headline-md { font-family: var(--font-brand); font-weight: 600; font-size: 1.5rem; line-height: 1.33; }
+.type-headline-sm { font-family: var(--font-brand); font-weight: 600; font-size: 1.25rem; line-height: 1.4; }
+.type-title-md { font-family: var(--font-brand); font-weight: 600; font-size: 1.125rem; line-height: 1.55; }
+.type-body-lg { font-family: var(--font-plain); font-weight: 400; font-size: 1rem; line-height: 1.5; }
+.type-body-md { font-family: var(--font-plain); font-weight: 400; font-size: 0.875rem; line-height: 1.43; }
+.type-label-lg { font-family: var(--font-plain); font-weight: 500; font-size: 0.875rem; line-height: 1.43; }
+.type-label-sm { font-family: var(--font-plain); font-weight: 500; font-size: 0.75rem; line-height: 1.33; letter-spacing: 0.1em; text-transform: uppercase; }
+.brand-dot { color: var(--color-button); }
+
+/* sticky floating pill nav, same recipe as ../index.html and other case studies (no on-load
+   entrance animation here, this is a secondary page reached mid-scroll) */
+.site-nav {
+  position: fixed; top: 1.25rem; left: 50%; transform: translateX(-50%);
+  z-index: 50; display: flex; align-items: center; gap: 1.75rem;
+  background: rgba(255,255,255,0.85); backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border-default);
+  border-radius: 999px; padding: 0.5rem 1.25rem;
+  box-shadow: var(--shadow-lg);
+  width: max-content;
+}
+.nav-link { position: relative; }
+.nav-link::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px;
+  background: var(--color-button); transform: scaleX(0); transform-origin: left;
+  transition: transform 220ms var(--ease-out);
+}
+.nav-link:hover::after { transform: scaleX(1); }
+
+.site-nav.site-nav-dark { background: var(--color-primary); border: none; }
+.site-nav-name {
+  font-family: var(--font-brand); font-weight: 700; font-size: 1.05rem;
+  letter-spacing: -0.02em; word-spacing: -0.15em;
+  color: var(--color-on-primary); white-space: nowrap; text-decoration: none;
+}
+.site-nav-dark .nav-link { color: var(--color-on-primary-soft); }
+.site-nav-dark .nav-link:hover { color: var(--color-on-primary); }
+.site-nav-dark .nav-link::after { background: var(--color-accent); }
+.site-nav-cta {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff; color: var(--color-button); font-weight: 600;
+  font-size: 0.85rem; height: 2rem; padding: 0 1.1rem; border-radius: 999px;
+  white-space: nowrap; text-decoration: none;
+}
+.site-nav-cta:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(255,255,255,0.6);
+}
+.site-nav-back {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2rem; height: 2rem; border-radius: 999px; flex-shrink: 0;
+  color: var(--color-on-primary-soft);
+  transition: color 150ms var(--ease-soft), background 150ms var(--ease-soft);
+}
+.site-nav-back:hover { color: var(--color-on-primary); background: rgba(255,255,255,0.1); }
+.site-nav-back:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(255,255,255,0.6);
+}
+.site-nav-dark .nav-link.is-active { color: var(--color-on-primary); }
+.site-nav-dark .nav-link.is-active::after { transform: scaleX(1); }
+
+/* thin scroll-progress bar, same as ../index.html */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: var(--color-button); z-index: 60; transition: width 80ms linear;
+}
+
+/* scroll reveal, identical mechanics to ../index.html */
+.reveal { opacity: 0; transform: translateY(54px); transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft); will-change: opacity, transform; }
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+.reveal-stagger > * { opacity: 0; transform: translateY(50px); transition: opacity 650ms var(--ease-soft), transform 650ms var(--ease-soft); will-change: opacity, transform; }
+.reveal-stagger > *.in-view { opacity: 1; transform: translateY(0); }
+
+/* arrow nudges right on hover, same as ../index.html */
+.arrow { display: inline-block; transition: transform 200ms var(--ease-out); }
+a:hover .arrow { transform: translateX(4px); }
+
+/* button hover glow, same as ../index.html */
+.btn-glow, .btn-glow-nav, .btn-glow-accent { transition: box-shadow 300ms var(--ease-soft); }
+.btn-glow:hover { box-shadow: var(--shadow-lg), 0 0 20px 4px rgb(6 78 59 / 0.35); }
+.btn-glow-accent:hover { box-shadow: var(--shadow-lg), 0 0 20px 4px rgb(16 185 129 / 0.45); }
+@media (min-width: 768px) {
+  .btn-glow-nav:hover { box-shadow: var(--shadow-lg), 0 0 20px 4px rgb(6 78 59 / 0.35); }
+}
+
+/* hero on-load entrance, same keyframe/stagger pattern as every other case study */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.enter { opacity: 0; animation: fadeUp 900ms var(--ease-soft) both; }
+
+/* hero gradient blob + scroll parallax wrapper, same recipe as ../index.html's contact section */
+.hero-blob {
+  position: absolute; border-radius: 999px; filter: blur(60px); opacity: 0.55;
+  background: conic-gradient(from 180deg, var(--color-green-200), var(--color-green-500), var(--color-gold-300), var(--color-green-200));
+  animation: blobshift 26s ease-in-out infinite;
+}
+.blob-parallax { position: absolute; will-change: transform; }
+@keyframes blobshift {
+  0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+  15%  { transform: translate(-9%, 12%) scale(1.1) rotate(4deg); }
+  32%  { transform: translate(12%, 20%) scale(0.92) rotate(-3deg); }
+  50%  { transform: translate(-16%, 5%) scale(1.06) rotate(5deg); }
+  68%  { transform: translate(7%, -14%) scale(0.95) rotate(-4deg); }
+  85%  { transform: translate(-11%, -7%) scale(1.12) rotate(2deg); }
+  100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+}
+
+.btn-on-primary:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* placeholder media block: flat neutral surface standing in for a real screenshot, same visual
+   language as every other in-progress placeholder on this site */
+.media-placeholder {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--color-neutral-100); border: 1px solid var(--color-border-default);
+}
+
+/* "the build" carousel: same mechanism as Internal Systems' B20 strategy carousel, verbatim,
+   renamed build- instead of strategy- since it lives in a different section here. Three
+   documentation screens crossfade on a timer with a dot rail below; the active dot isn't a
+   plain color swap, a second "blob" element travels between dot positions, stretching to span
+   the old + new dot on the way out, then contracting back into a dot at the new spot. */
+.build-slide { opacity: 0; transition: opacity 600ms var(--ease-soft); }
+.build-slide[data-active="true"] { opacity: 1; }
+.build-dot {
+  width: 8px; height: 8px; border-radius: 999px; background: var(--color-neutral-300);
+  border: none; padding: 0; cursor: pointer; transition: background 200ms var(--ease-soft);
+}
+.build-dot:hover { background: var(--color-neutral-400); }
+.build-blob {
+  position: absolute; top: 50%; left: 0; height: 8px; width: 8px;
+  background: var(--color-accent); border-radius: 999px; transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* B24: pull-past-top sky strip, same on every page, see ../Digital-Loans/index.html for the
+   full mechanics writeup */
+.sky-strip {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--sky-strip-height, 10rem);
+  background: linear-gradient(180deg, #05070d 0%, #0b1220 62%, #131d33 100%);
+  overflow: hidden; z-index: 0; pointer-events: none;
+}
+.sky-strip__star {
+  position: absolute; border-radius: 999px; background: #fff;
+  animation: skyTwinkle var(--star-duration, 3.2s) ease-in-out infinite;
+  animation-delay: var(--star-delay, 0s);
+}
+@keyframes skyTwinkle {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: var(--star-max, 0.85); }
+}
+.sky-strip__slogan {
+  position: absolute; left: 50%; top: 3.75rem; transform: translateX(-50%);
+  font-family: var(--font-plain); font-weight: 500; font-size: 0.8rem;
+  letter-spacing: 0.05em; color: rgba(255,255,255,0.6); white-space: nowrap;
+}
+.page-shift {
+  position: relative; background: var(--color-surface); z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter { animation: none; opacity: 1; filter: none; }
+  .reveal, .reveal-stagger > * { transition: none; opacity: 1; transform: none; }
+  .blob-parallax { transform: none !important; }
+  .sky-strip__star { animation: none; opacity: 0.4; }
+  .build-slide, .build-blob, .build-dot { transition: none !important; }
+}
+</style>
+</head>
+<body class="antialiased">
+
+  <!-- B24: hidden pull-past-top sky strip, sits behind everything below. -->
+  <div class="sky-strip" id="skyStrip" aria-hidden="true">
+    <div class="sky-strip__slogan">not even the sky is the limit :)</div>
+  </div>
+
+  <!-- Everything else lives inside .page-shift so it can translate as one sheet during the pull
+       gesture. Closed right before </body>. -->
+  <div class="page-shift" id="pageShift">
+
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- NAV: in-page tabs matching this page's own sections -->
+  <nav class="site-nav site-nav-dark">
+    <a href="../index.html#work" class="site-nav-back" aria-label="Back to work">
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+    </a>
+    <a href="../#" class="site-nav-name">Ofir Avitan</a>
+    <div class="hidden md:flex items-center gap-6 type-label-lg" id="navTabs">
+      <a href="#top" class="nav-link" data-nav-target="top">Design System</a>
+      <a href="#spark" class="nav-link" data-nav-target="spark">The Spark</a>
+      <a href="#build" class="nav-link" data-nav-target="build">The Build</a>
+      <a href="#practice" class="nav-link" data-nav-target="practice">In Practice</a>
+    </div>
+    <a href="../index.html#contact" class="site-nav-cta btn-glow-accent">Let's talk</a>
+  </nav>
+
+  <!-- HERO -->
+  <header id="top" class="px-4 pb-8 pt-32 sm:pb-16 lg:px-20 lg:pb-24 lg:pt-40">
+    <div class="mx-auto max-w-7xl">
+      <a href="../index.html#work" class="enter inline-flex items-center gap-2 type-label-lg text-secondary hover:text-default transition-colors" style="animation-delay:80ms">
+        <svg aria-hidden="true" class="arrow size-4 rtl:-scale-x-100" style="transform:rotate(180deg)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        Back to work
+      </a>
+
+      <div class="mt-8" style="max-width:1080px;">
+        <h1 class="enter type-display-sm sm:text-5xl" style="animation-delay:180ms">Design System<span class="brand-dot">.</span></h1>
+        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-[auto_auto_auto_1fr] sm:gap-x-10" style="animation-delay:240ms">
+          <div>
+            <p class="type-body-md text-muted">Year</p>
+            <p class="type-body-lg mt-1 font-medium text-default">2026</p>
+          </div>
+          <div>
+            <p class="type-body-md text-muted">Role</p>
+            <p class="type-body-lg mt-1 font-medium text-default">Personal project</p>
+          </div>
+          <div>
+            <p class="type-body-md text-muted">Duration</p>
+            <p class="type-body-lg mt-1 font-medium text-default">3 days</p>
+          </div>
+          <div>
+            <p class="type-body-md text-muted">Scope</p>
+            <p class="type-body-lg mt-1 font-medium text-default" style="max-width:495px;">Design Tokens, Component Architecture, Figma Variables, Documentation, Claude Code, Figma MCP</p>
+          </div>
+        </div>
+        <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms; max-width:790px;">My DSM: a personal design system built token-first with Claude Code and a live Figma connection, in three days that became the foundation for everything I've built since, including this site.</p>
+        <div class="enter mt-6 flex flex-wrap gap-2" style="animation-delay:420ms">
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Figma</span>
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Claude Code</span>
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Design Tokens</span>
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Personal Project</span>
+        </div>
+      </div>
+
+      <!-- hero: the DSM's own color tonal ramps, live in its documentation. Picked over a
+           generic screenshot since it reads as "real design system" at a glance, no caption
+           needed. Radius is baked into the PNG itself (transparent corners), only shadow added
+           here. Capped narrower than the hero's own 1080px width so it reads as a supporting
+           visual, not a dominant one. -->
+      <!-- rounded-xl restored here: the image's own baked-in corner transparency is invisible on
+           this white page (transparent just reveals white behind it), and box-shadow doesn't
+           follow an image's internal alpha shape anyway. border-radius is what actually clips
+           the image and rounds its shadow together. -->
+      <img class="enter mx-auto mt-12 h-auto w-full max-w-2xl rounded-xl shadow-lg lg:mt-16" style="animation-delay:540ms" src="tonal-ramps.png" alt="My DSM's color tonal ramps, documented live: green, neutral, gold, and rust, each running light to dark.">
+    </div>
+  </header>
+
+  <!-- THE SPARK -->
+  <section id="spark" class="px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl border-t border-border-default pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+      <h2 class="reveal type-headline-md max-w-2xl">the spark<span class="brand-dot">.</span></h2>
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">I unify design systems across four business lines at the bank, but I never had one of my own. That gap started to bother me while I was closing a personal skill gap in AI-assisted design. I found Design Cortex, a design-system documentation structure someone else had built and published, and used it as the base to build a system that was actually mine.</p>
+
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+          <h3 class="type-headline-sm mt-2">A Gap I Wanted Closed</h3>
+          <p class="type-body-md mt-2 text-secondary">I wanted real hands-on fluency with AI tools, not just the ability to point my team toward them.</p>
+        </div>
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+          <h3 class="type-headline-sm mt-2">Design Systems, Never My Own</h3>
+          <p class="type-body-md mt-2 text-secondary">Years spent unifying design languages for other people's products, with nothing built the same way for myself.</p>
+        </div>
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+          <h3 class="type-headline-sm mt-2">A Base, Not A Blank Page</h3>
+          <p class="type-body-md mt-2 text-secondary">Adopted an existing documentation structure and reshaped it around my own tokens, components, and voice.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE BUILD -->
+  <section id="build" class="bg-surface-alt px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl py-20 lg:py-28">
+      <h2 class="reveal type-headline-md max-w-2xl">the build<span class="brand-dot">.</span></h2>
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">No shortcuts, no jumping ahead. Three nights, barely a break, building and documenting every single piece the same disciplined way.</p>
+
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+          <h3 class="type-headline-sm mt-2">Tokens Before Anything Else</h3>
+          <p class="type-body-md mt-2 text-secondary">Primitives, then semantic color, type, spacing, and motion, the layer everything else binds to.</p>
+        </div>
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+          <h3 class="type-headline-sm mt-2">One Documentation Pattern For Everything</h3>
+          <p class="type-body-md mt-2 text-secondary">Live examples, anatomy, variants, when to use it and when not to, accessibility notes, on every single piece. Reads like a living Storybook, not a static file.</p>
+        </div>
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+          <h3 class="type-headline-sm mt-2">Built Once, Wired To Figma</h3>
+          <p class="type-body-md mt-2 text-secondary">Pushed group by group into Figma through Claude Code and a live Figma MCP connection, so design and code stay in sync instead of drifting apart.</p>
+        </div>
+      </div>
+
+      <!-- carousel: same mechanism as Internal-Systems/index.html's B20 strategy carousel,
+           three real documentation screens (tokens, a molecule, an elevation scale) so a
+           visitor sees more than one fragment of the system, not just this page's single
+           curated screenshots. -->
+      <div class="reveal mx-auto mt-12 flex w-full max-w-3xl flex-col items-center gap-4">
+        <div id="buildCarousel" class="relative w-full overflow-hidden rounded-xl shadow-lg" style="aspect-ratio: 1512 / 827;">
+          <img src="build-1-tokens.png" alt="My DSM's color tokens, documented live: primitives, semantic mappings, and their tonal ramps." class="build-slide absolute inset-0 h-full w-full object-cover" data-active="true">
+          <img src="build-2-card.png" alt="My DSM's Card molecule, documented live, including the full component sidebar." class="build-slide absolute inset-0 h-full w-full object-cover">
+          <img src="build-3-elevation.png" alt="My DSM's elevation scale, documented live: every shadow step from subtle to glow-accent." class="build-slide absolute inset-0 h-full w-full object-cover">
+        </div>
+        <div id="buildDots" class="relative flex items-center gap-3">
+          <button type="button" class="build-dot" data-index="0" aria-label="Show screen 1 of 3" aria-current="true"></button>
+          <button type="button" class="build-dot" data-index="1" aria-label="Show screen 2 of 3"></button>
+          <button type="button" class="build-dot" data-index="2" aria-label="Show screen 3 of 3"></button>
+          <span id="buildBlob" class="build-blob" aria-hidden="true"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IN PRACTICE -->
+  <section id="practice" class="px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl py-20 lg:py-28">
+      <h2 class="reveal type-headline-md max-w-2xl">in practice<span class="brand-dot">.</span></h2>
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Once I trusted the system, I built pages for my old portfolio with it. For this site, I duplicated the whole DSM rather than touch the original, and redefined color, type, and button style inside Claude Code. I view the live system through Cursor, opening it as a local server, but everything is still built in Claude Code.</p>
+
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+          <h3 class="type-headline-sm mt-2">Duplicated, Not Edited</h3>
+          <p class="type-body-md mt-2 text-secondary">A separate copy, so the original system stays untouched no matter what a specific site needs.</p>
+        </div>
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+          <h3 class="type-headline-sm mt-2">Viewing, Not Building</h3>
+          <p class="type-body-md mt-2 text-secondary">Cursor only opens the local server to look at the live docs. Claude Code is what actually builds, so the two never compete for the same job.</p>
+        </div>
+        <div>
+          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+          <h3 class="type-headline-sm mt-2">You're Looking At The Proof</h3>
+          <p class="type-body-md mt-2 text-secondary">This page's type, color, and buttons are running on that duplicated system right now.</p>
+        </div>
+      </div>
+
+      <div class="reveal mx-auto mt-12 flex w-full max-w-3xl flex-col items-center gap-4">
+        <img src="card-live-examples.png" alt="My DSM's Card component, live in its documentation, including a self-referential example card titled Design system from scratch." class="h-auto w-full rounded-xl shadow-lg">
+        <span class="type-label-sm text-muted" style="letter-spacing:normal; text-transform:none;">Card, documented live</span>
+      </div>
+
+      <!-- live component, not a screenshot: real markup pasted straight from My DSM's own Card
+           doc (Default + Featured), only touching the two tokens (--color-neutral-bg,
+           --shadow-glow-accent) this page's duplicated theme didn't carry yet, see the @theme
+           block. Buttons are inert on purpose, this is a proof-of-life swatch, not a nav element. -->
+      <h3 class="reveal mx-auto mt-14 w-full max-w-3xl text-center type-headline-sm">A real, live example<span class="brand-dot">.</span></h3>
+      <div class="reveal mx-auto mt-6 flex w-full max-w-3xl flex-col items-center gap-4">
+        <div class="grid w-full gap-6 sm:grid-cols-2">
+          <article class="flex flex-col rounded-xl border border-border-default bg-card shadow-sm transition-shadow duration-200 ease-out hover:shadow-md">
+            <div class="flex flex-col gap-2 p-6">
+              <div class="flex flex-wrap gap-2">
+                <span class="inline-flex items-center rounded-full bg-neutral-bg px-2 py-1 text-xs font-medium text-secondary">Research</span>
+              </div>
+              <h3 class="type-title-md text-default">Interview synthesis board</h3>
+              <p class="type-body-md text-secondary">Turning twelve user interviews into six themes the team could act on.</p>
+              <p class="type-label-sm text-muted">April 2026 &middot; Research</p>
+            </div>
+            <div class="mt-auto px-6 pb-4">
+              <button type="button" class="inline-flex h-8 items-center justify-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-on-primary shadow-md hover:shadow-lg transition-all duration-150 ease-out hover:bg-primary-hover active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-card">View case study</button>
+            </div>
+          </article>
+          <article class="flex flex-col rounded-xl border border-accent bg-gradient-to-b from-surface-alt to-card shadow-glow-accent">
+            <div class="flex flex-col gap-2 p-6">
+              <div class="flex flex-wrap gap-2">
+                <span class="inline-flex items-center rounded-full bg-surface-alt px-2 py-1 text-xs font-medium text-primary-active">Featured</span>
+              </div>
+              <h3 class="type-title-md text-default">Design system from scratch</h3>
+              <p class="type-body-md text-secondary">Building My DSM: tokens, patterns, and components documented as a living knowledge base.</p>
+              <p class="type-label-sm text-muted">June 2026 &middot; Product</p>
+            </div>
+            <div class="mt-auto px-6 pb-4">
+              <button type="button" class="inline-flex h-8 items-center justify-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-on-primary shadow-md hover:shadow-lg transition-all duration-150 ease-out hover:bg-primary-hover active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-card">View case study</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT I LEARNED: quiet text-only closing reflection, same pattern as every other case study -->
+  <section class="px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl border-t border-border-default py-16 lg:py-20">
+      <h2 class="reveal type-headline-md max-w-2xl">what I learned<span class="brand-dot">.</span></h2>
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">I've built and unified design systems wired to real production code for years, at the bank, just never with AI doing the work alongside me. Doing that once myself, tokens to components to Figma, is what finally made "trust the system" feel like something I understand firsthand, not just something I ask other people to do.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT / CLOSING: copied verbatim from ../index.html so every page shares one closing pattern -->
+  <section id="contact" class="relative overflow-hidden px-4 lg:px-20" style="background:var(--color-primary); color:var(--color-on-primary);">
+    <div class="blob-parallax" style="bottom:-12rem; left:-8rem;" data-parallax="-0.1">
+      <div class="hero-blob" style="width:28rem; height:28rem; bottom:0; left:0; opacity:0.25; animation-duration:33s; animation-direction:reverse;"></div>
+    </div>
+    <div class="relative mx-auto max-w-7xl py-24 text-center lg:py-32">
+      <span class="reveal type-label-sm" style="color:var(--color-on-primary-soft)">Get in touch</span>
+      <h2 class="reveal type-display-sm mt-4">Let's build the future<span style="color:var(--color-accent)">.</span></h2>
+      <p class="reveal type-body-lg mx-auto mt-4 max-w-lg" style="color:var(--color-on-primary-soft)">Open to design leadership roles, partnerships, and ambitious product bets.</p>
+      <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="mailto:avitano@gmail.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-button);">Email me</a>
+        <a href="https://linkedin.com/in/avitano" target="_blank" rel="noopener noreferrer" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="border-color:rgba(255,255,255,0.35); color:#fff;">LinkedIn</a>
+      </div>
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-3 type-body-md" style="color:var(--color-on-primary-soft)">
+        <span>+972-54-429-6353</span>
+      </div>
+      <div class="type-label-sm mt-16 border-t pt-6" style="color:var(--color-on-primary-soft); border-color:rgba(255,255,255,0.15); text-transform:none; letter-spacing:normal;">
+        Ofir Avitan &middot; 2026
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // scroll-triggered reveals, same mechanics as ../index.html
+    const isMobile = window.matchMedia('(max-width: 639px)').matches;
+    document.querySelectorAll('.reveal-stagger').forEach((group) => {
+      Array.from(group.children).forEach((child, i) => {
+        child.style.transitionDelay = `${i * (isMobile ? 70 : 160)}ms`;
+      });
+    });
+    let ioStarted = false;
+    const io = new IntersectionObserver((entries) => {
+      const isInitialCheck = !ioStarted;
+      ioStarted = true;
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          io.unobserve(entry.target);
+          if (isInitialCheck) {
+            setTimeout(() => entry.target.classList.add('in-view'), 1500);
+          } else {
+            entry.target.classList.add('in-view');
+          }
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
+
+    // "the build" carousel: crossfades the 3 documentation screenshots on a timer, dot rail
+    // below with the "liquid blob" indicator, same mechanism as Internal-Systems/index.html's
+    // B20 strategy carousel. Clicking a dot jumps straight there and resets the timer;
+    // hovering the whole block pauses rotation so it doesn't race a visitor looking at it.
+    const buildCarousel = document.getElementById('buildCarousel');
+    if (buildCarousel) {
+      const buildWrap = buildCarousel.parentElement;
+      const slides = buildCarousel.querySelectorAll('.build-slide');
+      const dotsWrap = document.getElementById('buildDots');
+      const dots = dotsWrap.querySelectorAll('.build-dot');
+      const blob = document.getElementById('buildBlob');
+      const AUTO_MS = 4500;
+      let current = 0;
+      let autoTimer = null;
+
+      const dotRect = (i) => {
+        const dotBox = dots[i].getBoundingClientRect();
+        const wrapBox = dotsWrap.getBoundingClientRect();
+        return { left: dotBox.left - wrapBox.left, width: dotBox.width };
+      };
+
+      const placeBlob = (i) => {
+        const r = dotRect(i);
+        blob.style.left = r.left + 'px';
+        blob.style.width = r.width + 'px';
+      };
+
+      const setActive = (index) => {
+        slides[current].removeAttribute('data-active');
+        dots[current].removeAttribute('aria-current');
+        current = index;
+        slides[current].setAttribute('data-active', 'true');
+        dots[current].setAttribute('aria-current', 'true');
+      };
+
+      const goTo = (index) => {
+        if (index === current) return;
+        if (prefersReducedMotion) {
+          setActive(index);
+          placeBlob(current);
+          return;
+        }
+        const from = dotRect(current);
+        const to = dotRect(index);
+        const left = Math.min(from.left, to.left);
+        const right = Math.max(from.left + from.width, to.left + to.width);
+
+        blob.style.transition = 'left 250ms var(--ease-soft), width 250ms var(--ease-soft)';
+        blob.style.left = left + 'px';
+        blob.style.width = (right - left) + 'px';
+
+        setActive(index);
+
+        setTimeout(() => {
+          blob.style.transition = 'left 300ms var(--ease-spring), width 300ms var(--ease-spring)';
+          placeBlob(current);
+        }, 250);
+      };
+
+      const restartAuto = () => {
+        clearInterval(autoTimer);
+        if (!prefersReducedMotion) autoTimer = setInterval(() => goTo((current + 1) % slides.length), AUTO_MS);
+      };
+
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => { goTo(i); restartAuto(); });
+      });
+      buildWrap.addEventListener('mouseenter', () => clearInterval(autoTimer));
+      buildWrap.addEventListener('mouseleave', restartAuto);
+
+      requestAnimationFrame(() => { placeBlob(0); restartAuto(); });
+    }
+
+    // nav tab scrollspy: highlights whichever tab matches the section currently crossing the
+    // vertical middle of the viewport, same technique as every other case study
+    const navTabs = document.querySelectorAll('#navTabs .nav-link');
+    if (navTabs.length) {
+      const navTabMap = {};
+      navTabs.forEach((a) => { navTabMap[a.dataset.navTarget] = a; });
+      const setActiveTab = (id) => {
+        const next = navTabMap[id];
+        if (!next || next.classList.contains('is-active')) return;
+        navTabs.forEach((a) => a.classList.remove('is-active'));
+        next.classList.add('is-active');
+      };
+      const tabSections = Object.keys(navTabMap)
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+      const tabIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveTab(entry.target.id);
+        });
+      }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
+      tabSections.forEach((el) => tabIo.observe(el));
+    }
+
+    // thin progress bar tracking scroll position, same as ../index.html
+    const progressBar = document.getElementById('scrollProgress');
+    const updateProgress = () => {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight;
+      const pct = max > 0 ? (doc.scrollTop / max) * 100 : 0;
+      progressBar.style.width = pct + '%';
+    };
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // scroll parallax on the contact section's decorative blob, same as ../index.html
+    if (!prefersReducedMotion) {
+      const parallaxEls = Array.from(document.querySelectorAll('.blob-parallax[data-parallax]'));
+      let ticking = false;
+      const applyParallax = () => {
+        const y = window.scrollY;
+        parallaxEls.forEach((el) => {
+          const factor = parseFloat(el.dataset.parallax) || 0;
+          el.style.transform = `translateY(${y * factor}px)`;
+        });
+        ticking = false;
+      };
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(applyParallax);
+          ticking = true;
+        }
+      }, { passive: true });
+      applyParallax();
+    }
+
+    // B24: pull-past-top sky strip, same mechanics as every other page
+    if (!prefersReducedMotion) {
+      const pageShift = document.getElementById('pageShift');
+      const skyStrip = document.getElementById('skyStrip');
+
+      const STAR_COUNT = 46;
+      for (let i = 0; i < STAR_COUNT; i++) {
+        const star = document.createElement('div');
+        star.className = 'sky-strip__star';
+        const size = Math.random() < 0.82 ? 1 : 2;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = (Math.random() * 100) + '%';
+        star.style.top = (8 + Math.random() * 68) + '%';
+        star.style.setProperty('--star-duration', (2.2 + Math.random() * 2.6) + 's');
+        star.style.setProperty('--star-delay', (Math.random() * 4) + 's');
+        star.style.setProperty('--star-max', (0.55 + Math.random() * 0.4).toFixed(2));
+        skyStrip.appendChild(star);
+      }
+
+      const MAX_PULL = 150;
+      const OPEN_THRESHOLD = 0.8 * MAX_PULL;
+      const HOLD_MS = 1700;
+
+      let state = 'idle';
+      let startY = 0;
+      let holdTimer = null;
+
+      function resistance(raw) {
+        if (raw <= 0) return 0;
+        return MAX_PULL * (1 - Math.exp(-raw / MAX_PULL));
+      }
+
+      function setPull(px, animate) {
+        pageShift.style.transition = animate ? 'transform 480ms var(--ease-soft)' : 'none';
+        pageShift.style.transform = `translateY(${px}px)`;
+      }
+
+      function close() {
+        clearTimeout(holdTimer);
+        holdTimer = null;
+        state = 'idle';
+        setPull(0, true);
+        setTimeout(() => {
+          if (state === 'idle') {
+            pageShift.style.transition = 'none';
+            pageShift.style.transform = 'none';
+          }
+        }, 500);
+      }
+
+      function lockOpen(px) {
+        state = 'locked';
+        setPull(px, true);
+        holdTimer = setTimeout(close, HOLD_MS);
+      }
+
+      document.addEventListener('touchstart', (e) => {
+        if (window.scrollY > 0 || state === 'locked') return;
+        startY = e.touches[0].clientY;
+        state = 'pulling';
+      }, { passive: true });
+
+      document.addEventListener('touchmove', (e) => {
+        if (state !== 'pulling' || window.scrollY > 0) return;
+        const raw = e.touches[0].clientY - startY;
+        if (raw <= 0) return;
+        e.preventDefault();
+        const pull = resistance(raw);
+        if (pull >= OPEN_THRESHOLD) { lockOpen(pull); return; }
+        setPull(pull, false);
+      }, { passive: false });
+
+      document.addEventListener('touchend', () => {
+        if (state === 'pulling') close();
+      }, { passive: true });
+
+      let wheelPull = 0;
+      let wheelReleaseTimer = null;
+      document.addEventListener('wheel', (e) => {
+        if (state === 'locked') return;
+        if (window.scrollY > 0 || e.deltaY >= 0) {
+          if (state === 'pulling') { wheelPull = 0; close(); }
+          return;
+        }
+        e.preventDefault();
+        state = 'pulling';
+        wheelPull += -e.deltaY * 0.6;
+        const pull = resistance(wheelPull);
+        if (pull >= OPEN_THRESHOLD) { lockOpen(pull); return; }
+        setPull(pull, false);
+        clearTimeout(wheelReleaseTimer);
+        wheelReleaseTimer = setTimeout(() => {
+          if (state === 'pulling') { wheelPull = 0; close(); }
+        }, 160);
+      }, { passive: false });
+    }
+  </script>
+
+  </div><!-- /.page-shift -->
+</body>
+</html>
