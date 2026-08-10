@@ -324,8 +324,10 @@ a:hover .arrow { transform: translateX(4px); }
 }
 .hero-strip__clouds-track--back { bottom: 13%; animation-duration: 110s; }
 .hero-strip__clouds-track--front { top: 26%; animation-duration: 70s; animation-direction: reverse; }
-/* cloud-sprite.png: cropped straight out of Ofir's real loader screenshot (the actual cloud
-   graphic, not a CSS approximation), background keyed to transparent, source ratio 300:134. */
+/* cloud.png: 2026-08-10p, Ofir supplied a clean asset (848x375, real alpha transparency, no
+   screenshot-crop keying artifacts) to replace the earlier cloud-sprite.png screenshot crop.
+   Ratio (~2.26:1) is close enough to the old sprite's (~2.24:1) that no width/scale retuning
+   was needed, same .cloud-shape sizing rules below still apply. */
 .cloud-shape { flex: none; height: auto; display: block; }
 .hero-strip__clouds-track--back .cloud-shape { width: 2.75rem; opacity: 0.55; }
 .hero-strip__clouds-track--front .cloud-shape { width: 5rem; opacity: 0.9; }
@@ -504,40 +506,40 @@ a:hover .arrow { transform: translateX(4px); }
       <div class="enter hero-strip mt-12 w-full lg:mt-16" style="animation-delay:540ms">
         <div class="hero-strip__clouds" aria-hidden="true">
           <div class="hero-strip__clouds-track hero-strip__clouds-track--back">
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
           </div>
           <div class="hero-strip__clouds-track hero-strip__clouds-track--front">
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud-sprite.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
           </div>
         </div>
         <div class="conveyor-track">
