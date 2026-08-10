@@ -253,6 +253,25 @@ a:hover .arrow { transform: translateX(4px); }
   background: var(--color-neutral-100); border: 1px solid var(--color-border-default);
 }
 
+/* B20 strategy carousel: three solution screenshots crossfade on a timer, with a dot
+   rail below. The active dot isn't just a color swap, a second "blob" element travels
+   between dot positions: it stretches to span the old + new dot on the way out, then
+   contracts back into a dot at the new spot, like a drop of liquid landing. Deliberately
+   not a real SVG goo/metaball filter (cross-browser wobble, heavier to build), this
+   two-phase left/width transition reads as the same delight moment with plain CSS. */
+.strategy-slide { opacity: 0; transition: opacity 600ms var(--ease-soft); }
+.strategy-slide[data-active="true"] { opacity: 1; }
+.strategy-dot {
+  width: 8px; height: 8px; border-radius: 999px; background: var(--color-neutral-300);
+  border: none; padding: 0; cursor: pointer; transition: background 200ms var(--ease-soft);
+}
+.strategy-dot:hover { background: var(--color-neutral-400); }
+.strategy-blob {
+  position: absolute; top: 50%; left: 0; height: 8px; width: 8px;
+  background: var(--color-accent); border-radius: 999px; transform: translateY(-50%);
+  pointer-events: none;
+}
+
 /* B24: pull-past-top sky strip, rolled out from ../index.html (built there
    2026-08-10, confirmed working) to every page for consistency, since
    someone landing directly on a case study never sees a homepage-only
@@ -287,6 +306,7 @@ a:hover .arrow { transform: translateX(4px); }
   .reveal, .reveal-stagger > * { transition: none; opacity: 1; transform: none; }
   .blob-parallax { transform: none !important; }
   .sky-strip__star { animation: none; opacity: 0.4; }
+  .strategy-slide, .strategy-blob, .strategy-dot { transition: none !important; }
 }
 </style>
 </head>
@@ -336,9 +356,6 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
       </div>
 
-      <div class="enter media-placeholder mt-12 h-40 w-full rounded-xl sm:h-48 lg:mt-16 lg:h-56" style="animation-delay:540ms">
-        <span class="type-label-sm text-muted">Coming soon</span>
-      </div>
     </div>
   </header>
 
@@ -366,8 +383,9 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
       </div>
 
-      <div class="media-placeholder reveal mt-12 h-40 w-full rounded-xl sm:h-48 lg:h-56">
-        <span class="type-label-sm text-muted">Coming soon</span>
+      <div class="reveal mx-auto mt-12 flex w-full max-w-2xl flex-col items-center gap-4">
+        <img src="challenge-before.jpg" alt="The original internal insurance dashboard: dense, unprioritized fields with no clear hierarchy." class="h-auto w-full rounded-xl shadow-lg">
+        <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">before</span>
       </div>
     </div>
   </section>
@@ -396,8 +414,18 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
       </div>
 
-      <div class="media-placeholder reveal mt-12 h-40 w-full rounded-xl sm:h-48 lg:h-56">
-        <span class="type-label-sm text-muted">Coming soon</span>
+      <div class="reveal mx-auto mt-12 flex w-full max-w-2xl flex-col items-center gap-4">
+        <div id="strategyCarousel" class="relative w-full overflow-hidden rounded-xl shadow-lg" style="aspect-ratio: 1510 / 734;">
+          <img src="strategy-1-dashboard.jpg" alt="The redesigned control panel: prioritized metrics and tasks at a glance." class="strategy-slide absolute inset-0 h-full w-full object-cover" data-active="true">
+          <img src="strategy-2-insurance.jpg" alt="A single client's insurance record, structured and easy to scan." class="strategy-slide absolute inset-0 h-full w-full object-cover">
+          <img src="strategy-3-loans.jpg" alt="The full loan book in one guided, filterable view." class="strategy-slide absolute inset-0 h-full w-full object-cover">
+        </div>
+        <div id="strategyDots" class="relative flex items-center gap-3">
+          <button type="button" class="strategy-dot" data-index="0" aria-label="Show screen 1 of 3" aria-current="true"></button>
+          <button type="button" class="strategy-dot" data-index="1" aria-label="Show screen 2 of 3"></button>
+          <button type="button" class="strategy-dot" data-index="2" aria-label="Show screen 3 of 3"></button>
+          <span id="strategyBlob" class="strategy-blob" aria-hidden="true"></span>
+        </div>
       </div>
     </div>
   </section>
@@ -526,6 +554,82 @@ a:hover .arrow { transform: translateX(4px); }
         }
       }, { passive: true });
       applyParallax();
+    }
+
+    // B20 strategy carousel: crossfades the 3 solution screenshots on a timer, dot rail
+    // below with the "liquid blob" indicator (see the .strategy-blob CSS comment for why
+    // not a real SVG goo filter). Clicking a dot jumps straight there and resets the
+    // timer; hovering the whole block pauses rotation so it doesn't race a visitor
+    // actually looking at it.
+    const strategyCarousel = document.getElementById('strategyCarousel');
+    if (strategyCarousel) {
+      const strategyWrap = strategyCarousel.parentElement;
+      const slides = strategyCarousel.querySelectorAll('.strategy-slide');
+      const dotsWrap = document.getElementById('strategyDots');
+      const dots = dotsWrap.querySelectorAll('.strategy-dot');
+      const blob = document.getElementById('strategyBlob');
+      const AUTO_MS = 4500;
+      let current = 0;
+      let autoTimer = null;
+
+      const dotRect = (i) => {
+        const dotBox = dots[i].getBoundingClientRect();
+        const wrapBox = dotsWrap.getBoundingClientRect();
+        return { left: dotBox.left - wrapBox.left, width: dotBox.width };
+      };
+
+      const placeBlob = (i) => {
+        const r = dotRect(i);
+        blob.style.left = r.left + 'px';
+        blob.style.width = r.width + 'px';
+      };
+
+      const setActive = (index) => {
+        slides[current].removeAttribute('data-active');
+        dots[current].removeAttribute('aria-current');
+        current = index;
+        slides[current].setAttribute('data-active', 'true');
+        dots[current].setAttribute('aria-current', 'true');
+      };
+
+      const goTo = (index) => {
+        if (index === current) return;
+        if (prefersReducedMotion) {
+          setActive(index);
+          placeBlob(current);
+          return;
+        }
+        const from = dotRect(current);
+        const to = dotRect(index);
+        const left = Math.min(from.left, to.left);
+        const right = Math.max(from.left + from.width, to.left + to.width);
+
+        // phase 1: stretch to span both dots, like a drop reaching for the next one
+        blob.style.transition = 'left 250ms var(--ease-soft), width 250ms var(--ease-soft)';
+        blob.style.left = left + 'px';
+        blob.style.width = (right - left) + 'px';
+
+        setActive(index);
+
+        // phase 2: contract back into a dot at the new position
+        setTimeout(() => {
+          blob.style.transition = 'left 300ms var(--ease-spring), width 300ms var(--ease-spring)';
+          placeBlob(current);
+        }, 250);
+      };
+
+      const restartAuto = () => {
+        clearInterval(autoTimer);
+        if (!prefersReducedMotion) autoTimer = setInterval(() => goTo((current + 1) % slides.length), AUTO_MS);
+      };
+
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => { goTo(i); restartAuto(); });
+      });
+      strategyWrap.addEventListener('mouseenter', () => clearInterval(autoTimer));
+      strategyWrap.addEventListener('mouseleave', restartAuto);
+
+      requestAnimationFrame(() => { placeBlob(0); restartAuto(); });
     }
 
     // B24: pull-past-top sky strip, same mechanics as ../index.html
