@@ -155,10 +155,10 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 .nav-link:hover::after { transform: scaleX(1); }
 
 /* 2026-08-08: recolored to match the homepage nav redesign (dark pill, name
-   as text instead of the logo image), but this page keeps its own 4 tab
-   links rather than adopting the homepage's scroll-driven phrase, so only
-   the colors and the logo swap change here, not the structure. */
-.site-nav.site-nav-dark { background: var(--color-primary); border: none; }
+   as text instead of the logo image). 2026-08-11: padding/gap brought in
+   line with ../index.html's site-nav-dark override too, this page's pill
+   was rendering visibly thinner than the homepage's before this. */
+.site-nav.site-nav-dark { background: var(--color-primary); border: none; padding: 0.85rem 2rem; gap: 2rem; }
 .site-nav-name {
   font-family: var(--font-brand); font-weight: 700; font-size: 1.05rem;
   letter-spacing: -0.02em; word-spacing: -0.15em;
@@ -177,28 +177,43 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
   outline: none;
   box-shadow: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(255,255,255,0.6);
 }
-/* 2026-08-08 trial (Credit-Cards only, Ofir reviewing before rolling to the
-   other case studies): the 4 tab links used to point back to homepage
-   sections that don't exist on this page, replaced with real in-page nav to
-   this page's own sections instead. Plus a compact icon-only "back to
-   other projects" link, no visible tooltip per Ofir's request, aria-label
-   covers screen readers instead. Plus a scroll-linked "current section"
-   highlight, using the same center-of-viewport IntersectionObserver
-   technique as the homepage's nav phrase, just toggling a class instead of
-   swapping text. */
+/* 2026-08-08 trial, reverted 2026-08-11 (Credit-Cards is the pilot page for
+   the revert, other 3 case studies to follow once Ofir confirms this one
+   live): the 4 tabs briefly pointed to this page's own in-page sections
+   (Challenge/Strategy/Impact) instead of the homepage, that's reverted back
+   to real homepage-section links (About Me/Case Studies/Skills), matching
+   what the tabs originally pointed to before the 08-08 trial. The
+   scroll-linked "current section" highlight (is-active) only made sense
+   for in-page anchors, removed along with it, see the JS near the bottom
+   of body. The compact icon-only "back to other projects" link stays but
+   is now mobile-only (see the @media block right below): on desktop the tabs plus
+   the browser's own back button already cover it, so keeping the icon
+   there too was redundant. On mobile the tabs are hidden entirely, so the
+   icon is still the only one-tap way back, and now points at this
+   project's own tile on the homepage specifically (#CreditCards, renamed
+   2026-08-11 from #tile-credit-cards, a cleaner id since it's visible in
+   the address bar after the jump) rather than the top of the Case Studies
+   section. */
 .site-nav-back {
   display: inline-flex; align-items: center; justify-content: center;
   width: 2rem; height: 2rem; border-radius: 999px; flex-shrink: 0;
   color: var(--color-on-primary-soft);
   transition: color 150ms var(--ease-soft), background 150ms var(--ease-soft);
 }
+/* the "md:hidden" utility class alone doesn't do this: this whole style block is
+   unlayered custom CSS (it lives in the same @import "tailwindcss" block, not inside
+   one of Tailwind's own layers), and unlayered CSS always beats layered utility
+   classes regardless of breakpoint or source order, so the unconditional
+   display:inline-flex above was silently winning at every width. Hiding it for real
+   needs its own unlayered media query, right here. */
+@media (min-width: 768px) {
+  .site-nav-back { display: none; }
+}
 .site-nav-back:hover { color: var(--color-on-primary); background: rgba(255,255,255,0.1); }
 .site-nav-back:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(255,255,255,0.6);
 }
-.site-nav-dark .nav-link.is-active { color: var(--color-on-primary); }
-.site-nav-dark .nav-link.is-active::after { transform: scaleX(1); }
 
 /* thin scroll-progress bar, same as ../index.html */
 .scroll-progress {
@@ -317,17 +332,16 @@ a:hover .arrow { transform: translateX(4px); }
 
   <div class="scroll-progress" id="scrollProgress"></div>
 
-  <!-- NAV: 2026-08-08 trial, Credit-Cards only, see the CSS comment above for what changed -->
+  <!-- NAV: reverted 2026-08-11 to point back at the homepage, see the CSS comment above -->
   <nav class="site-nav site-nav-dark">
-    <a href="../index.html#work" class="site-nav-back" aria-label="Back to work">
+    <a href="../index.html#CreditCards" class="site-nav-back" aria-label="Back to Credit Cards on the homepage">
       <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
     </a>
     <a href="../#" class="site-nav-name">Ofir Avitan</a>
     <div class="hidden md:flex items-center gap-6 type-label-lg" id="navTabs">
-      <a href="#top" class="nav-link" data-nav-target="top">Credit Cards</a>
-      <a href="#challenge" class="nav-link" data-nav-target="challenge">Challenge</a>
-      <a href="#strategy" class="nav-link" data-nav-target="strategy">Strategy</a>
-      <a href="#impact" class="nav-link" data-nav-target="impact">Impact</a>
+      <a href="../index.html#about" class="nav-link">About Me</a>
+      <a href="../index.html#case-studies" class="nav-link">Case Studies</a>
+      <a href="../index.html#skills" class="nav-link">Skills</a>
     </div>
     <a href="../index.html#contact" class="site-nav-cta btn-glow-accent">Let's talk</a>
   </nav>
@@ -335,13 +349,8 @@ a:hover .arrow { transform: translateX(4px); }
   <!-- HERO -->
   <header id="top" class="px-4 pb-8 pt-32 sm:pb-16 lg:px-20 lg:pb-24 lg:pt-40">
     <div class="mx-auto max-w-7xl">
-      <a href="../index.html#work" class="enter inline-flex items-center gap-2 type-label-lg text-secondary hover:text-default transition-colors" style="animation-delay:80ms">
-        <svg aria-hidden="true" class="arrow size-4 rtl:-scale-x-100" style="transform:rotate(180deg)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        Back to work
-      </a>
-
-      <div class="mt-8" style="max-width:1080px;">
-        <h1 class="enter type-display-sm sm:text-5xl" style="animation-delay:180ms">Credit Cards<span class="brand-dot">.</span></h1>
+      <div style="max-width:1080px;">
+        <h1 class="enter type-display-sm sm:text-5xl" style="animation-delay:80ms">Credit Cards<span class="brand-dot">.</span></h1>
         <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-[auto_auto_auto_1fr] sm:gap-x-10" style="animation-delay:240ms">
           <div>
             <p class="type-body-md text-muted">Year</p>
@@ -499,6 +508,25 @@ a:hover .arrow { transform: translateX(4px); }
     </div>
   </section>
 
+  <!-- NEXT CASE STUDY: added 2026-08-11 so a reader can keep browsing without
+       being forced back to the homepage. Cyclic order matching the homepage
+       tile order (Digital Loans > Credit Cards > Internal System > Design
+       System > wraps back to Digital Loans). Reuses the site's existing
+       label+heading+.arrow idiom (same one the hero CTA and tile "View"
+       buttons use), just without the pill button chrome. Shown at every
+       breakpoint, not mobile-only. -->
+  <section class="px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl border-t border-border-default py-16 text-right lg:py-20">
+      <a href="../Internal-Systems/" class="reveal inline-flex items-center gap-4">
+        <span class="flex flex-col text-right">
+          <span class="type-label-sm text-muted">Next Case Study</span>
+          <span class="type-headline-md mt-1">Internal System</span>
+        </span>
+        <svg aria-hidden="true" class="arrow size-6 shrink-0 rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
   <!-- CONTACT / CLOSING: copied verbatim from ../index.html so every page shares one closing pattern -->
   <section id="contact" class="relative overflow-hidden px-4 lg:px-20" style="background:var(--color-primary); color:var(--color-on-primary);">
     <div class="blob-parallax" style="bottom:-12rem; left:-8rem;" data-parallax="-0.1">
@@ -608,32 +636,6 @@ a:hover .arrow { transform: translateX(4px); }
         });
       }, { threshold: 0.3 });
       strategyIo.observe(strategyMedia);
-    }
-
-    // nav tab scrollspy (2026-08-08 trial): highlights whichever tab matches
-    // the section currently crossing the vertical middle of the viewport.
-    // Same center-band technique as the homepage's nav phrase (threshold 0 +
-    // a -45%/-45% rootMargin), just toggling a class here instead of
-    // swapping text.
-    const navTabs = document.querySelectorAll('#navTabs .nav-link');
-    if (navTabs.length) {
-      const navTabMap = {};
-      navTabs.forEach((a) => { navTabMap[a.dataset.navTarget] = a; });
-      const setActiveTab = (id) => {
-        const next = navTabMap[id];
-        if (!next || next.classList.contains('is-active')) return;
-        navTabs.forEach((a) => a.classList.remove('is-active'));
-        next.classList.add('is-active');
-      };
-      const tabSections = Object.keys(navTabMap)
-        .map((id) => document.getElementById(id))
-        .filter(Boolean);
-      const tabIo = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveTab(entry.target.id);
-        });
-      }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
-      tabSections.forEach((el) => tabIo.observe(el));
     }
 
     // thin progress bar tracking scroll position, same as ../index.html

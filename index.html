@@ -239,15 +239,16 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    heaviest elements using .reveal-stagger, so the distance/duration that reads fine
    for a line of text or a small icon card reads as an abrupt shove here. Bigger
    elements need less travel and more time to feel calm, not the same of both.
-   Needs its own .in-view rule (fixed 2026-08-06): #work has higher specificity
-   than .reveal-stagger > *.in-view no matter how many classes that has, an ID
-   always outranks classes, so without this the tiles' transform stayed pinned
-   at the hidden-state value forever. */
-#work .reveal-stagger > * {
+   Needs its own .in-view rule (fixed 2026-08-06): #case-studies has higher
+   specificity than .reveal-stagger > *.in-view no matter how many classes
+   that has, an ID always outranks classes, so without this the tiles'
+   transform stayed pinned at the hidden-state value forever. (Section id
+   renamed 2026-08-11 from #work to #case-studies to match the nav copy.) */
+#case-studies .reveal-stagger > * {
   transform: translateY(70px) scale(0.94);
   transition: opacity 800ms var(--ease-soft), transform 800ms var(--ease-soft);
 }
-#work .reveal-stagger > *.in-view {
+#case-studies .reveal-stagger > *.in-view {
   transform: translateY(0) scale(1);
 }
 
@@ -258,7 +259,7 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    the tile is basically at rest by the time it's readable, instead of still
    visibly growing after it's already in view. */
 @media (max-width: 639px) {
-  #work .reveal-stagger > * {
+  #case-studies .reveal-stagger > * {
     transform: translateY(28px) scale(0.98);
     transition: opacity 420ms var(--ease-soft), transform 420ms var(--ease-soft);
   }
@@ -512,7 +513,7 @@ a:hover .arrow { transform: translateX(4px); }
     </a>
     <div class="hidden md:flex items-center gap-6 type-label-lg text-secondary">
       <a href="#about" class="nav-link hover:text-default transition-colors">About Me</a>
-      <a href="#work" class="nav-link hover:text-default transition-colors">Work</a>
+      <a href="#case-studies" class="nav-link hover:text-default transition-colors">Case Studies</a>
       <a href="#skills" class="nav-link hover:text-default transition-colors">Skills</a>
       <a href="#contact" class="nav-link hover:text-default transition-colors">Contact</a>
     </div>
@@ -537,7 +538,7 @@ a:hover .arrow { transform: translateX(4px); }
         <h1 class="enter type-display-lg mt-4 sm:text-6xl" style="animation-delay:180ms">Design that moves<br>the work<span class="brand-dot">.</span></h1>
         <p class="enter type-body-lg mt-6 max-w-lg text-secondary" style="animation-delay:300ms">A walk through process, craft and outcomes: case studies from 9 years shaping fintech and regulated banking products.</p>
         <div class="enter mt-8 flex flex-wrap items-center gap-3" style="animation-delay:420ms">
-          <a href="#work" class="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-button px-6 text-sm font-medium text-on-primary shadow-md btn-glow transition-all duration-150 ease-out active:bg-button-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">
+          <a href="#case-studies" class="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-button px-6 text-sm font-medium text-on-primary shadow-md btn-glow transition-all duration-150 ease-out active:bg-button-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">
             See the work
             <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
           </a>
@@ -588,7 +589,7 @@ a:hover .arrow { transform: translateX(4px); }
   </section>
 
   <!-- WORK / CASE STUDIES -->
-  <section id="work" class="bg-surface-alt px-4 lg:px-20">
+  <section id="case-studies" class="bg-surface-alt px-4 lg:px-20">
     <div class="mx-auto max-w-7xl py-20 lg:py-28">
       <div>
         <span class="reveal type-label-sm text-muted">Selected work</span>
@@ -597,7 +598,7 @@ a:hover .arrow { transform: translateX(4px); }
 
       <div class="reveal-stagger mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-6 lg:auto-rows-[22rem]">
         <!-- Digital Loans -->
-        <div class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-3">
+        <div id="DigitalLoans" class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-3">
           <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-dl" aria-label="Preview Digital Loans">
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
               <video src="assets/digital%20loans.mp4" class="h-full w-full object-cover" autoplay muted loop playsinline></video>
@@ -617,7 +618,7 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
 
         <!-- Credit Cards -->
-        <div class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-3">
+        <div id="CreditCards" class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-3">
           <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-cc" aria-label="Preview Credit Cards">
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
               <video src="assets/credit%20cards.mp4" class="h-full w-full object-cover" autoplay muted loop playsinline></video>
@@ -637,7 +638,7 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
 
         <!-- Internal System -->
-        <div class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-4">
+        <div id="InternalSystems" class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-4">
           <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-is" aria-label="Preview Internal System">
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
               <img src="assets/internal%20systems.png" alt="" class="h-full w-full object-cover object-right">
@@ -658,7 +659,7 @@ a:hover .arrow { transform: translateX(4px); }
 
         <!-- Design System: live, B2. Not a client project, so uses the OA favicon mark as its
              own logo and reads "My personal DSM" instead of a company name. -->
-        <div class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-2">
+        <div id="DesignSystem" class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-2">
           <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-dsys" aria-label="Preview Design System">
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
               <img src="assets/dsm.png" alt="" class="h-full w-full object-cover object-left-top">
@@ -898,7 +899,7 @@ a:hover .arrow { transform: translateX(4px); }
       const navPhrases = {
         top: 'Hi, glad you\'re here',
         about: 'This part is about me',
-        work: 'A few things I\'ve shaped',
+        'case-studies': 'A few things I\'ve shaped',
         skills: 'What\'s in the toolbox',
         contact: 'Okay, let\'s talk'
       };
