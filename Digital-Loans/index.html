@@ -505,7 +505,16 @@ a:hover .arrow { transform: translateX(4px); }
     <div class="mx-auto max-w-7xl">
       <div style="max-width:1080px;">
         <h1 class="enter type-display-sm sm:text-5xl" style="animation-delay:80ms">Digital Loans<span class="brand-dot">.</span></h1>
-        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-[auto_auto_auto_1fr] sm:gap-x-10" style="animation-delay:240ms">
+        <!-- B29 pilot, 2026-08-12 v3: switched from content-driven auto_auto_auto_1fr
+             columns to fixed widths for Year/Role/Duration (Scope stays flexible).
+             Auto-sizing made each column exactly as wide as its own value, so the
+             label row above (Year/Role/Duration/Scope) fell out of even rhythm
+             purely because "Product Design Manager" is much longer than "2026",
+             not because of a real content problem. Fixed widths keep the label row
+             evenly spaced regardless of value length, matching what Ofir flagged
+             as the more correct layout in a reference mockup. Shared hero pattern
+             across all 3 case studies, piloted here first per the usual rule. -->
+        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-[4rem_13rem_6rem_1fr] sm:gap-x-10" style="animation-delay:240ms">
           <div>
             <p class="type-body-md text-muted">Year</p>
             <p class="type-body-lg mt-1 font-medium text-default">2026</p>
@@ -529,6 +538,67 @@ a:hover .arrow { transform: translateX(4px); }
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Android</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Web</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
+        </div>
+      </div>
+
+      <!-- B29 pilot, 2026-08-12 v4: moved out of the 1080px text wrapper above (was
+           only ever rendering at ~75-85% of the real content width, capped by that
+           wrapper) so it spans the full max-w-7xl header width instead, matching
+           every other section's content width on this page (Challenge/Strategy/
+           Proof all use the same max-w-7xl container). Card itself unchanged:
+           bg-card + border-border-default, the Track record card treatment from
+           ../index.html. Full width below the tags at every breakpoint including
+           mobile. Header carries the "where it stands today" label plus an "In
+           Production" status dot (only accurate for a shipped project like this
+           one, Credit Cards will need different wording since it's still in
+           development). Each stat has a one-line caption reused near-verbatim from
+           "the proof" section below. Mobile: stats stack vertically with a
+           horizontal divide-y rule between them (divide-y swaps to divide-x at sm,
+           where they go back to a row) per Ofir's explicit request, distinct from
+           the Track record cards on ../index.html which dropped dividers on mobile
+           entirely to fix a real overflow bug there (B40) - not the same risk
+           here since each stacked stat is already full-width on its own line, a
+           horizontal rule between full-width rows doesn't cause the same
+           side-to-side squeeze. Ideas pulled from a reference mockup Ofir shared
+           and reviewed against this site's real content/tokens before adopting
+           (see chat: kept the card/caption/status-dot ideas, dropped the mockup's
+           breadcrumb, category pill, and Challenge/Redesign hero summary since
+           those aren't sourced from career-master.md and overlap with the
+           still-undecided B34 synopsis block). -->
+      <div class="enter mt-6 rounded-lg border border-border-default bg-card p-6" style="animation-delay:480ms">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="type-label-sm text-muted">where it stands today</span>
+          <span class="inline-flex items-center gap-1.5 type-label-sm" style="color:var(--color-primary);">
+            <span class="inline-block h-1.5 w-1.5 rounded-full" style="background:var(--color-accent);"></span>
+            In Production
+          </span>
+        </div>
+        <!-- Mobile divider fix, 2026-08-12: the first version combined flex `gap-6`
+             with one-sided `pt-6` on each item, two different spacing mechanisms
+             for the same boundary, and the divide-y line ended up hugging the
+             block above instead of sitting centered in the gap (caught by Ofir
+             comparing directly against the Track record card on ../index.html).
+             Fixed to the standard, predictable divide-y idiom instead: no gap-6 on
+             the mobile axis, each item gets symmetric py-6 (first:pt-0, last:pb-0)
+             so the border sits evenly split, 24px padding on each side, between
+             every pair of stats. Desktop row behavior unchanged (gap-6 + divide-x
+             + px-5, already confirmed working), just scoped to sm and up. -->
+        <div class="mt-5 flex flex-col divide-y divide-border-default text-center sm:flex-row sm:gap-6 sm:divide-y-0 sm:divide-x">
+          <div class="min-w-0 flex-1 px-1 py-6 first:pt-0 last:pb-0 sm:px-5 sm:py-0">
+            <div class="type-headline-sm" style="color:var(--color-gold-700)">+18%</div>
+            <p class="type-label-sm text-muted mt-1">digital<br>adoption</p>
+            <p class="type-body-md text-secondary mt-2">Cumulative growth in digital loan adoption.</p>
+          </div>
+          <div class="min-w-0 flex-1 px-1 py-6 first:pt-0 last:pb-0 sm:px-5 sm:py-0">
+            <div class="type-headline-sm" style="color:var(--color-gold-700)">80%</div>
+            <p class="type-label-sm text-muted mt-1">self-service<br>migration</p>
+            <p class="type-body-md text-secondary mt-2">Loan applications moved to digital self-service.</p>
+          </div>
+          <div class="min-w-0 flex-1 px-1 py-6 first:pt-0 last:pb-0 sm:px-5 sm:py-0">
+            <div class="type-headline-sm" style="color:var(--color-gold-700)">~180K</div>
+            <p class="type-label-sm text-muted mt-1">monthly<br>flow entries</p>
+            <p class="type-body-md text-secondary mt-2">People entering the loan flow every month.</p>
+          </div>
         </div>
       </div>
 
@@ -702,7 +772,7 @@ a:hover .arrow { transform: translateX(4px); }
             <div>
               <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
               <h3 class="type-headline-sm mt-2">Self-Service Shift</h3>
-              <p class="type-body-md mt-2 text-secondary">Migrated <span class="font-medium text-primary">80%</span> of loan applications to digital self-service, cutting call-center dependency.</p>
+              <p class="type-body-md mt-2 text-secondary">Migrated <span class="font-medium text-primary">80%</span> of loan applications to digital self-service, cutting call-center dependency for roughly <span class="font-medium text-primary">180,000</span> people who enter the flow every month.</p>
             </div>
             <div>
               <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
@@ -738,7 +808,7 @@ a:hover .arrow { transform: translateX(4px); }
 
   <!-- NEXT CASE STUDY: added 2026-08-11 so a reader can keep browsing without
        being forced back to the homepage. Cyclic order matching the homepage
-       tile order (Digital Loans > Credit Cards > Internal System > Design
+       tile order (Digital Loans > Credit Cards > Internal Mortgage System > Design
        System > wraps back to Digital Loans). Reuses the site's existing
        label+heading+.arrow idiom, just without the pill button chrome.
        Right-aligned per Ofir's call (2026-08-11): the arrow points right,
