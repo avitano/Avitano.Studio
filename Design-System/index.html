@@ -365,9 +365,24 @@ a:hover .arrow { transform: translateX(4px); }
 .icon-card {
   display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
   border-radius: var(--radius-lg); border: 1px solid var(--color-border-default);
-  background: var(--color-card); padding: 1rem; text-align: center;
+  background: var(--color-card); padding: 1rem; text-align: center; min-width: 0;
+  /* safety net: labels are spaced now (Sliders Horizontal, not SlidersHorizontal) so they wrap
+     at the space on their own, but this guards against a future single long unspaced word
+     overflowing the card on narrow mobile columns the same way, without needing to remember it. */
+  overflow-wrap: anywhere;
 }
 .icon-card[hidden] { display: none; }
+
+/* narrow-phone exception, below 375px only (e.g. smaller/older Android widths): 3 columns
+   leaves too little column width for the single longest label ("Horizontal", in More/Sliders
+   Horizontal) to fit without overflow-wrap breaking it mid-word even with the safety net above.
+   2 columns only in this narrow band; 375px and up keeps Ofir's confirmed-good 3-column default,
+   untouched. Unlayered on purpose, same reasoning as the site-nav-back rule elsewhere on this
+   site: this needs to beat the base (unprefixed) Tailwind `grid-cols-3` utility already on
+   #iconCatGrid, and only an unlayered rule reliably wins that fight regardless of source order. */
+@media (max-width: 374px) {
+  #iconCatGrid { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* card-lift, ported verbatim from ../index.html so these cards hover exactly like every other
    card-lift element on the site (subtle raise + cursor-tracked spotlight glow). */
@@ -682,35 +697,35 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-          <span class="type-body-md text-secondary">ChevronDown</span>
+          <span class="type-body-md text-secondary">Chevron Down</span>
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-          <span class="type-body-md text-secondary">ChevronRight</span>
+          <span class="type-body-md text-secondary">Chevron Right</span>
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-          <span class="type-body-md text-secondary">ChevronLeft</span>
+          <span class="type-body-md text-secondary">Chevron Left</span>
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
-          <span class="type-body-md text-secondary">ChevronUp</span>
+          <span class="type-body-md text-secondary">Chevron Up</span>
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          <span class="type-body-md text-secondary">ArrowRight</span>
+          <span class="type-body-md text-secondary">Arrow Right</span>
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-          <span class="type-body-md text-secondary">ArrowLeft</span>
+          <span class="type-body-md text-secondary">Arrow Left</span>
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
-          <span class="type-body-md text-secondary">ArrowUp</span>
+          <span class="type-body-md text-secondary">Arrow Up</span>
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
-          <span class="type-body-md text-secondary">ArrowDown</span>
+          <span class="type-body-md text-secondary">Arrow Down</span>
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
@@ -718,11 +733,11 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
-          <span class="type-body-md text-secondary">LogOut</span>
+          <span class="type-body-md text-secondary">Log Out</span>
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
-          <span class="type-body-md text-secondary">ExternalLink</span>
+          <span class="type-body-md text-secondary">External Link</span>
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -730,11 +745,11 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-          <span class="type-body-md text-secondary">MoreHorizontal</span>
+          <span class="type-body-md text-secondary">More Horizontal</span>
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-          <span class="type-body-md text-secondary">MoreVertical</span>
+          <span class="type-body-md text-secondary">More Vertical</span>
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"/></svg>
@@ -742,11 +757,11 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5h20"/><path d="M6 12h12"/><path d="M9 19h6"/></svg>
-          <span class="type-body-md text-secondary">ListFilter</span>
+          <span class="type-body-md text-secondary">List Filter</span>
         </div>
         <div class="icon-card card-lift" data-cat="nav">
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/></svg>
-          <span class="type-body-md text-secondary">SlidersHorizontal</span>
+          <span class="type-body-md text-secondary">Sliders Horizontal</span>
         </div>
         <!-- Files & Content (13) -->
         <div class="icon-card card-lift" data-cat="files" hidden>
@@ -755,7 +770,7 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="icon-card card-lift" data-cat="files" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
-          <span class="type-body-md text-secondary">FileText</span>
+          <span class="type-body-md text-secondary">File Text</span>
         </div>
         <div class="icon-card card-lift" data-cat="files" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
@@ -763,7 +778,7 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="icon-card card-lift" data-cat="files" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg>
-          <span class="type-body-md text-secondary">FolderOpen</span>
+          <span class="type-body-md text-secondary">Folder Open</span>
         </div>
         <div class="icon-card card-lift" data-cat="files" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
@@ -787,7 +802,7 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="icon-card card-lift" data-cat="files" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v16"/><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"/></svg>
-          <span class="type-body-md text-secondary">BookOpen</span>
+          <span class="type-body-md text-secondary">Book Open</span>
         </div>
         <div class="icon-card card-lift" data-cat="files" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
@@ -808,15 +823,15 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="icon-card card-lift" data-cat="status" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
-          <span class="type-body-md text-secondary">CheckCircle</span>
+          <span class="type-body-md text-secondary">Check Circle</span>
         </div>
         <div class="icon-card card-lift" data-cat="status" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-          <span class="type-body-md text-secondary">AlertCircle</span>
+          <span class="type-body-md text-secondary">Alert Circle</span>
         </div>
         <div class="icon-card card-lift" data-cat="status" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-          <span class="type-body-md text-secondary">AlertTriangle</span>
+          <span class="type-body-md text-secondary">Alert Triangle</span>
         </div>
         <div class="icon-card card-lift" data-cat="status" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
@@ -824,28 +839,28 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="icon-card card-lift" data-cat="status" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-          <span class="type-body-md text-secondary">HelpCircle</span>
+          <span class="type-body-md text-secondary">Help Circle</span>
         </div>
         <div class="icon-card card-lift" data-cat="status" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg>
-          <span class="type-body-md text-secondary">BadgeCheck</span>
+          <span class="type-body-md text-secondary">Badge Check</span>
         </div>
         <div class="icon-card card-lift" data-cat="status" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
-          <span class="type-body-md text-secondary">RefreshCw</span>
+          <span class="type-body-md text-secondary">Refresh Cw</span>
         </div>
         <div class="icon-card card-lift" data-cat="status" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-          <span class="type-body-md text-secondary">RotateCcw</span>
+          <span class="type-body-md text-secondary">Rotate Ccw</span>
         </div>
         <!-- Commerce (3) -->
         <div class="icon-card card-lift" data-cat="commerce" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-          <span class="type-body-md text-secondary">CreditCard</span>
+          <span class="type-body-md text-secondary">Credit Card</span>
         </div>
         <div class="icon-card card-lift" data-cat="commerce" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          <span class="type-body-md text-secondary">DollarSign</span>
+          <span class="type-body-md text-secondary">Dollar Sign</span>
         </div>
         <div class="icon-card card-lift" data-cat="commerce" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg>
@@ -878,11 +893,11 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="icon-card card-lift" data-cat="account" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>
-          <span class="type-body-md text-secondary">EyeOff</span>
+          <span class="type-body-md text-secondary">Eye Off</span>
         </div>
         <div class="icon-card card-lift" data-cat="account" hidden>
           <svg aria-hidden="true" class="size-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>
-          <span class="type-body-md text-secondary">KeyRound</span>
+          <span class="type-body-md text-secondary">Key Round</span>
         </div>
         <!-- Media & Communication (11) -->
         <div class="icon-card card-lift" data-cat="media" hidden>
@@ -911,7 +926,7 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="icon-card card-lift" data-cat="media" hidden>
           <svg class="size-6 text-primary" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg>
-          <span class="type-body-md text-secondary">MessageSquare</span>
+          <span class="type-body-md text-secondary">Message Square</span>
         </div>
         <div class="icon-card card-lift" data-cat="media" hidden>
           <svg class="size-6 text-primary" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>
@@ -936,7 +951,7 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="icon-card card-lift" data-cat="data" hidden>
           <svg class="size-6 text-primary" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
-          <span class="type-body-md text-secondary">LayoutGrid</span>
+          <span class="type-body-md text-secondary">Layout Grid</span>
         </div>
         <div class="icon-card card-lift" data-cat="data" hidden>
           <svg class="size-6 text-primary" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
@@ -952,19 +967,19 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="icon-card card-lift" data-cat="data" hidden>
           <svg class="size-6 text-primary" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
-          <span class="type-body-md text-secondary">BarChart3</span>
+          <span class="type-body-md text-secondary">Bar Chart3</span>
         </div>
         <div class="icon-card card-lift" data-cat="data" hidden>
           <svg class="size-6 text-primary" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z"/><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/></svg>
-          <span class="type-body-md text-secondary">PieChart</span>
+          <span class="type-body-md text-secondary">Pie Chart</span>
         </div>
         <div class="icon-card card-lift" data-cat="data" hidden>
           <svg class="size-6 text-primary" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg>
-          <span class="type-body-md text-secondary">TrendingUp</span>
+          <span class="type-body-md text-secondary">Trending Up</span>
         </div>
         <div class="icon-card card-lift" data-cat="data" hidden>
           <svg class="size-6 text-primary" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 17h6v-6"/><path d="m22 17-8.5-8.5-5 5L2 7"/></svg>
-          <span class="type-body-md text-secondary">TrendingDown</span>
+          <span class="type-body-md text-secondary">Trending Down</span>
         </div>
         <div class="icon-card card-lift" data-cat="data" hidden>
           <svg class="size-6 text-primary" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
@@ -1034,7 +1049,7 @@ a:hover .arrow { transform: translateX(4px); }
         <!-- Misc & Location (12) -->
         <div class="icon-card card-lift" data-cat="misc" hidden>
           <svg class="size-6 text-primary" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
-          <span class="type-body-md text-secondary">MapPin</span>
+          <span class="type-body-md text-secondary">Map Pin</span>
         </div>
         <div class="icon-card card-lift" data-cat="misc" hidden>
           <svg class="size-6 text-primary" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></svg>
