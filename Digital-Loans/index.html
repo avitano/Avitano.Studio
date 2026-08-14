@@ -227,6 +227,24 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 .reveal-stagger > * { opacity: 0; transform: translateY(50px); transition: opacity 650ms var(--ease-soft), transform 650ms var(--ease-soft); will-change: opacity, transform; }
 .reveal-stagger > *.in-view { opacity: 1; transform: translateY(0); }
 
+/* happy-flow filmstrip "conveyor" entrance (2026-08-14, v2 - replaces the earlier per-card
+   staggered-opacity "push" attempt below, kept only in git history): the 6 cards live in
+   #loanPurposeStripInner (width = true content width via w-max), nested inside the fixed-width,
+   overflow-hidden-by-scroll #loanPurposeStrip viewport. The whole inner row starts shifted
+   completely out of view (translateX(-100%)) and slides to translateX(0) as ONE single linear
+   motion - no per-card delays, no opacity fades, matching the hero's own .conveyor-track feel.
+   Because every card moves in perfect lockstep but rests at a different natural x position,
+   card 6 (resting at the far right of the row) crosses into the visible viewport almost
+   immediately, while card 1 (resting at x=0) only becomes visible right at the end of the
+   slide - "screen 6 enters first, then 5, 4, 3, 2, and finally 1" falls out of the geometry
+   for free, with zero artificial timing differences between cards. */
+#loanPurposeStripInner { transform: translateX(-100%); }
+#loanPurposeStrip.strip-in-view #loanPurposeStripInner { animation: strip-conveyor-in 950ms linear both; }
+@keyframes strip-conveyor-in {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
 /* arrow nudges right on hover, same as ../index.html */
 .arrow { display: inline-block; transition: transform 200ms var(--ease-out); }
 a:hover .arrow { transform: translateX(4px); }
@@ -459,6 +477,58 @@ a:hover .arrow { transform: translateX(4px); }
   to   { transform: translateX(-50%); }
 }
 
+/* Purpose-based happy-flow strip (Strategy), draft 2026-08-13: NavItem molecule ported verbatim
+   from Design-System/index.html's icon-showcase sidebar (same My DSM component, see B46), reused
+   here as a 6-loan-purpose menu next to an image filmstrip (see #loanPurposeStrip's script for the
+   swap logic). All 5 slots (each wrapped in a [data-slot-media] box) vary per purpose, corrected
+   same day from an earlier assumption that slots 3-4 (Offers/Summary) were generic, they actually
+   name the loan purpose directly in their own copy. Real Vacation screens are wired in as a first
+   pass, Ofir's own words: "temporary, now that I've seen how it came out I'll prepare higher
+   quality images." The other 5 purposes fall back to a "Coming soon." placeholder (border-dashed)
+   across all 5 slots until their own 5-screen sets exist. No click-to-expand interaction yet
+   (still an open decision). Icons are a neutral placeholder dot for all 6 menu items, real
+   per-purpose DSM icons still TBD. */
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  inline-size: 100%;
+  min-block-size: 2.75rem;
+  padding-block: 0.5rem;
+  padding-inline: 0.75rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-plain);
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  text-align: start;
+  white-space: nowrap;
+  background: transparent;
+  color: var(--color-secondary);
+  border: none;
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
+}
+.nav-item__icon { flex: none; width: 1.25rem; height: 1.25rem; color: var(--color-muted); }
+.nav-item__label { flex: 1 1 auto; }
+.nav-item:hover { background-color: var(--color-surface-alt); color: var(--color-default); }
+.nav-item:hover .nav-item__icon { color: var(--color-default); }
+.nav-item[aria-current="page"], .nav-item.is-active {
+  background-color: var(--color-surface-pressed);
+  color: var(--color-default);
+  font-weight: 600;
+}
+.nav-item[aria-current="page"] .nav-item__icon, .nav-item.is-active .nav-item__icon { color: var(--color-primary); }
+.nav-item[aria-current="page"]::before, .nav-item.is-active::before {
+  content: ""; position: absolute; inset-inline-start: 0; inset-block: 0.375rem;
+  inline-size: 0.1875rem; border-radius: var(--radius-sm); background-color: var(--color-primary);
+}
+.nav-item:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-focus);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .enter { animation: none; opacity: 1; filter: none; }
   .reveal, .reveal-stagger > * { transition: none; opacity: 1; transform: none; }
@@ -468,6 +538,9 @@ a:hover .arrow { transform: translateX(4px); }
   .conveyor-card.land { animation: none; opacity: 1; transform: none; }
   .hero-strip__clouds-track { animation: none; }
   .cloud-drift { animation: none; }
+  .nav-item { transition: none; }
+  #loanPurposeStripInner { transform: none; }
+  #loanPurposeStrip.strip-in-view #loanPurposeStripInner { animation: none; }
 }
 </style>
 </head>
@@ -726,30 +799,50 @@ a:hover .arrow { transform: translateX(4px); }
   </section>
 
   <!-- STRATEGY -->
-  <section id="strategy" class="bg-surface-alt px-4 lg:px-20">
+  <!-- Split into two beats 2026-08-13, per Ofir's real story (worked through with Gemini, cross-
+       checked against career-master.md's SCOPE CORRECTION): "the mvp." (funnel inversion, the
+       backend-rejected pivot) then "the full product." (the mandatory purpose field turned into
+       the personalization engine). Copy is a first draft grounded in confirmed facts, flag
+       anything that doesn't sound like Ofir's own words. Also quietly drops the old "3 tailored
+       pathways" phrasing from point 01, Ofir was never confident that number was literally 3 (see
+       SCOPE CORRECTION), no need to keep repeating an unconfirmed figure while this paragraph was
+       already being rewritten anyway. -->
+  <!-- MVP -->
+  <!-- Own section now (split from Strategy 2026-08-13, per Ofir: needs a background-color break
+       from what follows, not a border divider). Plain background, same as Challenge, so the color
+       change lands specifically at the mvp -> strategy boundary. 50/50 grid restored (was briefly
+       text-only), media LEFT / text RIGHT on desktop (order-2 lg:order-1 / order-1 lg:order-2) -
+       opposite of Challenge's text-left/media-right, continuing the zigzag. Media is a placeholder
+       (dashed border, "Coming soon.", aspect-[195/431] matching the filmstrip cards) since the only
+       real screen recording available (new_loans.mp4) documents the fully personalized product, not
+       the MVP - it moved to "the strategy." below instead of implying the MVP looked like this.
+       Ofir will supply a real MVP-specific mockup later. -->
+  <section id="mvp" class="bg-surface-alt px-4 lg:px-20">
     <div class="mx-auto max-w-7xl py-20 lg:py-28">
       <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
         <div class="order-2 lg:order-1 lg:col-span-6">
-          <div id="strategyMedia" class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
-            <video class="h-auto w-full" src="new_loans.mp4" muted loop playsinline preload="auto"></video>
-            <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">after</span>
+          <div id="mvpMedia" class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
+            <div class="aspect-[195/431] w-full overflow-hidden rounded-lg border border-dashed border-border-default bg-neutral-100">
+              <span class="flex h-full items-center justify-center px-4 text-center type-label-sm text-muted">Coming soon.</span>
+            </div>
+            <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">mvp</span>
           </div>
         </div>
 
         <div class="order-1 lg:order-2 lg:col-span-6">
-          <h2 class="reveal type-headline-md max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
-          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The original ambition was bigger: cut the number of loan types bank-wide. That scope proved too complex to take on in one move, so the strategy narrowed deliberately to the digital channel, real impact within a scoped-down version of the vision, not the full one.</p>
+          <h2 class="reveal type-headline-md max-w-2xl">the mvp<span class="brand-dot">.</span></h2>
+          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The first proposal was to simplify the loan-type logic itself, bank-wide. That was blocked by backend and organizational constraints, so the fix moved to the UX layer instead: change what the user is asked, not what the bank offers.</p>
 
           <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
             <div>
               <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
               <h3 class="type-headline-sm mt-2">Intent-Based Discovery</h3>
-              <p class="type-body-md mt-2 text-secondary">Invert the funnel: capture amount and purpose first, then present 3 tailored pathways instead of 15+.</p>
+              <p class="type-body-md mt-2 text-secondary">Invert the funnel: capture amount and purpose first, then surface focused, eligible offers instead of 15+ undifferentiated options.</p>
             </div>
             <div>
               <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
-              <h3 class="type-headline-sm mt-2">Emotional &amp; Human-Centric</h3>
-              <p class="type-body-md mt-2 text-secondary">Turn a dry transaction into an aspirational milestone with contextual visual worlds and reassuring microcopy.</p>
+              <h3 class="type-headline-sm mt-2">A Backend Constraint, Reframed</h3>
+              <p class="type-body-md mt-2 text-secondary">Reducing the loan-type logic itself wasn't possible in one move. Reordering the flow around it was.</p>
             </div>
             <div>
               <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
@@ -759,6 +852,209 @@ a:hover .arrow { transform: translateX(4px); }
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- STRATEGY -->
+  <!-- "the strategy." (renamed back from "the full product.", 2026-08-13) owns the 50/50 text/media
+       split with new_loans.mp4 - Ofir's real story confirms it documents the fully personalized
+       product, so it lives here, not under mvp. No order-* classes (text first in DOM/left, media
+       second/right on desktop) - deliberately matches Challenge's orientation exactly, since mvp
+       just used the opposite one, keeping the three 50/50 blocks alternating left-right-left down
+       the page instead of repeating the same side twice in a row. Points grid is grid-cols-1 to fit
+       the half-width column.
+
+       Below its own divider: eyebrow + headline pair introducing the purpose-picker filmstrip,
+       reusing the exact eyebrow/headline pattern from the homepage's Capabilities section
+       (`<span class="type-label-sm text-muted">` + `<h2 class="type-headline-md mt-4 max-w-2xl">`)
+       instead of two stacked headings of mismatched weight. Corrected 2026-08-13 after Ofir caught
+       the hierarchy was backwards: "The Full Product" is the small eyebrow (just context - which
+       beat this belongs to), "happy flow." is the big headline (the actual named thing being shown,
+       matching what a visitor is actually looking at). Mechanism built 2026-08-13. All 6 purposes now have real 6-screen sets in
+       Loan_Purposes/<Purpose>/1.png-6.png, uploaded by Ofir same day, first-pass quality (he'll
+       refine once he's seen the mechanism work). Slot 4 (Calculator) is the SAME file byte-for-byte
+       across all 6 purpose folders (confirmed via md5sum) - flagged to Ofir as likely intentional
+       (the calculator UI itself has no purpose-specific illustration, unlike loader/finish) rather
+       than assumed silently; wired in either way since it renders correctly regardless. "General"
+       was renamed to "Shopping" per Ofir's translation of the Hebrew "צריכה פרטית" (private
+       consumption). Images get object-top so varying source heights all crop from the same
+       position. Caption sits below each image, styled as a real gray pill reusing the exact
+       "before"/"after"/"mvp" tag classes used elsewhere on this page (`inline-flex items-center
+       rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary`) for consistency.
+       `sm:items-start` on the showcase row keeps the side nav's own bordered box wrapping only its
+       short menu list instead of default flex stretch-to-match the much taller filmstrip column.
+       Cards were originally `flex-1` (grow to fill available width, no true fixed size) so the strip
+       filled the page's content width without ever needing to scroll on desktop. Changed to a fixed
+       `w-56 shrink-0` 2026-08-13 per Ofir's explicit ask to make the cards genuinely bigger and is
+       fine with the resulting horizontal scroll - `min-w` alone hadn't worked as a first attempt
+       (raising the floor from 6.5rem to 11rem did nothing) because `flex-1` was already growing
+       cards past that floor on his screen, so the floor was never the binding constraint; a real
+       fixed width was the actual fix. Since the page caps at `max-w-7xl` (container never grows past
+       that regardless of screen width), 6 cards at `w-56` plus gaps now reliably exceed the strip's
+       available width on every desktop size, so horizontal scroll always kicks in as intended rather
+       than only on some screens. Box aspect ratio changed from `aspect-[32/67]` (an approximation
+       from older placeholder screenshots) to `aspect-[195/431]` 2026-08-13, matching the real Finish
+       screen's native size exactly (confirmed via PIL: every purpose's 6.png is identically
+       780x1724px) so Finish renders with zero cropping - it was previously getting cut off right at
+       the closing button, per Ofir. The other 5 slots have their own native ratios (measured:
+       1.png ~0.32, 2.png 780x1630/~0.48, 3.png/5.png ~0.30-0.34, 4.png 780x2756/~0.28) and are
+       expected to crop against this box, that's intentional per Ofir ("supposed to have cropping").
+       2.png (Loader) was measured at ~0.48 vs the box's 0.4524, close enough on paper that cropping
+       looked minor in theory, but Ofir reported the side-crop was actually visible/distracting in
+       practice once seen live, so he replaced the 2.png source file himself in all 6 purpose folders
+       (same filename, same path - the page needed no code change, `src` references the path not the
+       content, and the box just re-crops automatically against whatever the file's real dimensions
+       are now).
+
+       Added 2026-08-13, corrected same day: first attempt wrapped each of the 6 media boxes in its
+       own individual white matte frame - wrong reading of the ask, reverted. Ofir's actual intent:
+       ONE single white frame around the whole strip as a unit, not six separate ones.
+       `#loanPurposeStrip` (the horizontally-scrolling row) sits inside that one padded frame div,
+       which carries `sm:flex-1` (moved from the strip itself) so it still fills the remaining width
+       next to the nav; the strip and its 6 cards are otherwise back to their original sizing
+       (`w-56` cards, `w-full` media box) from before the individual-frame attempt. The frame itself
+       stays fixed/static - only the row of cards scrolls inside it via the strip's own
+       `overflow-x-auto`. Two more corrections same day after this landed live: (1) the frame's
+       `sm:flex-1` had no `min-w-0` alongside it, so its default flex-item `min-width: auto` let the
+       strip's real (unscrolled) content width - 6 cards + gaps, wider than the available column -
+       force the FRAME itself wider than its container, which forced the entire PAGE into horizontal
+       scroll instead of containing the scroll inside the frame as intended; added `min-w-0` so the
+       frame can shrink to the available column width and the strip's own `overflow-x-auto` handles
+       the excess internally, the standard fix for this well-known flexbox-overflow gotcha. (2)
+       padding changed from `p-2` (borrowed from the nav's tight menu padding, read as cramped/like a
+       sidebar once seen live) to `p-6`, matching the site's established bigger "content card"
+       padding convention (see the Track record card pattern, `rounded-lg border border-border-
+       default bg-card p-6`, used elsewhere on the homepage) instead of the compact one meant for a
+       nav list. `[data-slot-media]` still resolves correctly via `querySelector` inside
+       `renderSlot()` regardless of this wrapping. Height is intentionally
+       NOT capped to the nav's height, the real screens are taller than the menu and that's expected. No
+       click-to-expand yet, still an open decision.
+
+       Background-color pass 2026-08-14: split into a real alternating rhythm per Ofir - challenge
+       (white) / mvp (alt) / strategy (white) / happy-flow (alt) / proof (white, must stay white).
+       "the mvp." section moved from plain to `bg-surface-alt`; "the strategy." section moved the
+       other way, from `bg-surface-alt` to plain. The happy-flow content (eyebrow + "happy flow."
+       headline + purpose nav + filmstrip) used to live inside the same `<section>` as "the
+       strategy.", separated only by an internal `border-t` divider - it's now its own
+       `<section id="happy-flow" class="bg-surface-alt ...">`, and that internal divider was removed
+       since the background-color change itself now signals the section break, consistent with how
+       mvp/strategy were split earlier and with how the rest of the page already works (no borders
+       between top-level sections, only bg differences). -->
+  <section id="strategy" class="px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl py-20 lg:py-28">
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+        <div class="lg:col-span-6">
+          <h2 class="reveal type-headline-md max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
+          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Declaring the loan's purpose is a mandatory field for every credit provider in Israel, not a design choice. Instead of treating it as a compliance checkbox, it became the engine for the entire experience's tone, illustration, and closing moment.</p>
+
+          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+              <h3 class="type-headline-sm mt-2">A Regulatory Step, Reframed</h3>
+              <p class="type-body-md mt-2 text-secondary">A field the bank is required to ask becomes the reason the rest of the flow feels considered instead of generic.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+              <h3 class="type-headline-sm mt-2">Emotional &amp; Human-Centric</h3>
+              <p class="type-body-md mt-2 text-secondary">Turn a dry transaction into an aspirational milestone with contextual visual worlds and reassuring microcopy.</p>
+            </div>
+            <div>
+              <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+              <h3 class="type-headline-sm mt-2">Six Distinct Journeys</h3>
+              <p class="type-body-md mt-2 text-secondary">Vacation, car, medical, studies, debt coverage, or shopping, each with its own illustration, loader microcopy, and closing moment.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6">
+          <div id="strategyMedia" class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
+            <video class="h-auto w-full" src="new_loans.mp4" muted loop playsinline preload="auto"></video>
+            <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">after</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HAPPY FLOW -->
+  <section id="happy-flow" class="bg-surface-alt px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl py-20 lg:py-28">
+      <span class="reveal type-label-sm text-muted">The Full Product</span>
+      <h2 class="reveal type-headline-md mt-4 max-w-2xl">happy flow<span class="brand-dot">.</span></h2>
+
+      <div class="reveal mt-12 flex w-full flex-col gap-6 sm:flex-row sm:items-start" id="loanPurposeShowcase">
+          <nav aria-label="Loan purpose" class="rounded-lg border border-border-default bg-card p-2 sm:w-56 sm:shrink-0">
+            <ul class="flex list-none flex-row gap-1 overflow-x-auto p-0 sm:flex-col sm:overflow-visible" id="loanPurposeMenu">
+              <li><button type="button" class="nav-item is-active" data-purpose="vacation" aria-current="page">
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
+                <span class="nav-item__label">Vacation</span>
+              </button></li>
+              <li><button type="button" class="nav-item" data-purpose="car">
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
+                <span class="nav-item__label">Car</span>
+              </button></li>
+              <li><button type="button" class="nav-item" data-purpose="medical">
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
+                <span class="nav-item__label">Medical</span>
+              </button></li>
+              <li><button type="button" class="nav-item" data-purpose="studies">
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
+                <span class="nav-item__label">Studies</span>
+              </button></li>
+              <li><button type="button" class="nav-item" data-purpose="debt-coverage">
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
+                <span class="nav-item__label">Debt Coverage</span>
+              </button></li>
+              <li><button type="button" class="nav-item" data-purpose="shopping">
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
+                <span class="nav-item__label">Shopping</span>
+              </button></li>
+            </ul>
+          </nav>
+
+          <div class="min-w-0 rounded-lg border border-border-default bg-card p-6 sm:flex-1">
+            <div class="snap-x snap-mandatory overflow-x-auto pb-2" id="loanPurposeStrip">
+            <div class="flex w-max gap-4" id="loanPurposeStripInner">
+              <div class="flex w-56 shrink-0 snap-start flex-col items-center gap-2" data-slot="1">
+                <div class="aspect-[195/431] w-full overflow-hidden rounded-lg border border-border-default bg-neutral-100 shadow-md" data-slot-media>
+                  <img src="Loan_Purposes/Vacation/1.png" alt="" class="h-full w-full object-cover object-top">
+                </div>
+                <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">1 &middot; Request</span>
+              </div>
+              <div class="flex w-56 shrink-0 snap-start flex-col items-center gap-2" data-slot="2">
+                <div class="aspect-[195/431] w-full overflow-hidden rounded-lg border border-border-default bg-neutral-100 shadow-md" data-slot-media>
+                  <img src="Loan_Purposes/Vacation/2.png" alt="" class="h-full w-full object-cover object-top">
+                </div>
+                <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">2 &middot; Loader</span>
+              </div>
+              <div class="flex w-56 shrink-0 snap-start flex-col items-center gap-2" data-slot="3">
+                <div class="aspect-[195/431] w-full overflow-hidden rounded-lg border border-border-default bg-neutral-100 shadow-md" data-slot-media>
+                  <img src="Loan_Purposes/Vacation/3.png" alt="" class="h-full w-full object-cover object-top">
+                </div>
+                <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">3 &middot; Offers</span>
+              </div>
+              <div class="flex w-56 shrink-0 snap-start flex-col items-center gap-2" data-slot="4">
+                <div class="aspect-[195/431] w-full overflow-hidden rounded-lg border border-border-default bg-neutral-100 shadow-md" data-slot-media>
+                  <img src="Loan_Purposes/Vacation/4.png" alt="" class="h-full w-full object-cover object-top">
+                </div>
+                <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">4 &middot; Calculator</span>
+              </div>
+              <div class="flex w-56 shrink-0 snap-start flex-col items-center gap-2" data-slot="5">
+                <div class="aspect-[195/431] w-full overflow-hidden rounded-lg border border-border-default bg-neutral-100 shadow-md" data-slot-media>
+                  <img src="Loan_Purposes/Vacation/5.png" alt="" class="h-full w-full object-cover object-top">
+                </div>
+                <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">5 &middot; Summary</span>
+              </div>
+              <div class="flex w-56 shrink-0 snap-start flex-col items-center gap-2" data-slot="6">
+                <div class="aspect-[195/431] w-full overflow-hidden rounded-lg border border-border-default bg-neutral-100 shadow-md" data-slot-media>
+                  <img src="Loan_Purposes/Vacation/6.png" alt="" class="h-full w-full object-cover object-top">
+                </div>
+                <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">6 &middot; Finish</span>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
     </div>
   </section>
 
@@ -1077,6 +1373,105 @@ a:hover .arrow { transform: translateX(4px); }
         }, 160);
       }, { passive: false });
     }
+
+    // Happy-flow strip (2026-08-13): purpose menu selection swaps the real image (or a "Coming
+    // soon." fallback) in all 6 slots. As of today all 6 purposes have real, directly-numbered
+    // 6-screen sets (Loan_Purposes/<Purpose>/1.png-6.png, folder number === strip slot number, no
+    // shift needed for any purpose - Vacation's folder was renumbered to match once its own
+    // Calculator shot was added), so purposeScreens is generated from a purpose->folder map instead
+    // of hand-written per purpose. Slot 4 (Calculator) reuses the same source image across every
+    // purpose (confirmed byte-identical via md5sum) - kept as-is rather than special-cased, since
+    // it renders correctly either way and Ofir can swap it later if that wasn't intentional.
+    (function () {
+      var menu = document.getElementById('loanPurposeMenu');
+      var strip = document.getElementById('loanPurposeStrip');
+      var purposeFolders = {
+        vacation: 'Vacation',
+        car: 'Car',
+        medical: 'Medical',
+        studies: 'Studies',
+        'debt-coverage': 'Debt',
+        shopping: 'Shopping'
+      };
+      var purposeScreens = {};
+      Object.keys(purposeFolders).forEach(function (purpose) {
+        var folder = purposeFolders[purpose];
+        var screens = {};
+        [1, 2, 3, 4, 5, 6].forEach(function (n) {
+          screens[n] = 'Loan_Purposes/' + folder + '/' + n + '.png';
+        });
+        purposeScreens[purpose] = screens;
+      });
+      function renderSlot(slotEl, src) {
+        var media = slotEl && slotEl.querySelector('[data-slot-media]');
+        if (!media) return;
+        if (src) {
+          media.classList.remove('border-dashed');
+          media.innerHTML = '<img src="' + src + '" alt="" class="h-full w-full object-cover object-top">';
+        } else {
+          media.classList.add('border-dashed');
+          media.innerHTML = '<span class="flex h-full items-center justify-center px-1 text-center type-label-sm text-muted">Coming soon.</span>';
+        }
+      }
+      var stripInner = document.getElementById('loanPurposeStripInner');
+      // 2026-08-14: replays the conveyor slide-in on demand by toggling `.strip-in-view` off then
+      // back on. Removing the class drops the animation rule entirely, so the inner row snaps back
+      // to its base translateX(-100%) - but the browser batches that with the next class change
+      // unless we force a reflow in between (reading offsetWidth), so re-adding the class in the
+      // same tick would be a no-op and the animation wouldn't restart. Guarded by prefersReducedMotion
+      // same as the initial entrance below.
+      function replayStripEntrance() {
+        if (!strip || !stripInner || prefersReducedMotion) return;
+        strip.classList.remove('strip-in-view');
+        void stripInner.offsetWidth; // force reflow between remove and re-add
+        strip.classList.add('strip-in-view');
+      }
+      if (menu && strip) {
+        var buttons = menu.querySelectorAll('.nav-item');
+        menu.addEventListener('click', function (e) {
+          var btn = e.target.closest('.nav-item');
+          if (!btn) return;
+          buttons.forEach(function (b) {
+            var active = b === btn;
+            b.classList.toggle('is-active', active);
+            if (active) b.setAttribute('aria-current', 'page');
+            else b.removeAttribute('aria-current');
+          });
+          var purpose = btn.getAttribute('data-purpose');
+          var screens = purposeScreens[purpose] || {};
+          [1, 2, 3, 4, 5, 6].forEach(function (n) {
+            renderSlot(strip.querySelector('[data-slot="' + n + '"]'), screens[n]);
+          });
+          // 2026-08-14: always jump back to screen 1 on purpose switch, so a visitor who scrolled
+          // the strip to see screen 5/6 for one purpose doesn't land mid-strip when they pick a
+          // different one - every switch should start the story over from the beginning.
+          strip.scrollLeft = 0;
+          // 2026-08-14: every purpose switch replays the conveyor slide-in too, not just the very
+          // first time the strip scrolls into view - Ofir's ask, so the "6 enters first, then 5,
+          // 4...1" motion re-plays as a mini transition every time the screens actually change.
+          replayStripEntrance();
+        });
+      }
+      // 2026-08-14: conveyor entrance for the strip's 6 cards (CSS transform/keyframes live in the
+      // <style> block above) - fires the first time the strip scrolls into view, same "observe once
+      // then unobserve" pattern used for challengeMedia/strategyMedia's video-autoplay triggers below
+      // (this only controls the FIRST play; every later purpose switch replays it via
+      // replayStripEntrance() above, called from the nav click handler). Skipped entirely under
+      // reduced motion, consistent with those same triggers - the CSS reduced-motion block
+      // separately forces the cards to their final visible state regardless, so nothing is lost by
+      // not attaching this.
+      if (strip && !prefersReducedMotion) {
+        var stripIo = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              stripIo.unobserve(entry.target);
+              entry.target.classList.add('strip-in-view');
+            }
+          });
+        }, { threshold: 0.2 });
+        stripIo.observe(strip);
+      }
+    })();
   </script>
 
   </div><!-- /.page-shift -->
