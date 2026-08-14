@@ -12,15 +12,15 @@
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ofir Avitan | Digital Loans Case Study</title>
-<meta name="description" content="Digital Loans case study: redesigning Bank Hapoalim's loan experience from a 15-option lobby into a 3-path, intent-based flow.">
+<meta name="description" content="Digital Loans case study: reordering Bank Hapoalim's loan request flow so eligibility comes before offers, then personalizing it around the customer's stated purpose.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://avitano.studio/Digital-Loans/">
 <meta property="og:title" content="Ofir Avitan | Digital Loans Case Study">
-<meta property="og:description" content="Digital Loans case study: redesigning Bank Hapoalim's loan experience from a 15-option lobby into a 3-path, intent-based flow.">
+<meta property="og:description" content="Digital Loans case study: reordering Bank Hapoalim's loan request flow so eligibility comes before offers, then personalizing it around the customer's stated purpose.">
 <meta property="og:image" content="https://avitano.studio/assets/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Ofir Avitan | Digital Loans Case Study">
-<meta name="twitter:description" content="Digital Loans case study: redesigning Bank Hapoalim's loan experience from a 15-option lobby into a 3-path, intent-based flow.">
+<meta name="twitter:description" content="Digital Loans case study: reordering Bank Hapoalim's loan request flow so eligibility comes before offers, then personalizing it around the customer's stated purpose.">
 <meta name="twitter:image" content="https://avitano.studio/assets/og-image.jpg">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon.ico" sizes="any">
@@ -636,7 +636,7 @@ a:hover .arrow { transform: translateX(4px); }
             <p class="type-body-lg mt-1 font-medium text-default" style="max-width:495px;">Product Strategy, UX, UI, Microcopy, Usability Testing, Legal Collaboration, Design System, Animations</p>
           </div>
         </div>
-        <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms; max-width:790px;">Redesigned Bank Hapoalim's loan experience: a single long scroll of 15+ raw options, spanning four distinct loan products, became a 3-path, intent-based flow.</p>
+        <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms; max-width:790px;">Redesigned Bank Hapoalim's loan request flow: offers used to appear before eligibility was ever checked. Flipped the order and personalized what's left around the customer's stated purpose.</p>
         <div class="enter mt-6 flex flex-wrap gap-2" style="animation-delay:420ms">
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">iOS</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Android</span>
@@ -690,8 +690,8 @@ a:hover .arrow { transform: translateX(4px); }
         <div class="mt-5 flex flex-col divide-y divide-border-default text-center sm:flex-row sm:gap-6 sm:divide-y-0 sm:divide-x">
           <div class="min-w-0 flex-1 px-1 py-6 first:pt-0 last:pb-0 sm:px-5 sm:py-0">
             <div class="type-headline-sm" style="color:var(--color-gold-700)">+18%</div>
-            <p class="type-label-sm text-muted mt-1">digital<br>adoption</p>
-            <p class="type-body-md text-secondary mt-2">Cumulative growth in digital loan adoption.</p>
+            <p class="type-label-sm text-muted mt-1">loan<br>conversions</p>
+            <p class="type-body-md text-secondary mt-2">Cumulative growth in loan conversions.</p>
           </div>
           <div class="min-w-0 flex-1 px-1 py-6 first:pt-0 last:pb-0 sm:px-5 sm:py-0">
             <div class="type-headline-sm" style="color:var(--color-gold-700)">80%</div>
@@ -788,12 +788,22 @@ a:hover .arrow { transform: translateX(4px); }
        lobby screen recording. Same 12-col grid utility as Credit Cards' challenge section
        (../Credit-Cards/index.html), not a new pattern. Numbered points drop to a single column
        since the text side is narrower now. -->
+  <!-- Accuracy fix, 2026-08-14 (B39 + B50, executed together per Ofir's explicit sign-off after
+       cross-referencing his corrected story against career-master.md's SCOPE CORRECTION): removed
+       the "it was four [products]... 15+ raw options... 3-path" framing (never accurate - see
+       SCOPE CORRECTION, dated 2026-08-12, which already flagged refinance/car-loan/universal-loan
+       as separate products, not paths inside this flow). Real story, confirmed 2026-08-14: this is
+       ONE flow (loan request, app + website, existing private customers). Old flow opened straight
+       into 4-5 offers built from ~15 backend loan-type templates, calculator before eligibility,
+       so customers could build hope around offers they didn't qualify for. Same correction applied
+       to the meta description/OG/Twitter tags, hero subheading, and "the mvp." section's point 01
+       below. -->
   <section id="challenge" class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl border-t border-border-default pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
       <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
         <div class="lg:col-span-6">
           <h2 class="reveal type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
-          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The digital loans experience wasn't one flow, it was four. A new loan request, a refinance, a car loan, and a universal loan open to any customer, each with its own dependencies, backend models, and layer of business and regulatory rules. All of it surfaced through the same legacy lobby: one long scroll of 15+ raw options with no hierarchy.</p>
+          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The loan request flow, in the app and website, for existing private customers. It opened straight into 4-5 offers at different amounts, drawn from roughly 15 loan-type templates behind the scenes, before ever asking what the customer actually needed. Customers picked an offer and ran the calculator first, only finding out whether they were eligible deep into the flow.</p>
 
           <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
             <div>
@@ -803,8 +813,8 @@ a:hover .arrow { transform: translateX(4px); }
             </div>
             <div>
               <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
-              <h3 class="type-headline-sm mt-2">Cognitive Overload</h3>
-              <p class="type-body-md mt-2 text-secondary">15+ raw, confusing options at once, with no hierarchy or differentiation.</p>
+              <h3 class="type-headline-sm mt-2">Eligibility Came Last</h3>
+              <p class="type-body-md mt-2 text-secondary">Customers explored offers and ran the calculator before ever finding out, late in the flow, whether they qualified.</p>
             </div>
             <div>
               <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
@@ -870,13 +880,13 @@ a:hover .arrow { transform: translateX(4px); }
 
         <div class="order-1 lg:order-2 lg:col-span-6">
           <h2 class="reveal type-headline-md max-w-2xl">the mvp<span class="brand-dot">.</span></h2>
-          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The first proposal was to simplify the loan-type logic itself, bank-wide. That was blocked by backend and organizational constraints, so the fix moved to the UX layer instead: change what the user is asked, not what the bank offers.</p>
+          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The first proposal was to simplify the ~15 loan types behind the scenes, bank-wide. That was blocked by backend and organizational constraints, so the fix moved to the UX layer instead: change what the user is asked, not what the bank offers.</p>
 
           <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
             <div>
               <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
               <h3 class="type-headline-sm mt-2">Intent-Based Discovery</h3>
-              <p class="type-body-md mt-2 text-secondary">Invert the funnel: capture amount and purpose first, then surface focused, eligible offers instead of 15+ undifferentiated options.</p>
+              <p class="type-body-md mt-2 text-secondary">Invert the order: capture amount and purpose first, check eligibility in a loader, then surface offers, before the customer ever touches a calculator.</p>
             </div>
             <div>
               <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
@@ -1125,7 +1135,7 @@ a:hover .arrow { transform: translateX(4px); }
         <div class="lg:col-span-6">
           <div class="reveal mx-auto flex w-full flex-col items-center gap-3 text-center">
             <div class="type-display-lg" style="font-size:4.5rem; color:var(--color-button);">+18%</div>
-            <p class="type-body-lg max-w-xs text-secondary">Cumulative growth in digital loan adoption.</p>
+            <p class="type-body-lg max-w-xs text-secondary">Cumulative growth in loan conversions.</p>
           </div>
         </div>
       </div>
