@@ -138,6 +138,21 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    white until this same fix landed there. Matching it here so this page can't silently break
    the same way if that nav rule ever changes. */
 .brand-dot-accent { color: var(--color-accent); }
+/* 2026-08-14, B56: same emission-bug family as above. --color-gold-700 was only ever referenced
+   via inline style="" attributes on the numbered labels and stat numbers below, so it never got
+   emitted into :root and these silently rendered as inherited dark text instead of gold. Ofir's
+   call: don't restore gold, recolor to the site's green instead (same --color-button used
+   site-wide). */
+.stat-accent-green { color: var(--color-button); }
+/* 2026-08-14, B56: same root cause, different symptom. --ease-spring was never referenced inside
+   a real CSS rule in this stylesheet (only defined in @theme, then used via inline JS
+   blob.style.transition on the B20 carousel dot's stretch/contract animation further down this
+   file), so it never got emitted into :root and the spring bounce silently fell back to the
+   browser's default easing. This rule isn't applied to anything itself, its only job is to force
+   the real in-stylesheet reference so the token actually emits - the existing inline JS
+   var(--ease-spring) usage then resolves correctly via normal CSS custom-property inheritance,
+   no JS change needed. */
+.ease-spring-ref { transition-timing-function: var(--ease-spring); }
 
 /* sticky floating pill nav, same recipe as ../index.html (no on-load entrance animation here,
    this is a secondary page reached mid-scroll, not the very first thing a visitor sees) */
@@ -423,12 +438,12 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
         <div class="mt-5 flex flex-col divide-y divide-border-default text-center sm:flex-row sm:gap-6 sm:divide-y-0 sm:divide-x">
           <div class="min-w-0 flex-1 px-1 py-6 first:pt-0 last:pb-0 sm:px-5 sm:py-0">
-            <div class="type-headline-sm" style="color:var(--color-gold-700)">150+</div>
+            <div class="type-headline-sm stat-accent-green">150+</div>
             <p class="type-label-sm text-muted mt-1">regular<br>users</p>
             <p class="type-body-md text-secondary mt-2">Bankers who rely on the dashboard daily.</p>
           </div>
           <div class="min-w-0 flex-1 px-1 py-6 first:pt-0 last:pb-0 sm:px-5 sm:py-0">
-            <div class="type-headline-sm" style="color:var(--color-gold-700)">-8 min</div>
+            <div class="type-headline-sm stat-accent-green">-8 min</div>
             <p class="type-label-sm text-muted mt-1">call handling<br>time</p>
             <p class="type-body-md text-secondary mt-2">Average drop in call handling time per case.</p>
           </div>
@@ -446,17 +461,17 @@ a:hover .arrow { transform: translateX(4px); }
 
       <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+          <span class="type-label-sm stat-accent-green">01</span>
           <h3 class="type-headline-sm mt-2">The Language Gap</h3>
           <p class="type-body-md mt-2 text-secondary">Bankers and clients spoke different financial languages, causing high friction, manual errors, and prolonged session times.</p>
         </div>
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+          <span class="type-label-sm stat-accent-green">02</span>
           <h3 class="type-headline-sm mt-2">Cognitive Load &amp; Data Density</h3>
           <p class="type-body-md mt-2 text-secondary">Dense, unprioritized tabular data and fragmented views forced bankers to jump between screens to find critical metadata.</p>
         </div>
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+          <span class="type-label-sm stat-accent-green">03</span>
           <h3 class="type-headline-sm mt-2">Operational Inefficiency</h3>
           <p class="type-body-md mt-2 text-secondary">No clear information hierarchy or intuitive navigation, driving high drop-offs and limiting the bank's ability to scale service quality.</p>
         </div>
@@ -477,17 +492,17 @@ a:hover .arrow { transform: translateX(4px); }
 
       <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+          <span class="type-label-sm stat-accent-green">01</span>
           <h3 class="type-headline-sm mt-2">Need-Based Discovery</h3>
           <p class="type-body-md mt-2 text-secondary">Redesigned the dense tabular interface into an intuitive, guided dashboard prioritizing essential parameters for bankers and clients alike.</p>
         </div>
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+          <span class="type-label-sm stat-accent-green">02</span>
           <h3 class="type-headline-sm mt-2">Information Hierarchy</h3>
           <p class="type-body-md mt-2 text-secondary">Clear visual nesting and structured modules centralize critical indicators, cutting the need to toggle between fragmented screens.</p>
         </div>
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+          <span class="type-label-sm stat-accent-green">03</span>
           <h3 class="type-headline-sm mt-2">Iterative Evolution</h3>
           <p class="type-body-md mt-2 text-secondary">Refined through continuous feedback loops, balancing complex banking logic and regulation with clean, high-performance UI.</p>
         </div>
@@ -522,12 +537,12 @@ a:hover .arrow { transform: translateX(4px); }
           <h2 class="reveal type-headline-md max-w-2xl">the impact<span class="brand-dot">.</span></h2>
           <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
             <div>
-              <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+              <span class="type-label-sm stat-accent-green">01</span>
               <h3 class="type-headline-sm mt-2">Trusted Daily</h3>
               <p class="type-body-md mt-2 text-secondary"><span class="font-medium text-primary">150+</span> bankers rely on the redesigned dashboard as their daily workspace, not a tool they open occasionally.</p>
             </div>
             <div>
-              <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+              <span class="type-label-sm stat-accent-green">02</span>
               <h3 class="type-headline-sm mt-2">Shorter, Smoother Calls</h3>
               <p class="type-body-md mt-2 text-secondary">Average call-center calls dropped by <span class="font-medium text-primary">8 minutes</span>. Bankers report the shorter calls led to a better connection with customers and fewer points of friction.</p>
             </div>

@@ -147,6 +147,14 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    reference the same variable and drags it in. This class makes the reference real and permanent
    instead of relying on that coincidence. */
 .brand-dot-accent { color: var(--color-accent); }
+/* 2026-08-14, B56: same emission-bug family as B53 above. --color-gold-700 was only ever
+   referenced via inline style="" attributes on the 01/02/03 About Me labels and the Track
+   record/Impact stat numbers, so Tailwind's browser compiler never emitted it into :root and
+   these silently rendered as inherited dark text instead of gold. Ofir's call: don't restore
+   gold, recolor to the site's green instead (same --color-button already used for Digital
+   Loans' "+18%" stat). This class makes the reference real so the token actually resolves,
+   and points it at green per that decision. */
+.stat-accent-green { color: var(--color-button); }
 
 /* sticky floating pill nav, animates in on load */
 @keyframes navEnter {
@@ -587,17 +595,17 @@ a:hover .arrow { transform: translateX(4px); }
       </div>
       <div class="reveal-stagger mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
         <div class="card-lift rounded-lg bg-card p-6 border border-border-default">
-          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+          <span class="type-label-sm stat-accent-green">01</span>
           <h3 class="type-headline-sm mt-2">Cross-Squad Leadership</h3>
           <p class="type-body-md mt-2 text-secondary">One design language across 4 autonomous business lines, each its own world of stakeholders and constraints.</p>
         </div>
         <div class="card-lift rounded-lg bg-card p-6 border border-border-default">
-          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+          <span class="type-label-sm stat-accent-green">02</span>
           <h3 class="type-headline-sm mt-2">Unified Experience</h3>
           <p class="type-body-md mt-2 text-secondary">Aligning squads and tech leads to eliminate product silos.</p>
         </div>
         <div class="card-lift rounded-lg bg-card p-6 border border-border-default">
-          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+          <span class="type-label-sm stat-accent-green">03</span>
           <h3 class="type-headline-sm mt-2">People &amp; Process Focused</h3>
           <p class="type-body-md mt-2 text-secondary">Leveraging an educational background to mentor teams and workflows.</p>
         </div>
@@ -637,15 +645,15 @@ a:hover .arrow { transform: translateX(4px); }
               <div class="flex justify-center border-t border-border-default pt-6 lg:items-center lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
                 <div class="flex w-full text-center lg:w-auto lg:divide-x lg:divide-border-default">
                   <div class="min-w-0 flex-1 px-1 lg:flex-none lg:px-5">
-                    <div class="type-headline-sm" style="color:var(--color-gold-700)">2.5M+</div>
+                    <div class="type-headline-sm stat-accent-green">2.5M+</div>
                     <p class="type-label-sm text-muted mt-1">private<br>customers</p>
                   </div>
                   <div class="min-w-0 flex-1 px-1 lg:flex-none lg:px-5">
-                    <div class="type-headline-sm" style="color:var(--color-gold-700)">200K+</div>
+                    <div class="type-headline-sm stat-accent-green">200K+</div>
                     <p class="type-label-sm text-muted mt-1">business<br>customers</p>
                   </div>
                   <div class="min-w-0 flex-1 px-1 lg:flex-none lg:px-5">
-                    <div class="type-headline-sm" style="color:var(--color-gold-700)">1.5M+</div>
+                    <div class="type-headline-sm stat-accent-green">1.5M+</div>
                     <p class="type-label-sm text-muted mt-1">monthly<br>interactions</p>
                   </div>
                 </div>
@@ -670,15 +678,15 @@ a:hover .arrow { transform: translateX(4px); }
               <div class="flex justify-center border-t border-border-default pt-6 lg:items-center lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
                 <div class="flex w-full text-center lg:w-auto lg:divide-x lg:divide-border-default">
                   <div class="min-w-0 flex-1 px-1 lg:flex-none lg:px-5">
-                    <div class="type-headline-sm" style="color:var(--color-gold-700)">~2M</div>
+                    <div class="type-headline-sm stat-accent-green">~2M</div>
                     <p class="type-label-sm text-muted mt-1">active<br>customers</p>
                   </div>
                   <div class="min-w-0 flex-1 px-1 lg:flex-none lg:px-5">
-                    <div class="type-headline-sm" style="color:var(--color-gold-700)">3.5M+</div>
+                    <div class="type-headline-sm stat-accent-green">3.5M+</div>
                     <p class="type-label-sm text-muted mt-1">active<br>credit cards</p>
                   </div>
                   <div class="min-w-0 flex-1 px-1 lg:flex-none lg:px-5">
-                    <div class="type-headline-sm" style="color:var(--color-gold-700)">800K+</div>
+                    <div class="type-headline-sm stat-accent-green">800K+</div>
                     <p class="type-label-sm text-muted mt-1">monthly<br>interactions</p>
                   </div>
                 </div>

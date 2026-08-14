@@ -138,6 +138,11 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    white until this same fix landed there. Matching it here so this page can't silently break
    the same way if that nav rule ever changes. */
 .brand-dot-accent { color: var(--color-accent); }
+/* 2026-08-14, B56: same emission-bug family as above. --color-gold-700 was only ever referenced
+   via inline style="" attributes on the numbered labels below, so it never got emitted into
+   :root and these silently rendered as inherited dark text instead of gold. Ofir's call: don't
+   restore gold, recolor to the site's green instead (same --color-button used site-wide). */
+.stat-accent-green { color: var(--color-button); }
 
 /* sticky floating pill nav, same recipe as ../index.html (no on-load entrance animation here,
    this is a secondary page reached mid-scroll, not the very first thing a visitor sees) */
@@ -412,17 +417,17 @@ a:hover .arrow { transform: translateX(4px); }
 
           <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
             <div>
-              <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+              <span class="type-label-sm stat-accent-green">01</span>
               <h3 class="type-headline-sm mt-2">The Commodity Trap</h3>
               <p class="type-body-md mt-2 text-secondary">Cards were treated as generic financial utilities, forcing users to compare raw numbers and dry terms instead of emotional value.</p>
             </div>
             <div>
-              <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+              <span class="type-label-sm stat-accent-green">02</span>
               <h3 class="type-headline-sm mt-2">Compliance vs. Experience</h3>
               <p class="type-body-md mt-2 text-secondary">Heavy regulatory disclosures overloaded the interface with dense, intimidating text blocks, creating heavy cognitive friction.</p>
             </div>
             <div>
-              <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+              <span class="type-label-sm stat-accent-green">03</span>
               <h3 class="type-headline-sm mt-2">The Aesthetic Deficit</h3>
               <p class="type-body-md mt-2 text-secondary">The legacy interface lacked visual storytelling, failing to leverage the premium lifestyle appeal of high-tier cards, directly hurting conversion.</p>
             </div>
@@ -460,17 +465,17 @@ a:hover .arrow { transform: translateX(4px); }
 
           <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
             <div>
-              <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+              <span class="type-label-sm stat-accent-green">01</span>
               <h3 class="type-headline-sm mt-2">Visual-First Framework</h3>
               <p class="type-body-md mt-2 text-secondary">When core banking terms are identical, immersive visual identity becomes the primary decision-driver.</p>
             </div>
             <div>
-              <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+              <span class="type-label-sm stat-accent-green">02</span>
               <h3 class="type-headline-sm mt-2">Lifestyle Immersion</h3>
               <p class="type-body-md mt-2 text-secondary">Wrapping standard cards in rich contextual worlds, aviation, luxury travel, to evoke immediate emotional alignment.</p>
             </div>
             <div>
-              <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+              <span class="type-label-sm stat-accent-green">03</span>
               <h3 class="type-headline-sm mt-2">Friction-Free Compliance</h3>
               <p class="type-body-md mt-2 text-secondary">De-risked the regulatory overhead by moving dense legal disclaimers into progressive disclosure, keeping focus on the experience.</p>
             </div>
@@ -488,22 +493,22 @@ a:hover .arrow { transform: translateX(4px); }
 
       <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2">
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+          <span class="type-label-sm stat-accent-green">01</span>
           <h3 class="type-headline-sm mt-2">Validated Concepts &amp; Organizational Shift</h3>
           <p class="type-body-md mt-2 text-secondary">High-fidelity prototypes underwent extensive usability testing to validate the visual-first approach against regulated constraints.</p>
         </div>
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+          <span class="type-label-sm stat-accent-green">02</span>
           <h3 class="type-headline-sm mt-2">Cognitive Load Reduction</h3>
           <p class="type-body-md mt-2 text-secondary">Usability testing showed a dramatic drop in choice paralysis, with participants navigating the selection flow seamlessly.</p>
         </div>
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+          <span class="type-label-sm stat-accent-green">03</span>
           <h3 class="type-headline-sm mt-2">Aspirational Alignment</h3>
           <p class="type-body-md mt-2 text-secondary">Qualitative feedback confirmed lifestyle environments shifted user perception from a dry banking form to an elite experience.</p>
         </div>
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">04</span>
+          <span class="type-label-sm stat-accent-green">04</span>
           <h3 class="type-headline-sm mt-2">De-Risked Compliance</h3>
           <p class="type-body-md mt-2 text-secondary">Progressive disclosure satisfies legal requirements while maintaining high user engagement and flow velocity.</p>
         </div>

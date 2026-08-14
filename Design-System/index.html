@@ -143,6 +143,20 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    white until this same fix landed there. Matching it here so this page can't silently break
    the same way if that nav rule ever changes. */
 .brand-dot-accent { color: var(--color-accent); }
+/* 2026-08-14, B56: same emission-bug family as above. --color-gold-700 was only ever referenced
+   via inline style="" attributes on the numbered labels below, so it never got emitted into
+   :root and these silently rendered as inherited dark text instead of gold. Ofir's call: don't
+   restore gold, recolor to the site's green instead (same --color-button used site-wide). */
+.stat-accent-green { color: var(--color-button); }
+/* 2026-08-14, B56: same root cause, different symptom. --ease-spring was never referenced inside
+   a real CSS rule in this stylesheet (only defined in @theme, then used via inline JS
+   blob.style.transition on the B20 carousel dot's stretch/contract animation further down this
+   file), so it never got emitted into :root and the spring bounce silently fell back to the
+   browser's default easing. This rule isn't applied to anything itself, its only job is to force
+   the real in-stylesheet reference so the token actually emits - the existing inline JS
+   var(--ease-spring) usage then resolves correctly via normal CSS custom-property inheritance,
+   no JS change needed. */
+.ease-spring-ref { transition-timing-function: var(--ease-spring); }
 
 /* sticky floating pill nav, same recipe as ../index.html and other case studies (no on-load
    entrance animation here, this is a secondary page reached mid-scroll) */
@@ -501,17 +515,17 @@ a:hover .arrow { transform: translateX(4px); }
 
       <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+          <span class="type-label-sm stat-accent-green">01</span>
           <h3 class="type-headline-sm mt-2">A Gap I Wanted Closed</h3>
           <p class="type-body-md mt-2 text-secondary">I wanted real hands-on fluency with AI tools, not just the ability to point my team toward them.</p>
         </div>
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+          <span class="type-label-sm stat-accent-green">02</span>
           <h3 class="type-headline-sm mt-2">Design Systems, Never My Own</h3>
           <p class="type-body-md mt-2 text-secondary">Years spent unifying design languages for other people's products, with nothing built the same way for myself.</p>
         </div>
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+          <span class="type-label-sm stat-accent-green">03</span>
           <h3 class="type-headline-sm mt-2">A Base, Not A Blank Page</h3>
           <p class="type-body-md mt-2 text-secondary">Adopted an existing documentation structure and reshaped it around my own tokens, components, and voice.</p>
         </div>
@@ -527,17 +541,17 @@ a:hover .arrow { transform: translateX(4px); }
 
       <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+          <span class="type-label-sm stat-accent-green">01</span>
           <h3 class="type-headline-sm mt-2">Tokens Before Anything Else</h3>
           <p class="type-body-md mt-2 text-secondary">Primitives, then semantic color, type, spacing, and motion, the layer everything else binds to.</p>
         </div>
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+          <span class="type-label-sm stat-accent-green">02</span>
           <h3 class="type-headline-sm mt-2">One Documentation Pattern For Everything</h3>
           <p class="type-body-md mt-2 text-secondary">Live examples, anatomy, variants, when to use it and when not to, accessibility notes, on every single piece. Reads like a living Storybook, not a static file.</p>
         </div>
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+          <span class="type-label-sm stat-accent-green">03</span>
           <h3 class="type-headline-sm mt-2">Built Once, Wired To Figma</h3>
           <p class="type-body-md mt-2 text-secondary">Pushed group by group into Figma through Claude Code and a live Figma MCP connection, so design and code stay in sync instead of drifting apart.</p>
         </div>
@@ -571,17 +585,17 @@ a:hover .arrow { transform: translateX(4px); }
 
       <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">01</span>
+          <span class="type-label-sm stat-accent-green">01</span>
           <h3 class="type-headline-sm mt-2">Duplicated, Not Edited</h3>
           <p class="type-body-md mt-2 text-secondary">A separate copy, so the original system stays untouched no matter what a specific site needs.</p>
         </div>
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">02</span>
+          <span class="type-label-sm stat-accent-green">02</span>
           <h3 class="type-headline-sm mt-2">Viewing, Not Building</h3>
           <p class="type-body-md mt-2 text-secondary">Cursor only opens the local server to look at the live docs. Claude Code is what actually builds, so the two never compete for the same job.</p>
         </div>
         <div>
-          <span class="type-label-sm" style="color:var(--color-gold-700)">03</span>
+          <span class="type-label-sm stat-accent-green">03</span>
           <h3 class="type-headline-sm mt-2">You're Looking At The Proof</h3>
           <p class="type-body-md mt-2 text-secondary">This page's type, color, and buttons are running on that duplicated system right now.</p>
         </div>
