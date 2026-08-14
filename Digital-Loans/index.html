@@ -245,6 +245,25 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
   to { transform: translateX(0); }
 }
 
+/* mobile-only centered "peek carousel" (2026-08-15, Ofir's ask): screen 1 lands centered at rest
+   instead of flush-left, both neighbors sit smaller on either side and grow to full size as they
+   scroll toward center. Gated to the same max-width:639.98px cutoff used elsewhere on this page
+   (matches Tailwind's sm breakpoint) so desktop's original left-aligned snap-start scroll is
+   completely untouched. Centering is pure CSS, the standard "padding-inline: calc(50% - half the
+   card's width)" trick on the scrollable content plus scroll-snap-align:center on each card: the
+   percentage resolves against #loanPurposeStrip's own visible width (the containing block for an
+   overflow:auto child's padding), so it self-adjusts to any phone width with no JS measurement.
+   Because the padding is exactly engineered to put card 1's center at scrollLeft:0, the existing
+   "jump back to screen 1 on purpose switch" reset (`strip.scrollLeft = 0`, in the click handler
+   below) already lands it dead center with no change needed there. The actual scale-on-scroll
+   (below, in the loanPurposeMenu script) is JS: measures each card's distance from the strip's
+   center on every scroll frame and sets transform:scale() directly with no CSS transition, so it
+   tracks the finger 1:1 during a drag rather than animating in discrete steps. */
+@media (max-width: 639.98px) {
+  #loanPurposeStripInner { padding-inline: calc(50% - 7rem); }
+  #loanPurposeStrip [data-slot] { scroll-snap-align: center; will-change: transform; }
+}
+
 /* arrow nudges right on hover, same as ../index.html */
 .arrow { display: inline-block; transition: transform 200ms var(--ease-out); }
 a:hover .arrow { transform: translateX(4px); }
@@ -486,8 +505,11 @@ a:hover .arrow { transform: translateX(4px); }
    pass, Ofir's own words: "temporary, now that I've seen how it came out I'll prepare higher
    quality images." The other 5 purposes fall back to a "Coming soon." placeholder (border-dashed)
    across all 5 slots until their own 5-screen sets exist. No click-to-expand interaction yet
-   (still an open decision). Icons are a neutral placeholder dot for all 6 menu items, real
-   per-purpose DSM icons still TBD. */
+   (still an open decision). Menu icons (2026-08-14): real Lucide glyphs per Ofir's own picks, not
+   placeholders any more - martini (Vacation), car (Car), pill (Medical, no teacup exists in Lucide
+   so this was his stated fallback), book (Studies), coins (Debt Coverage, closest available to "a
+   bag of coins," Lucide has no literal money-bag icon), shopping-bag (Shopping). Path data pulled
+   programmatically from the lucide-static package, not hand-drawn or recalled. */
 .nav-item {
   position: relative;
   display: flex;
@@ -812,19 +834,27 @@ a:hover .arrow { transform: translateX(4px); }
        from what follows, not a border divider). Plain background, same as Challenge, so the color
        change lands specifically at the mvp -> strategy boundary. 50/50 grid restored (was briefly
        text-only), media LEFT / text RIGHT on desktop (order-2 lg:order-1 / order-1 lg:order-2) -
-       opposite of Challenge's text-left/media-right, continuing the zigzag. Media is a placeholder
-       (dashed border, "Coming soon.", aspect-[195/431] matching the filmstrip cards) since the only
-       real screen recording available (new_loans.mp4) documents the fully personalized product, not
-       the MVP - it moved to "the strategy." below instead of implying the MVP looked like this.
-       Ofir will supply a real MVP-specific mockup later. -->
+       opposite of Challenge's text-left/media-right, continuing the zigzag. Real MVP mockup wired
+       in 2026-08-14 (loan_mvp.mp4, compressed from Ofir's own loan_mvp.original.mp4 via the site's
+       standard ffmpeg recipe, 2.98MB -> 464KB, no audio, same as the other case-study phone
+       recordings) - bare <video> matching the challengeMedia/strategyMedia pattern exactly (no
+       aspect-ratio wrapper, no border, sized by mx-auto max-w-[17rem] + the video's own h-auto
+       w-full), same size/position as the rest of the page's mockups per Ofir's ask. Old
+       placeholder (dashed border, "Coming soon.") kept below as an inert rollback. -->
+  <!--
+  <div id="mvpMedia" class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
+    <div class="aspect-[195/431] w-full overflow-hidden rounded-lg border border-dashed border-border-default bg-neutral-100">
+      <span class="flex h-full items-center justify-center px-4 text-center type-label-sm text-muted">Coming soon.</span>
+    </div>
+    <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">mvp</span>
+  </div>
+  -->
   <section id="mvp" class="bg-surface-alt px-4 lg:px-20">
     <div class="mx-auto max-w-7xl py-20 lg:py-28">
       <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
         <div class="order-2 lg:order-1 lg:col-span-6">
           <div id="mvpMedia" class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
-            <div class="aspect-[195/431] w-full overflow-hidden rounded-lg border border-dashed border-border-default bg-neutral-100">
-              <span class="flex h-full items-center justify-center px-4 text-center type-label-sm text-muted">Coming soon.</span>
-            </div>
+            <video class="h-auto w-full" src="loan_mvp.mp4" muted loop playsinline preload="auto"></video>
             <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">mvp</span>
           </div>
         </div>
@@ -986,33 +1016,33 @@ a:hover .arrow { transform: translateX(4px); }
           <nav aria-label="Loan purpose" class="rounded-lg border border-border-default bg-card p-2 sm:w-56 sm:shrink-0">
             <ul class="flex list-none flex-row gap-1 overflow-x-auto p-0 sm:flex-col sm:overflow-visible" id="loanPurposeMenu">
               <li><button type="button" class="nav-item is-active" data-purpose="vacation" aria-current="page">
-                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12 4.207 4.207A.707.707 0 0 1 4.707 3h14.586a.707.707 0 0 1 .5 1.207z"/><path d="M12 12v10"/><path d="M7 22h10"/></svg>
                 <span class="nav-item__label">Vacation</span>
               </button></li>
               <li><button type="button" class="nav-item" data-purpose="car">
-                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
                 <span class="nav-item__label">Car</span>
               </button></li>
               <li><button type="button" class="nav-item" data-purpose="medical">
-                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
                 <span class="nav-item__label">Medical</span>
               </button></li>
               <li><button type="button" class="nav-item" data-purpose="studies">
-                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg>
                 <span class="nav-item__label">Studies</span>
               </button></li>
               <li><button type="button" class="nav-item" data-purpose="debt-coverage">
-                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.744 17.736a6 6 0 1 1-7.48-7.48"/><path d="M15 6h1v4"/><path d="m6.134 14.768.866-.5 2 3.464"/><circle cx="16" cy="8" r="6"/></svg>
                 <span class="nav-item__label">Debt Coverage</span>
               </button></li>
               <li><button type="button" class="nav-item" data-purpose="shopping">
-                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 10a4 4 0 0 1-8 0"/><path d="M3.103 6.034h17.794"/><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/></svg>
                 <span class="nav-item__label">Shopping</span>
               </button></li>
             </ul>
           </nav>
 
-          <div class="min-w-0 rounded-lg border border-border-default bg-card p-6 sm:flex-1">
+          <div class="min-w-0 rounded-lg border border-border-default bg-card p-4 sm:flex-1 sm:p-6">
             <div class="snap-x snap-mandatory overflow-x-auto pb-2" id="loanPurposeStrip">
             <div class="flex w-max gap-4" id="loanPurposeStripInner">
               <div class="flex w-56 shrink-0 snap-start flex-col items-center gap-2" data-slot="1">
@@ -1228,6 +1258,22 @@ a:hover .arrow { transform: translateX(4px); }
       challengeIo.observe(challengeMedia);
     }
 
+    // mvp section (2026-08-14): same play-once-in-view treatment as challengeMedia above, real
+    // mockup (loan_mvp.mp4) replacing the old "Coming soon." placeholder.
+    const mvpMedia = document.getElementById('mvpMedia');
+    if (mvpMedia && !prefersReducedMotion) {
+      const mvpVideos = mvpMedia.querySelectorAll('video');
+      const mvpIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            mvpIo.unobserve(entry.target);
+            mvpVideos.forEach((v) => v.play());
+          }
+        });
+      }, { threshold: 0.3 });
+      mvpIo.observe(mvpMedia);
+    }
+
     // strategy section: same play-once-in-view treatment as challengeMedia above, "after"
     // phone recording (new_loans.mp4) pairing with challenge's "before" one.
     const strategyMedia = document.getElementById('strategyMedia');
@@ -1426,6 +1472,57 @@ a:hover .arrow { transform: translateX(4px); }
         void stripInner.offsetWidth; // force reflow between remove and re-add
         strip.classList.add('strip-in-view');
       }
+
+      // 2026-08-15 (Ofir's ask): mobile-only "peek carousel" scale effect - the two cards
+      // flanking the centered one sit smaller and grow to full size as they approach center.
+      // Centering itself is pure CSS (see #loanPurposeStripInner's mobile-only padding-inline and
+      // [data-slot]'s scroll-snap-align:center above), this only owns the scale. Checked at
+      // runtime via matchMedia rather than a one-time flag, so a resize/orientation change that
+      // crosses the breakpoint is picked up correctly instead of getting stuck on whatever was
+      // true at page load.
+      var stripSlots = strip ? Array.prototype.slice.call(strip.querySelectorAll('[data-slot]')) : [];
+      var isMobileStripQuery = window.matchMedia('(max-width: 639.98px)');
+      var STRIP_SCALE_MIN = 0.86;
+      var stripScaleRaf = null;
+      function updateStripScale() {
+        if (!strip || !stripSlots.length) return;
+        if (!isMobileStripQuery.matches) {
+          // not mobile (or resized back out of it): clear any leftover inline scale so desktop's
+          // original left-aligned layout is never touched by this.
+          stripSlots.forEach(function (el) { el.style.transform = ''; });
+          return;
+        }
+        var stripRect = strip.getBoundingClientRect();
+        var stripCenter = stripRect.left + stripRect.width / 2;
+        stripSlots.forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          var cardCenter = r.left + r.width / 2;
+          var maxDist = stripRect.width / 2 + r.width / 2;
+          var t = maxDist > 0 ? Math.min(Math.abs(cardCenter - stripCenter) / maxDist, 1) : 0;
+          var scale = 1 - t * (1 - STRIP_SCALE_MIN);
+          // no CSS transition on this: setting it directly every scroll frame is what makes it
+          // track the finger 1:1 during a drag instead of animating in discrete steps.
+          el.style.transform = 'scale(' + scale.toFixed(3) + ')';
+        });
+      }
+      function scheduleStripScale() {
+        if (stripScaleRaf) return;
+        stripScaleRaf = requestAnimationFrame(function () {
+          stripScaleRaf = null;
+          updateStripScale();
+        });
+      }
+      if (strip && stripSlots.length) {
+        strip.addEventListener('scroll', scheduleStripScale, { passive: true });
+        window.addEventListener('resize', scheduleStripScale);
+        // recompute once the conveyor entrance (initial or replayed) actually settles, since the
+        // whole row is mid-transform until then and card positions are transient during the
+        // slide; under reduced motion the animation never plays at all so nothing would ever call
+        // this without the explicit call below.
+        if (stripInner) stripInner.addEventListener('animationend', updateStripScale);
+        updateStripScale();
+      }
+
       if (menu && strip) {
         var buttons = menu.querySelectorAll('.nav-item');
         menu.addEventListener('click', function (e) {
@@ -1437,6 +1534,16 @@ a:hover .arrow { transform: translateX(4px); }
             if (active) b.setAttribute('aria-current', 'page');
             else b.removeAttribute('aria-current');
           });
+          // 2026-08-14: on mobile the menu itself is a horizontal scroll strip (flex-row +
+          // overflow-x-auto below sm), so the tapped pill can land partially off-screen. Center it
+          // in the visible strip so both neighbors peek in as a "there's more to scroll" cue, per
+          // Ofir's ask (confirmed against his own phone test: at 360px only Vacation/Car/Medical
+          // show before the cut). Guarded by an actual overflow check (scrollWidth > clientWidth),
+          // not a hardcoded breakpoint, so desktop's sm:flex-col/sm:overflow-visible layout - which
+          // never overflows - is untouched and this can never trigger a stray page-level scroll.
+          if (menu.scrollWidth > menu.clientWidth) {
+            btn.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+          }
           var purpose = btn.getAttribute('data-purpose');
           var screens = purposeScreens[purpose] || {};
           [1, 2, 3, 4, 5, 6].forEach(function (n) {
