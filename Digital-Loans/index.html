@@ -617,11 +617,17 @@ a:hover .arrow { transform: translateX(4px); }
              not because of a real content problem. Fixed widths keep the label row
              evenly spaced regardless of value length, matching what Ofir flagged
              as the more correct layout in a reference mockup. Shared hero pattern
-             across all 3 case studies, piloted here first per the usual rule. -->
-        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-[4rem_13rem_6rem_1fr] sm:gap-x-10" style="animation-delay:240ms">
+             across all 3 case studies, piloted here first per the usual rule.
+             2026-08-14: Year/Duration content changed to reflect the real, non-consecutive
+             timeline (MVP designed ~2022, full product ~2026, ~2+ year development gap in
+             between per Ofir - he doesn't recall the gap length precisely). Year widened
+             4rem->7rem to fit "2022-2026" on one line, Duration widened 6rem->9rem to fit
+             "6 months (2 phases)". This file's own inline grid template only, doesn't touch
+             the other 2 case studies' copies of this same pattern. -->
+        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-[7rem_13rem_9rem_1fr] sm:gap-x-10" style="animation-delay:240ms">
           <div>
             <p class="type-body-md text-muted">Year</p>
-            <p class="type-body-lg mt-1 font-medium text-default">2026</p>
+            <p class="type-body-lg mt-1 font-medium text-default">2022&ndash;2026</p>
           </div>
           <div>
             <p class="type-body-md text-muted">Role</p>
@@ -629,7 +635,7 @@ a:hover .arrow { transform: translateX(4px); }
           </div>
           <div>
             <p class="type-body-md text-muted">Duration</p>
-            <p class="type-body-lg mt-1 font-medium text-default">6 months</p>
+            <p class="type-body-lg mt-1 font-medium text-default">6 months (2 phases)</p>
           </div>
           <div>
             <p class="type-body-md text-muted">Scope</p>
