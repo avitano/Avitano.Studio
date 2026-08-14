@@ -32,7 +32,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<!-- 2026-08-14: pinned to an exact version instead of the loose "@4" tag, so the CDN always serves
+     the identical, already-verified build rather than re-resolving "latest 4.x" on every request.
+     NOTE: this was an initial guess at the cause of the Contact-dot bug (a "Refused to apply
+     style .../tailwindcss" console error, native @import fallback) that turned out to be a red
+     herring - that same error fires on every page of the site, including ones where the dot
+     renders correctly, so it's unrelated. The real bug and real fix are the .brand-dot-accent
+     class near .brand-dot below. Keeping this pin anyway since it's a harmless stability
+     improvement on its own merits, just don't mistake it for what actually fixed the dot. -->
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3"></script>
 <style type="text/tailwindcss">
 @import "tailwindcss";
 
@@ -130,6 +138,15 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 .type-label-lg { font-family: var(--font-plain); font-weight: 500; font-size: 0.875rem; line-height: 1.43; }
 .type-label-sm { font-family: var(--font-plain); font-weight: 500; font-size: 0.75rem; line-height: 1.33; letter-spacing: 0.1em; text-transform: uppercase; }
 .brand-dot { color: var(--color-button); }
+/* 2026-08-14: real class instead of an inline style, so var(--color-accent) is referenced inside
+   this stylesheet where Tailwind's browser compiler actually looks when deciding which @theme
+   variables to emit into :root. An inline style="color:var(--color-accent)" alone doesn't count,
+   the compiler only scans the CSS it compiles, not attributes in the HTML body, so --color-accent
+   never made it into :root at all on this page and the Contact dot rendered white. Digital-Loans
+   only ever worked by accident, because its .site-nav-dark .nav-link::after rule happens to
+   reference the same variable and drags it in. This class makes the reference real and permanent
+   instead of relying on that coincidence. */
+.brand-dot-accent { color: var(--color-accent); }
 
 /* sticky floating pill nav, animates in on load */
 @keyframes navEnter {
@@ -901,7 +918,7 @@ a:hover .arrow { transform: translateX(4px); }
     </div>
     <div class="relative mx-auto max-w-7xl py-24 text-center lg:py-32">
       <span class="reveal type-label-sm" style="color:var(--color-on-primary-soft)">Get in touch</span>
-      <h2 class="reveal type-display-sm mt-4">Let's build the future<span style="color:var(--color-accent)">.</span></h2>
+      <h2 class="reveal type-display-sm mt-4">Let's build the future<span class="brand-dot-accent">.</span></h2>
       <p class="reveal type-body-lg mx-auto mt-4 max-w-lg" style="color:var(--color-on-primary-soft)">Open to design leadership roles, partnerships, and ambitious product bets.</p>
       <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-3">
         <a href="mailto:avitano@gmail.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-button);">Email me</a>
