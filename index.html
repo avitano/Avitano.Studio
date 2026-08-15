@@ -1374,6 +1374,17 @@ a:hover .arrow { transform: translateX(4px); }
       let state = 'idle'; // idle -> pulling -> (locked ->) idle
       let startY = 0;
       let holdTimer = null;
+      // Bugfix: without this, touchstart optimistically flags every gesture
+      // that begins at scrollY 0 as 'pulling', even a normal scroll-down
+      // (finger moves up, raw stays <= 0 the whole time so setPull() never
+      // actually runs). state was never reset back to 'idle' in that case,
+      // so touchend's close() fired anyway on release, forcing a transform
+      // onto #pageShift after the user had already scrolled away from the
+      // top, which (see close()'s own comment above) makes #pageShift the
+      // nav's containing block for a moment and the nav visibly jumps.
+      // pulled only flips true once a real pull offset has been applied,
+      // so close() only fires for gestures that actually opened the strip.
+      let pulled = false;
 
       // Elastic falloff: approaches MAX_PULL but never reaches it, so the
       // strip's own fixed height only ever needs to cover MAX_PULL, not an
@@ -1420,6 +1431,7 @@ a:hover .arrow { transform: translateX(4px); }
         if (window.scrollY > 0 || state === 'locked') return;
         startY = e.touches[0].clientY;
         state = 'pulling';
+        pulled = false;
       }, { passive: true });
 
       document.addEventListener('touchmove', (e) => {
@@ -1427,13 +1439,15 @@ a:hover .arrow { transform: translateX(4px); }
         const raw = e.touches[0].clientY - startY;
         if (raw <= 0) return;
         e.preventDefault();
+        pulled = true;
         const pull = resistance(raw);
         if (pull >= OPEN_THRESHOLD) { lockOpen(pull); return; }
         setPull(pull, false);
       }, { passive: false });
 
       document.addEventListener('touchend', () => {
-        if (state === 'pulling') close();
+        if (state === 'pulling' && pulled) close();
+        else state = 'idle';
       }, { passive: true });
 
       // wheel (desktop trackpad/mouse), same resistance/threshold/hold

@@ -935,6 +935,11 @@ a:hover .arrow { transform: translateX(4px); }
       let state = 'idle';
       let startY = 0;
       let holdTimer = null;
+      // Bugfix: pulled only flips true once a real pull offset has been
+      // applied, so touchend's close() can't fire (forcing a transform onto
+      // #pageShift and making the nav jump) for a plain scroll-down gesture
+      // that merely started at scrollY 0. See index.html for the full note.
+      let pulled = false;
 
       function resistance(raw) {
         if (raw <= 0) return 0;
@@ -969,6 +974,7 @@ a:hover .arrow { transform: translateX(4px); }
         if (window.scrollY > 0 || state === 'locked') return;
         startY = e.touches[0].clientY;
         state = 'pulling';
+        pulled = false;
       }, { passive: true });
 
       document.addEventListener('touchmove', (e) => {
@@ -976,13 +982,15 @@ a:hover .arrow { transform: translateX(4px); }
         const raw = e.touches[0].clientY - startY;
         if (raw <= 0) return;
         e.preventDefault();
+        pulled = true;
         const pull = resistance(raw);
         if (pull >= OPEN_THRESHOLD) { lockOpen(pull); return; }
         setPull(pull, false);
       }, { passive: false });
 
       document.addEventListener('touchend', () => {
-        if (state === 'pulling') close();
+        if (state === 'pulling' && pulled) close();
+        else state = 'idle';
       }, { passive: true });
 
       let wheelPull = 0;
