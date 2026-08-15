@@ -581,6 +581,33 @@ a:hover .arrow { transform: translateX(4px); }
   position: relative; background: var(--color-surface); z-index: 1;
 }
 
+/* B55: footer sparkle dust, Ofir's own concept. Went through several passes
+   on an accompanying gold glow/goo effect (blurred blobs, then thin
+   ribbons, then an SVG goo merge of drifting circles), removed entirely per
+   Ofir's call, he didn't like the result even after several rounds of
+   tuning. Sparks alone are what's left: same B24 sky-strip "small
+   JS-generated dot + shared CSS keyframe" technique, scattered inside a
+   simple edge wrapper, appearing once you scroll down to the footer. */
+.footer-glow {
+  position: absolute; top: 0; bottom: 0; width: min(28rem, 40vw);
+  overflow: hidden; pointer-events: none; z-index: 0;
+  opacity: 0; transition: opacity 1100ms var(--ease-soft), transform 1100ms var(--ease-soft);
+}
+.footer-glow--left { left: 0; transform: translateX(-12%); }
+.footer-glow--right { right: 0; transform: translateX(12%); }
+.footer-glow.in-view { opacity: 1; transform: translateX(0); }
+
+.footer-glow__spark {
+  position: absolute; border-radius: 999px; background: var(--color-gold-200);
+  box-shadow: 0 0 6px 1px var(--color-gold-300);
+  animation: footerSparkTwinkle var(--spark-duration, 3.4s) ease-in-out infinite;
+  animation-delay: var(--spark-delay, 0s);
+}
+@keyframes footerSparkTwinkle {
+  0%, 100% { opacity: 0.1; }
+  50%      { opacity: var(--spark-max, 0.9); }
+}
+
 /* respect reduced-motion: the DSM's own accessibility rules (CardGrid) already
    call for no positional animation under prefers-reduced-motion, extended here
    to on-load entrance and scroll reveals. Content stays visible (opacity 1, no
@@ -598,6 +625,12 @@ a:hover .arrow { transform: translateX(4px); }
   .blob-parallax { transform: none !important; }
   .case-scrim, .case-content, .case-toggle { transition: none; }
   .sky-strip__star { animation: none; opacity: 0.4; }
+  /* footer glow: shown at rest immediately, same "no observer-gated reveal,
+     just show it" convention as .reveal above. No slide. Sparks aren't
+     generated at all under reduced motion, see the script guard around the
+     generation loop below, this rule is just the defensive fallback, same
+     belt-and-suspenders pattern the sky-strip stars already use. */
+  .footer-glow { transition: none; opacity: 1; transform: none; }
 }
 
 </style>
@@ -1022,22 +1055,34 @@ a:hover .arrow { transform: translateX(4px); }
   </section>
 
   <!-- CONTACT / CLOSING -->
-  <section id="contact" class="relative overflow-hidden px-4 lg:px-20" style="background:var(--color-primary); color:var(--color-on-primary);">
+  <section id="contact" class="relative overflow-hidden px-4 lg:px-20" style="background:var(--color-green-975);">
     <div class="blob-parallax" style="bottom:-12rem; left:-8rem;" data-parallax="-0.1">
       <div class="hero-blob" style="width:28rem; height:28rem; bottom:0; left:0; opacity:0.25; animation-duration:33s; animation-direction:reverse;"></div>
     </div>
-    <div class="relative mx-auto max-w-7xl py-24 text-center lg:py-32">
-      <span class="reveal type-label-sm" style="color:var(--color-on-primary-soft)">Get in touch</span>
-      <h2 class="reveal type-display-sm mt-4">Let's build the future<span class="brand-dot-accent">.</span></h2>
-      <p class="reveal type-body-lg mx-auto mt-4 max-w-lg" style="color:var(--color-on-primary-soft)">Open to design leadership roles, partnerships, and ambitious product bets.</p>
+    <!-- sparks are generated into these two empty containers by the script
+         below, same approach as the sky-strip stars: randomized per
+         instance, so hand-authoring each one isn't needed. -->
+    <div class="footer-glow footer-glow--left" id="footerGlowLeft" aria-hidden="true"></div>
+    <div class="footer-glow footer-glow--right" id="footerGlowRight" aria-hidden="true"></div>
+    <div class="relative z-[1] mx-auto max-w-7xl py-24 text-center lg:py-32">
+      <!-- B55: text colors + dot switched from inline style="color:var(...)"
+           / .brand-dot-accent (green) to the same real classes the header
+           uses (hero-dark-on-primary / hero-dark-on-primary-soft /
+           hero-dark-gold), so the footer's text treatment matches the hero
+           exactly instead of an ad hoc inline approximation, and the dot
+           reads gold like the header's instead of green. Buttons untouched
+           per Ofir's call. -->
+      <span class="reveal type-label-sm hero-dark-on-primary-soft">Get in touch</span>
+      <h2 class="reveal hero-dark-on-primary type-display-sm mt-4">Let's build the future<span class="hero-dark-gold">.</span></h2>
+      <p class="reveal hero-dark-on-primary-soft type-body-lg mx-auto mt-4 max-w-lg">Open to design leadership roles, partnerships, and ambitious product bets.</p>
       <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-3">
         <a href="mailto:avitano@gmail.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-button);">Email me</a>
         <a href="https://linkedin.com/in/avitano" target="_blank" rel="noopener noreferrer" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="border-color:rgba(255,255,255,0.35); color:#fff;">LinkedIn</a>
       </div>
-      <div class="mt-10 flex flex-wrap items-center justify-center gap-3 type-body-md" style="color:var(--color-on-primary-soft)">
+      <div class="hero-dark-on-primary-soft mt-10 flex flex-wrap items-center justify-center gap-3 type-body-md">
         <span>+972-54-429-6353</span>
       </div>
-      <div class="type-label-sm mt-16 border-t pt-6" style="color:var(--color-on-primary-soft); border-color:rgba(255,255,255,0.15); text-transform:none; letter-spacing:normal;">
+      <div class="hero-dark-on-primary-soft type-label-sm mt-16 border-t pt-6" style="border-color:rgba(255,255,255,0.15); text-transform:none; letter-spacing:normal;">
         Ofir Avitan · 2026
       </div>
     </div>
@@ -1103,6 +1148,27 @@ a:hover .arrow { transform: translateX(4px); }
     }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
     document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
     document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
+
+    // B55: footer gold sparks, one-shot entrance, same "trigger once,
+    // unobserve, done" shape as the .reveal observer above, kept separate
+    // because it targets #contact itself (not the individual .footer-glow
+    // elements) so both sides trigger together off one intersection check
+    // rather than needing two near-identical observer entries.
+    const footerGlowLeft = document.getElementById('footerGlowLeft');
+    const footerGlowRight = document.getElementById('footerGlowRight');
+    const contactSection = document.getElementById('contact');
+    if (footerGlowLeft && footerGlowRight && contactSection) {
+      const footerGlowIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            footerGlowIo.unobserve(entry.target);
+            footerGlowLeft.classList.add('in-view');
+            footerGlowRight.classList.add('in-view');
+          }
+        });
+      }, { threshold: 0.15 });
+      footerGlowIo.observe(contactSection);
+    }
 
     // nav phrase scrollspy (2026-08-08): swaps the center nav text to match
     // whichever section is currently crossing the vertical middle of the
@@ -1255,6 +1321,30 @@ a:hover .arrow { transform: translateX(4px); }
         star.style.setProperty('--star-max', (0.55 + Math.random() * 0.4).toFixed(2));
         skyStrip.appendChild(star);
       }
+
+      // B55: footer sparkle dust, same generation approach as the stars
+      // just above, scattered inside each .footer-glow wrapper so they're
+      // clipped to the same edge band and never drift into the centered
+      // text column. Skipped entirely under reduced motion, same as the
+      // stars, rather than generating static sparks that would never do
+      // anything.
+      const SPARK_COUNT = 14;
+      [footerGlowLeft, footerGlowRight].forEach((wrap) => {
+        if (!wrap) return;
+        for (let i = 0; i < SPARK_COUNT; i++) {
+          const spark = document.createElement('div');
+          spark.className = 'footer-glow__spark';
+          const size = 1 + Math.random() * 2;
+          spark.style.width = size + 'px';
+          spark.style.height = size + 'px';
+          spark.style.left = (Math.random() * 100) + '%';
+          spark.style.top = (10 + Math.random() * 80) + '%';
+          spark.style.setProperty('--spark-duration', (2.4 + Math.random() * 2.8) + 's');
+          spark.style.setProperty('--spark-delay', (Math.random() * 4) + 's');
+          spark.style.setProperty('--spark-max', (0.5 + Math.random() * 0.4).toFixed(2));
+          wrap.appendChild(spark);
+        }
+      });
 
       const MAX_PULL = 150;                    // px, asymptotic resistance ceiling
       const OPEN_THRESHOLD = 0.8 * MAX_PULL;    // px, crossing this locks it open
