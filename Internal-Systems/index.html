@@ -49,6 +49,8 @@
   --color-green-800: #065f46;
   --color-green-900: #064e3b;
   --color-green-950: #022c22;
+  /* B57: ported from ../index.html (B55), see that file for the HSL-extension writeup. */
+  --color-green-975: #030f0c;
 
   --color-neutral-50: #f7f8f7;
   --color-neutral-100: #eff1ef;
@@ -63,6 +65,8 @@
   --color-neutral-950: #1a1d1a;
 
   --color-gold-100: #f0e6d2;
+  /* B57: ported from ../index.html (B55), formalizes the footer-spark highlight hex. */
+  --color-gold-200: #f9e8b8;
   --color-gold-300: #ecc678;
   --color-gold-500: #e0a52e;
   --color-gold-700: #a87a1e;
@@ -144,6 +148,14 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    call: don't restore gold, recolor to the site's green instead (same --color-button used
    site-wide). */
 .stat-accent-green { color: var(--color-button); }
+/* B57: footer text-color classes, ported from ../index.html (B55), plus the same-day
+   readability fix (footer-text-soft/neutral-100 instead of green-100, see that file's
+   comment on the gotcha). hero-dark-on-primary-soft kept defined for parity across pages
+   even though this page's hero is untouched and doesn't currently use it. */
+.hero-dark-gold { color: var(--color-gold-500); }
+.hero-dark-on-primary { color: var(--color-on-primary); }
+.hero-dark-on-primary-soft { color: var(--color-on-primary-soft); }
+.footer-text-soft { color: var(--color-neutral-100); }
 /* 2026-08-14, B56: same root cause, different symptom. --ease-spring was never referenced inside
    a real CSS rule in this stylesheet (only defined in @theme, then used via inline JS
    blob.style.transition on the B20 carousel dot's stretch/contract animation further down this
@@ -201,6 +213,32 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
   outline: none;
   box-shadow: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(255,255,255,0.6);
 }
+
+/* B57: gold hairline + gold CTA fill, ported from ../index.html (B55/nav-dark-gold). Needs
+   all 3 classes to beat .site-nav.site-nav-dark's own 2-class `border: none` above. */
+.site-nav.site-nav-dark.nav-dark-gold { border: 1px solid rgb(224 165 46 / 0.4); }
+.nav-dark-gold .site-nav-cta { background: var(--color-gold-500); color: var(--color-green-950); }
+
+/* B57: widens the pill to match ../index.html's nav-wide footprint (min(80rem, viewport)),
+   adapted to this page's own nav content: .site-nav-leading (back-arrow + name, back-arrow
+   only actually visible on mobile) takes col 1, #navTabs (desktop-only) takes the centered
+   col 2, the CTA takes col 3, same 3-column shape ../index.html uses for name/phrase/CTA.
+   Explicit grid-column on all three, not DOM-order autoflow, so #navTabs being hidden below
+   md doesn't let the CTA slide into the middle "auto" track on mobile, same reasoning as
+   ../index.html's own comment on this. */
+.site-nav.nav-wide {
+  width: min(80rem, calc(100vw - 2rem));
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+@media (min-width: 1024px) {
+  .site-nav.nav-wide { width: min(80rem, calc(100vw - 10rem)); }
+}
+.nav-wide .site-nav-leading { grid-column: 1; justify-self: start; display: flex; align-items: center; gap: 0.75rem; }
+.nav-wide #navTabs { grid-column: 2; justify-self: center; }
+.nav-wide .site-nav-cta { grid-column: 3; justify-self: end; }
 /* 2026-08-11: reverted the 2026-08-08 in-page nav trial back to real
    homepage-section links (About Me/Case Studies/Skills), same pattern
    rolled out from ../Credit-Cards/index.html once Ofir confirmed it live
@@ -293,6 +331,36 @@ a:hover .arrow { transform: translateX(4px); }
 
 .btn-on-primary:hover { background: rgba(255, 255, 255, 0.1); }
 
+/* B57: real class instead of inline style="background:var(--color-green-975)". Per the
+   site's standing token-emission rule, an inline style="" is never scanned by Tailwind's
+   browser JIT, so this forces the token to actually emit into :root (see the ../Digital-Loans
+   B57 note on the same fix, this hero/header is out of scope on this page so nothing else
+   here references the token). */
+.footer-dark-bg { background: var(--color-green-975); }
+
+/* B57: footer gold sparkle-dust, ported verbatim from ../index.html (B55). Same
+   B24 sky-strip "small JS-generated dot + shared CSS keyframe" technique, scattered
+   inside a simple edge wrapper, revealed once you scroll down to the footer. */
+.footer-glow {
+  position: absolute; top: 0; bottom: 0; width: min(28rem, 40vw);
+  overflow: hidden; pointer-events: none; z-index: 0;
+  opacity: 0; transition: opacity 1100ms var(--ease-soft), transform 1100ms var(--ease-soft);
+}
+.footer-glow--left { left: 0; transform: translateX(-12%); }
+.footer-glow--right { right: 0; transform: translateX(12%); }
+.footer-glow.in-view { opacity: 1; transform: translateX(0); }
+
+.footer-glow__spark {
+  position: absolute; border-radius: 999px; background: var(--color-gold-200);
+  box-shadow: 0 0 6px 1px var(--color-gold-300);
+  animation: footerSparkTwinkle var(--spark-duration, 3.4s) ease-in-out infinite;
+  animation-delay: var(--spark-delay, 0s);
+}
+@keyframes footerSparkTwinkle {
+  0%, 100% { opacity: 0.1; }
+  50%      { opacity: var(--spark-max, 0.9); }
+}
+
 /* placeholder media block: flat neutral surface standing in for a real screenshot/video,
    same visual language as the "Preview coming soon" tile on ../index.html, not a new pattern */
 .media-placeholder {
@@ -354,6 +422,7 @@ a:hover .arrow { transform: translateX(4px); }
   .blob-parallax { transform: none !important; }
   .sky-strip__star { animation: none; opacity: 0.4; }
   .strategy-slide, .strategy-blob, .strategy-dot { transition: none !important; }
+  .footer-glow { transition: none; opacity: 1; transform: none; }
 }
 </style>
 </head>
@@ -372,12 +441,31 @@ a:hover .arrow { transform: translateX(4px); }
 
   <div class="scroll-progress" id="scrollProgress"></div>
 
-  <!-- NAV: reverted 2026-08-11 to point back at the homepage, see the CSS comment above -->
+  <!-- NAV: reverted 2026-08-11 to point back at the homepage, see the CSS comment above.
+       B57 (2026-08-15) added the gold hairline/CTA + nav-wide treatment ported from
+       ../index.html (B55), wrapping the back-arrow + name into .site-nav-leading so
+       the wider 3-column grid has a single item for col 1.
+  ROLLBACK (pre-B57 compact nav):
   <nav class="site-nav site-nav-dark">
     <a href="../index.html#InternalSystems" class="site-nav-back" aria-label="Back to Internal Mortgage System on the homepage">
       <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
     </a>
     <a href="../#" class="site-nav-name">Ofir Avitan</a>
+    <div class="hidden md:flex items-center gap-6 type-label-lg" id="navTabs">
+      <a href="../index.html#about" class="nav-link">About Me</a>
+      <a href="../index.html#case-studies" class="nav-link">Case Studies</a>
+      <a href="../index.html#skills" class="nav-link">Skills</a>
+    </div>
+    <a href="../index.html#contact" class="site-nav-cta btn-glow-accent">Let's talk</a>
+  </nav>
+  -->
+  <nav class="site-nav site-nav-dark nav-dark-gold nav-wide">
+    <div class="site-nav-leading">
+      <a href="../index.html#InternalSystems" class="site-nav-back" aria-label="Back to Internal Mortgage System on the homepage">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+      </a>
+      <a href="../#" class="site-nav-name">Ofir Avitan</a>
+    </div>
     <div class="hidden md:flex items-center gap-6 type-label-lg" id="navTabs">
       <a href="../index.html#about" class="nav-link">About Me</a>
       <a href="../index.html#case-studies" class="nav-link">Case Studies</a>
@@ -588,23 +676,32 @@ a:hover .arrow { transform: translateX(4px); }
     </div>
   </section>
 
-  <!-- CONTACT / CLOSING: copied verbatim from ../index.html so every page shares one closing pattern -->
-  <section id="contact" class="relative overflow-hidden px-4 lg:px-20" style="background:var(--color-primary); color:var(--color-on-primary);">
+  <!-- CONTACT / CLOSING: was a verbatim copy of the pre-B55 ../index.html closing pattern.
+       B57 (2026-08-15) ported the B55 dark-gold footer treatment: background swapped to
+       --color-green-975 (via .footer-dark-bg, see the token-emission note on that class),
+       heading/dot on hero-dark-on-primary/hero-dark-gold, soft/muted text (eyebrow,
+       paragraph, phone, copyright) on footer-text-soft (neutral-100, not the green-100
+       hero-dark-on-primary-soft, per the readability fix from ../Digital-Loans/../index.html),
+       plus the two footer-glow spark wrappers. Email me/LinkedIn button colors are
+       explicitly unchanged. -->
+  <section id="contact" class="footer-dark-bg relative overflow-hidden px-4 lg:px-20">
     <div class="blob-parallax" style="bottom:-12rem; left:-8rem;" data-parallax="-0.1">
       <div class="hero-blob" style="width:28rem; height:28rem; bottom:0; left:0; opacity:0.25; animation-duration:33s; animation-direction:reverse;"></div>
     </div>
-    <div class="relative mx-auto max-w-7xl py-24 text-center lg:py-32">
-      <span class="reveal type-label-sm" style="color:var(--color-on-primary-soft)">Get in touch</span>
-      <h2 class="reveal type-display-sm mt-4">Let's build the future<span class="brand-dot-accent">.</span></h2>
-      <p class="reveal type-body-lg mx-auto mt-4 max-w-lg" style="color:var(--color-on-primary-soft)">Open to design leadership roles, partnerships, and ambitious product bets.</p>
+    <div class="footer-glow footer-glow--left" id="footerGlowLeft" aria-hidden="true"></div>
+    <div class="footer-glow footer-glow--right" id="footerGlowRight" aria-hidden="true"></div>
+    <div class="relative z-[1] mx-auto max-w-7xl py-24 text-center lg:py-32">
+      <span class="reveal type-label-sm footer-text-soft">Get in touch</span>
+      <h2 class="reveal hero-dark-on-primary type-display-sm mt-4">Let's build the future<span class="hero-dark-gold">.</span></h2>
+      <p class="reveal footer-text-soft type-body-lg mx-auto mt-4 max-w-lg">Open to design leadership roles, partnerships, and ambitious product bets.</p>
       <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-3">
         <a href="mailto:avitano@gmail.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-button);">Email me</a>
         <a href="https://linkedin.com/in/avitano" target="_blank" rel="noopener noreferrer" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="border-color:rgba(255,255,255,0.35); color:#fff;">LinkedIn</a>
       </div>
-      <div class="mt-10 flex flex-wrap items-center justify-center gap-3 type-body-md" style="color:var(--color-on-primary-soft)">
+      <div class="footer-text-soft mt-10 flex flex-wrap items-center justify-center gap-3 type-body-md">
         <span>+972-54-429-6353</span>
       </div>
-      <div class="type-label-sm mt-16 border-t pt-6" style="color:var(--color-on-primary-soft); border-color:rgba(255,255,255,0.15); text-transform:none; letter-spacing:normal;">
+      <div class="footer-text-soft type-label-sm mt-16 border-t pt-6" style="border-color:rgba(255,255,255,0.15); text-transform:none; letter-spacing:normal;">
         Ofir Avitan &middot; 2026
       </div>
     </div>
@@ -657,6 +754,27 @@ a:hover .arrow { transform: translateX(4px); }
     }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
     document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
     document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
+
+    // B57: footer gold-spark reveal, ported from ../index.html (B55). One-shot entrance,
+    // same "trigger once, unobserve, done" shape as the .reveal observer above, kept
+    // separate because it targets #contact itself, not the individual .footer-glow elements.
+    (function () {
+      const footerGlowLeftEl = document.getElementById('footerGlowLeft');
+      const footerGlowRightEl = document.getElementById('footerGlowRight');
+      const contactSection = document.getElementById('contact');
+      if (footerGlowLeftEl && footerGlowRightEl && contactSection) {
+        const footerGlowIo = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              footerGlowIo.unobserve(entry.target);
+              footerGlowLeftEl.classList.add('in-view');
+              footerGlowRightEl.classList.add('in-view');
+            }
+          });
+        }, { threshold: 0.15 });
+        footerGlowIo.observe(contactSection);
+      }
+    })();
 
     // thin progress bar tracking scroll position, same as ../index.html
     const progressBar = document.getElementById('scrollProgress');
@@ -785,6 +903,30 @@ a:hover .arrow { transform: translateX(4px); }
         star.style.setProperty('--star-max', (0.55 + Math.random() * 0.4).toFixed(2));
         skyStrip.appendChild(star);
       }
+
+      // B57: footer gold sparkle dust, ported verbatim from ../index.html (B55). Same
+      // generation approach as the stars just above, scattered inside each .footer-glow
+      // wrapper so they stay clipped to the edge band and never drift into the centered
+      // text column. Skipped entirely under reduced motion (whole block is guarded above).
+      const SPARK_COUNT = 14;
+      const footerGlowLeft = document.getElementById('footerGlowLeft');
+      const footerGlowRight = document.getElementById('footerGlowRight');
+      [footerGlowLeft, footerGlowRight].forEach((wrap) => {
+        if (!wrap) return;
+        for (let i = 0; i < SPARK_COUNT; i++) {
+          const spark = document.createElement('div');
+          spark.className = 'footer-glow__spark';
+          const size = 1 + Math.random() * 2;
+          spark.style.width = size + 'px';
+          spark.style.height = size + 'px';
+          spark.style.left = (Math.random() * 100) + '%';
+          spark.style.top = (10 + Math.random() * 80) + '%';
+          spark.style.setProperty('--spark-duration', (2.4 + Math.random() * 2.8) + 's');
+          spark.style.setProperty('--spark-delay', (Math.random() * 4) + 's');
+          spark.style.setProperty('--spark-max', (0.5 + Math.random() * 0.4).toFixed(2));
+          wrap.appendChild(spark);
+        }
+      });
 
       const MAX_PULL = 150;
       const OPEN_THRESHOLD = 0.8 * MAX_PULL;
