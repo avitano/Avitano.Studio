@@ -57,6 +57,14 @@
   --color-green-800: #065f46;
   --color-green-900: #064e3b;
   --color-green-950: #022c22;
+  /* 2026-08-14, B55: one step darker than green-950, added for the hero
+     background in this pass. Checked against Ofir's reference sketch's exact
+     page-background hex (#030f0c) before adopting it: converted both to HSL,
+     green-950 sits at ~166deg hue, the sketch's near-black at ~165deg, i.e.
+     the same hue family the whole green scale already uses, just pushed
+     darker and slightly less saturated (normal as L approaches 0). Not an
+     arbitrary import from Figma, a real harmonious extension of this scale. */
+  --color-green-975: #030f0c;
 
   --color-neutral-50: #f7f8f7;
   --color-neutral-100: #eff1ef;
@@ -71,6 +79,10 @@
   --color-neutral-950: #1a1d1a;
 
   --color-gold-100: #f0e6d2;
+  /* 2026-08-14, B55: formalizes a highlight hex (#f9e8b8) the photo ring's
+     shine gradient below uses inline, twice. Real named step between 100 and
+     300 instead of a repeated magic value, same reasoning as green-975. */
+  --color-gold-200: #f9e8b8;
   --color-gold-300: #ecc678;
   --color-gold-500: #e0a52e;
   --color-gold-700: #a87a1e;
@@ -155,6 +167,87 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    Loans' "+18%" stat). This class makes the reference real so the token actually resolves,
    and points it at green per that decision. */
 .stat-accent-green { color: var(--color-button); }
+
+/* B55: dark hero concept, adapted from Ofir's own mockup (draft4, then a
+   real Figma sketch, draft5/6). Scoped strictly to the hero (header) and
+   the fixed nav, which is already a permanently-dark surface regardless of
+   scroll position, so recoloring its CTA gold fits "gold only on dark
+   background" too. Every other section (About onward) is untouched. The
+   light-gray hairline that used to separate the hero from About is dropped
+   too, per Ofir: once the section itself goes dark, the color break does
+   that job on its own, the line is redundant. Headline and every label stay
+   the same sans-serif brand fonts (Inter Tight / Inter) as the rest of the
+   site per Ofir's explicit call, the Figma sketch's own serif headline and
+   Geist labels were not adopted. Button colors (gold CTA, gold nav border)
+   are also explicitly unchanged, the sketch's own green buttons were not
+   adopted either, Ofir's call. */
+.hero-dark {
+  /* .site-nav-dark deliberately keeps using --color-primary (green-950,
+     unchanged) rather than following suit, that's what makes the nav read
+     as a distinct, slightly lighter panel against this darker page
+     background, the effect Ofir liked in the sketch, achieved by leaving
+     the nav's own CSS alone rather than copying the sketch's separate
+     nav-panel color. */
+  background: var(--color-green-975);
+  min-height: 100vh;
+  min-height: 100svh;
+}
+/* Hero text/CTA colors on the dark panel: real classes instead of inline
+   style="color:var(...)", per the B53/B56 token-emission gotcha (an inline
+   style="" or JS .style.property is never scanned by Tailwind's browser
+   JIT, only a real rule in this <style> block forces emission). */
+.hero-dark-gold { color: var(--color-gold-500); }
+.hero-dark-on-primary { color: var(--color-on-primary); }
+.hero-dark-on-primary-soft { color: var(--color-on-primary-soft); }
+.hero-dark-cta-primary { background: var(--color-gold-500); color: var(--color-green-950); }
+
+/* nav modifier: gold hairline border + gold CTA, only when the nav is
+   showing this dark-hero treatment. Selector needs all 3 classes
+   (.site-nav.site-nav-dark.nav-dark-gold): .site-nav.site-nav-dark's own
+   `border: none` further down has 2-class specificity, a plain
+   .nav-dark-gold alone (1 class) loses to it regardless of source order. */
+.site-nav.site-nav-dark.nav-dark-gold { border: 1px solid rgb(224 165 46 / 0.4); }
+.nav-dark-gold .site-nav-cta { background: var(--color-gold-500); color: var(--color-green-950); }
+
+/* wider nav: switches the pill from flex/gap (sized to its own content via
+   width:max-content) to a real 3-column grid so name/phrase/CTA spread
+   across a much wider pill, with the phrase staying centered regardless of
+   how long the name or button text is. .site-nav.nav-wide (2 classes) is
+   needed to beat the base .site-nav{display:flex} rule (1 class) at
+   equal-or-lower source order. Width matches the hero's own content
+   container exactly (max-w-7xl = 80rem, same px-4/lg:px-20 side padding
+   the hero text and photo already sit inside), so the nav's edges line up
+   with where the headline starts and the photo ends. */
+.site-nav.nav-wide {
+  width: min(80rem, calc(100vw - 2rem));
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1rem;
+}
+@media (min-width: 1024px) {
+  .site-nav.nav-wide { width: min(80rem, calc(100vw - 10rem)); }
+}
+/* explicit grid-column on all three (not relying on DOM-order
+   auto-placement): .site-nav-phrase is display:none below md, and without
+   an explicit column a hidden grid item just gets skipped, so the CTA
+   would auto-fill into the middle "auto" track instead of the right "1fr"
+   track on mobile. Explicit placement keeps col 1/2/3 fixed regardless of
+   what's hidden. */
+.nav-wide .site-nav-name { grid-column: 1; justify-self: start; }
+.nav-wide .site-nav-phrase { grid-column: 2; justify-self: center; margin: 0; }
+.nav-wide .site-nav-cta { grid-column: 3; justify-self: end; }
+
+/* Photo "shine" ring: a static (no animation, no blur/glow) conic-gradient
+   ring simulating polished metal catching light unevenly, several
+   light/dark gold stops around the circle rather than one flat gold color.
+   Built with the padding + inner-image trick so the ring itself never
+   needs its own separate element. */
+.hero-photo-ring {
+  border-radius: 999px; padding: 3px;
+  background: conic-gradient(from 210deg, var(--color-gold-200) 0%, var(--color-gold-500) 16%, var(--color-gold-700) 34%, var(--color-gold-500) 50%, var(--color-gold-200) 62%, var(--color-gold-700) 80%, var(--color-gold-200) 100%);
+  box-shadow: var(--shadow-xl);
+}
+.hero-photo-ring img { display: block; width: 100%; height: 100%; }
 
 /* sticky floating pill nav, animates in on load */
 @keyframes navEnter {
@@ -545,46 +638,55 @@ a:hover .arrow { transform: translateX(4px); }
     <a href="#contact" class="inline-flex h-8 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-border-strong px-4 text-sm font-medium text-default btn-glow-nav transition-all duration-150 ease-out max-md:hover:bg-surface-alt active:border-button md:border-0 md:bg-button md:text-on-primary md:shadow-md md:active:bg-button-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Let's talk</a>
   </nav>
   -->
-  <nav class="site-nav site-nav-dark">
+  <nav class="site-nav site-nav-dark nav-dark-gold nav-wide">
     <a href="#" class="site-nav-name">Ofir Avitan</a>
     <span class="site-nav-phrase" id="navPhrase">Hi, glad you're here</span>
-    <a href="#contact" class="site-nav-cta btn-glow-accent">Let's talk</a>
+    <a href="#contact" class="site-nav-cta">Let's talk</a>
   </nav>
 
-  <!-- HERO -->
-  <header id="top" class="relative overflow-hidden px-4 lg:px-20">
-    <div class="blob-parallax" style="top:-8rem; right:-10rem;" data-parallax="0.12">
-      <div class="hero-blob" style="width:32rem; height:32rem; top:0; right:0; animation-duration:26s;"></div>
-    </div>
-    <div class="relative mx-auto flex max-w-7xl flex-col items-start gap-10 pt-40 pb-24 lg:flex-row lg:items-center lg:pt-48 lg:pb-32">
-      <div class="max-w-2xl">
-        <span class="enter type-label-sm font-semibold text-default" style="animation-delay:60ms">Ofir Avitan</span>
-        <span class="enter type-label-sm mt-1 block text-muted" style="animation-delay:80ms">Product Design Manager</span>
-        <h1 class="enter type-display-lg mt-4 sm:text-6xl" style="animation-delay:180ms">Design that moves<br>the work<span class="brand-dot">.</span></h1>
-        <p class="enter type-body-lg mt-6 max-w-lg text-secondary" style="animation-delay:300ms">A walk through process, craft and outcomes: case studies from over a decade shaping fintech and regulated banking products.</p>
-        <div class="enter mt-8 flex flex-wrap items-center gap-3" style="animation-delay:420ms">
-          <a href="#case-studies" class="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-button px-6 text-sm font-medium text-on-primary shadow-md btn-glow transition-all duration-150 ease-out active:bg-button-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">
-            See the work
-            <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
-          <a href="#contact" class="inline-flex h-10 items-center justify-center gap-2 rounded-full border border-border-strong px-6 text-sm font-medium text-default transition-colors duration-150 ease-out hover:bg-surface-alt active:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Get in touch</a>
-        </div>
-        <div class="enter mt-8 inline-flex items-center gap-2 type-body-md text-muted" style="animation-delay:520ms">
-          <span class="size-2 rounded-full bg-green-500"></span>
-          Open to design leadership roles
+  <!-- HERO — B55: centered-stack layout, adapted from Ofir's Figma sketch
+       (photo ring / name+role / headline / description / CTA row, all
+       centered, single column). See the .hero-dark CSS comment above for
+       the background/nav color reasoning. Two things intentionally NOT
+       adopted from the sketch: its serif headline/Geist labels (fonts stay
+       Inter/Inter Tight, Ofir's explicit call) and its green button colors
+       (buttons and the nav's gold border stay as originally built). The
+       decorative green blob stays dropped. Centering the photo (was hidden
+       below lg before) is the point of this layout per Ofir, it's now
+       small enough (168px, was 224-288px) to show at every breakpoint
+       without crowding mobile. -->
+  <header id="top" class="hero-dark relative overflow-hidden px-4 lg:px-20">
+    <div class="relative mx-auto flex max-w-3xl flex-col items-center gap-6 pt-40 pb-24 text-center lg:pt-48 lg:pb-32">
+      <div class="enter-scale relative" style="animation-delay:60ms">
+        <div class="hero-photo-ring size-[168px]">
+          <img src="assets/headshot2.png" alt="Ofir Avitan" class="size-full rounded-full object-cover">
         </div>
       </div>
-      <div class="enter-scale relative hidden lg:block lg:mx-0 lg:ms-auto" style="animation-delay:260ms">
-        <div class="size-56 overflow-hidden rounded-full border border-border-default shadow-xl sm:size-72">
-          <img src="assets/headshot2.png" alt="Ofir Avitan" class="size-full object-cover">
-        </div>
+      <div class="enter flex flex-col items-center gap-1" style="animation-delay:160ms">
+        <span class="hero-dark-gold type-label-sm font-semibold">Ofir Avitan</span>
+        <span class="hero-dark-on-primary-soft type-label-sm">Product Design Manager</span>
+      </div>
+      <h1 class="enter hero-dark-on-primary type-display-lg sm:text-6xl" style="animation-delay:260ms">Design that moves the work<span class="hero-dark-gold">.</span></h1>
+      <p class="enter hero-dark-on-primary-soft type-body-lg max-w-lg" style="animation-delay:360ms">A walk through process, craft and outcomes: case studies from over a decade shaping fintech and regulated banking products.</p>
+      <div class="enter flex flex-wrap items-center justify-center gap-3" style="animation-delay:460ms">
+        <a href="#case-studies" class="hero-dark-cta-primary inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-sm font-medium shadow-md transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2">
+          See the work
+          <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <a href="#contact" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2" style="border-color:rgba(255,255,255,0.35); color:#fff;">Get in touch</a>
+      </div>
+      <div class="enter hero-dark-on-primary-soft inline-flex items-center gap-2 type-body-md" style="animation-delay:560ms">
+        <span class="size-2 rounded-full bg-green-500"></span>
+        Open to design leadership roles
       </div>
     </div>
   </header>
 
-  <!-- ABOUT -->
+  <!-- ABOUT — B55: dropped the top hairline (border-t) here, per Ofir, once
+       the hero above goes dark, the color break itself is the divider, the
+       line on top of it was redundant. -->
   <section id="about" class="px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl border-t border-border-default py-20 lg:py-28">
+    <div class="mx-auto max-w-7xl py-20 lg:py-28">
       <span class="reveal type-label-sm text-muted">About Me</span>
       <div class="mt-6 grid grid-cols-1 gap-12 lg:grid-cols-12">
         <h2 class="reveal type-headline-md lg:col-span-6">Product design leadership, hands-on<span class="brand-dot">.</span></h2>
