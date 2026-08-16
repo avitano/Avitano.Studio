@@ -11,16 +11,16 @@
   gtag('config', 'G-V1HNVYX124');
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ofir Avitan | Credit Cards Case Study</title>
-<meta name="description" content="Credit Cards case study: redesigning Bank Hapoalim's credit card experience from a commodity trap into a visual-first, lifestyle-led selection flow.">
+<title>Ofir Avitan | Cross-Bank Loan Case Study</title>
+<meta name="description" content="Cross-Bank Loan case study: designing a zero-to-one loan application experience for customers of any bank, built and launched in 2026.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://avitano.studio/Credit-Cards/">
-<meta property="og:title" content="Ofir Avitan | Credit Cards Case Study">
-<meta property="og:description" content="Credit Cards case study: redesigning Bank Hapoalim's credit card experience from a commodity trap into a visual-first, lifestyle-led selection flow.">
+<meta property="og:url" content="https://avitano.studio/Cross-Bank-Loan/">
+<meta property="og:title" content="Ofir Avitan | Cross-Bank Loan Case Study">
+<meta property="og:description" content="Cross-Bank Loan case study: designing a zero-to-one loan application experience for customers of any bank, built and launched in 2026.">
 <meta property="og:image" content="https://avitano.studio/assets/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Ofir Avitan | Credit Cards Case Study">
-<meta name="twitter:description" content="Credit Cards case study: redesigning Bank Hapoalim's credit card experience from a commodity trap into a visual-first, lifestyle-led selection flow.">
+<meta name="twitter:title" content="Ofir Avitan | Cross-Bank Loan Case Study">
+<meta name="twitter:description" content="Cross-Bank Loan case study: designing a zero-to-one loan application experience for customers of any bank, built and launched in 2026.">
 <meta name="twitter:image" content="https://avitano.studio/assets/og-image.jpg">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon.ico" sizes="any">
@@ -49,7 +49,6 @@
   --color-green-800: #065f46;
   --color-green-900: #064e3b;
   --color-green-950: #022c22;
-  /* B57: ported from ../index.html (B55), see that file for the HSL-extension writeup. */
   --color-green-975: #031e17;
 
   --color-neutral-50: #f7f8f7;
@@ -65,7 +64,6 @@
   --color-neutral-950: #1a1d1a;
 
   --color-gold-100: #f0e6d2;
-  /* B57: ported from ../index.html (B55), formalizes the footer-spark highlight hex. */
   --color-gold-200: #f9e8b8;
   --color-gold-300: #ecc678;
   --color-gold-500: #e0a52e;
@@ -133,31 +131,14 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 .type-label-lg { font-family: var(--font-plain); font-weight: 500; font-size: 0.875rem; line-height: 1.43; }
 .type-label-sm { font-family: var(--font-plain); font-weight: 500; font-size: 0.75rem; line-height: 1.33; letter-spacing: 0.1em; text-transform: uppercase; }
 .brand-dot { color: var(--color-button); }
-/* 2026-08-14: real class instead of an inline style, so var(--color-accent) is referenced
-   inside this stylesheet where Tailwind's browser compiler actually looks when deciding which
-   @theme variables to emit into :root (it doesn't scan inline style="" attributes in the HTML
-   body). This page currently gets --color-accent for free via .site-nav-dark .nav-link::after
-   below, which happens to reference the same variable, but that's an accidental dependency -
-   found for real on ../index.html, which has no such rule and its Contact dot rendered pure
-   white until this same fix landed there. Matching it here so this page can't silently break
-   the same way if that nav rule ever changes. */
 .brand-dot-accent { color: var(--color-accent); }
-/* 2026-08-14, B56: same emission-bug family as above. --color-gold-700 was only ever referenced
-   via inline style="" attributes on the numbered labels below, so it never got emitted into
-   :root and these silently rendered as inherited dark text instead of gold. Ofir's call: don't
-   restore gold, recolor to the site's green instead (same --color-button used site-wide). */
 .stat-accent-green { color: var(--color-button); }
-/* B57: footer text-color classes, ported from ../index.html (B55), plus the same-day
-   readability fix (footer-text-soft/neutral-100 instead of green-100, see that file's
-   comment on the gotcha). hero-dark-on-primary-soft kept defined for parity across pages
-   even though this page's hero is untouched and doesn't currently use it. */
 .hero-dark-gold { color: var(--color-gold-500); }
 .hero-dark-on-primary { color: var(--color-on-primary); }
 .hero-dark-on-primary-soft { color: var(--color-on-primary-soft); }
 .footer-text-soft { color: var(--color-neutral-100); }
 
-/* sticky floating pill nav, same recipe as ../index.html (no on-load entrance animation here,
-   this is a secondary page reached mid-scroll, not the very first thing a visitor sees) */
+/* sticky floating pill nav, same recipe as ../index.html */
 .site-nav {
   position: fixed; top: 1.25rem; left: 50%; transform: translateX(-50%);
   z-index: 50; display: flex; align-items: center; gap: 1.75rem;
@@ -165,11 +146,6 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
   border: 1px solid var(--color-border-default);
   border-radius: 999px; padding: 0.5rem 1.25rem;
   box-shadow: var(--shadow-lg);
-  /* width: max-content (2026-08-07): with only `left: 50%` set (no `right`),
-     an auto-width fixed element's shrink-to-fit box is computed against the
-     remaining space to the right of `left`, roughly 50vw, not the full
-     viewport, so on mobile the flex items got compressed and "Let's talk"
-     wrapped to two lines. See ../index.html for the full writeup. */
   width: max-content;
 }
 .nav-link { position: relative; }
@@ -180,10 +156,6 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 }
 .nav-link:hover::after { transform: scaleX(1); }
 
-/* 2026-08-08: recolored to match the homepage nav redesign (dark pill, name
-   as text instead of the logo image). 2026-08-11: padding/gap brought in
-   line with ../index.html's site-nav-dark override too, this page's pill
-   was rendering visibly thinner than the homepage's before this. */
 .site-nav.site-nav-dark { background: var(--color-primary); border: none; padding: 0.85rem 2rem; gap: 2rem; }
 .site-nav-name {
   font-family: var(--font-brand); font-weight: 700; font-size: 1.05rem;
@@ -204,18 +176,9 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
   box-shadow: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(255,255,255,0.6);
 }
 
-/* B57: gold hairline + gold CTA fill, ported from ../index.html (B55/nav-dark-gold). Needs
-   all 3 classes to beat .site-nav.site-nav-dark's own 2-class `border: none` above. */
 .site-nav.site-nav-dark.nav-dark-gold { border: 1px solid rgb(224 165 46 / 0.4); }
 .nav-dark-gold .site-nav-cta { background: var(--color-gold-500); color: var(--color-green-950); }
 
-/* B57: widens the pill to match ../index.html's nav-wide footprint (min(80rem, viewport)),
-   adapted to this page's own nav content: .site-nav-leading (back-arrow + name, back-arrow
-   only actually visible on mobile) takes col 1, #navTabs (desktop-only) takes the centered
-   col 2, the CTA takes col 3, same 3-column shape ../index.html uses for name/phrase/CTA.
-   Explicit grid-column on all three, not DOM-order autoflow, so #navTabs being hidden below
-   md doesn't let the CTA slide into the middle "auto" track on mobile, same reasoning as
-   ../index.html's own comment on this. */
 .site-nav.nav-wide {
   width: min(80rem, calc(100vw - 2rem));
   display: grid;
@@ -230,35 +193,12 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 .nav-wide #navTabs { grid-column: 2; justify-self: center; }
 .nav-wide .site-nav-cta { grid-column: 3; justify-self: end; }
 
-/* 2026-08-08 trial, reverted 2026-08-11 (Credit-Cards is the pilot page for
-   the revert, other 3 case studies to follow once Ofir confirms this one
-   live): the 4 tabs briefly pointed to this page's own in-page sections
-   (Challenge/Strategy/Impact) instead of the homepage, that's reverted back
-   to real homepage-section links (About Me/Case Studies/Skills), matching
-   what the tabs originally pointed to before the 08-08 trial. The
-   scroll-linked "current section" highlight (is-active) only made sense
-   for in-page anchors, removed along with it, see the JS near the bottom
-   of body. The compact icon-only "back to other projects" link stays but
-   is now mobile-only (see the @media block right below): on desktop the tabs plus
-   the browser's own back button already cover it, so keeping the icon
-   there too was redundant. On mobile the tabs are hidden entirely, so the
-   icon is still the only one-tap way back, and now points at this
-   project's own tile on the homepage specifically (#CreditCards, renamed
-   2026-08-11 from #tile-credit-cards, a cleaner id since it's visible in
-   the address bar after the jump) rather than the top of the Case Studies
-   section. */
 .site-nav-back {
   display: inline-flex; align-items: center; justify-content: center;
   width: 2rem; height: 2rem; border-radius: 999px; flex-shrink: 0;
   color: var(--color-on-primary-soft);
   transition: color 150ms var(--ease-soft), background 150ms var(--ease-soft);
 }
-/* the "md:hidden" utility class alone doesn't do this: this whole style block is
-   unlayered custom CSS (it lives in the same @import "tailwindcss" block, not inside
-   one of Tailwind's own layers), and unlayered CSS always beats layered utility
-   classes regardless of breakpoint or source order, so the unconditional
-   display:inline-flex above was silently winning at every width. Hiding it for real
-   needs its own unlayered media query, right here. */
 @media (min-width: 768px) {
   .site-nav-back { display: none; }
 }
@@ -268,28 +208,19 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
   box-shadow: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(255,255,255,0.6);
 }
 
-/* thin scroll-progress bar, same as ../index.html */
 .scroll-progress {
   position: fixed; top: 0; left: 0; height: 3px; width: 0%;
   background: var(--color-button); z-index: 60; transition: width 80ms linear;
 }
 
-/* scroll reveal, identical mechanics to ../index.html */
 .reveal { opacity: 0; transform: translateY(54px); transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft); will-change: opacity, transform; }
 .reveal.in-view { opacity: 1; transform: translateY(0); }
 .reveal-stagger > * { opacity: 0; transform: translateY(50px); transition: opacity 650ms var(--ease-soft), transform 650ms var(--ease-soft); will-change: opacity, transform; }
 .reveal-stagger > *.in-view { opacity: 1; transform: translateY(0); }
 
-/* arrow nudges right on hover, same as ../index.html */
 .arrow { display: inline-block; transition: transform 200ms var(--ease-out); }
 a:hover .arrow { transform: translateX(4px); }
 
-/* button hover glow (2026-08-08), same as ../index.html: replaces the old flat
-   color-swap-on-hover with a soft colored halo. .btn-glow-accent is for buttons on an
-   already-dark backdrop (Contact section), where a --color-button-toned glow would
-   nearly vanish, so it borrows the brighter --color-accent green instead. .btn-glow-nav
-   is the nav's "Let's talk" pill, filled/glowing only at md and up (mobile stays the
-   plain outline style). */
 .btn-glow, .btn-glow-nav, .btn-glow-accent { transition: box-shadow 300ms var(--ease-soft); }
 .btn-glow:hover { box-shadow: var(--shadow-lg), 0 0 20px 4px rgb(6 78 59 / 0.35); }
 .btn-glow-accent:hover { box-shadow: var(--shadow-lg), 0 0 20px 4px rgb(16 185 129 / 0.45); }
@@ -297,17 +228,12 @@ a:hover .arrow { transform: translateX(4px); }
   .btn-glow-nav:hover { box-shadow: var(--shadow-lg), 0 0 20px 4px rgb(6 78 59 / 0.35); }
 }
 
-/* hero on-load entrance (2026-08-08): ../index.html's hero has always had this fadeUp
-   treatment, this page's hero never did, it just rendered static, so it read as "no
-   motion" until the first scroll-triggered section. Same keyframe/stagger pattern. */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(22px); filter: blur(6px); }
   to   { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 .enter { opacity: 0; animation: fadeUp 900ms var(--ease-soft) both; }
 
-/* hero gradient blob + scroll parallax wrapper, same recipe as ../index.html's contact section
-   (reused verbatim here since the contact/closing section below is copied unchanged) */
 .hero-blob {
   position: absolute; border-radius: 999px; filter: blur(60px); opacity: 0.55;
   background: conic-gradient(from 180deg, var(--color-green-200), var(--color-green-500), var(--color-gold-300), var(--color-green-200));
@@ -326,16 +252,8 @@ a:hover .arrow { transform: translateX(4px); }
 
 .btn-on-primary:hover { background: rgba(255, 255, 255, 0.1); }
 
-/* B57: real class instead of inline style="background:var(--color-green-975)". Per the
-   site's standing token-emission rule, an inline style="" is never scanned by Tailwind's
-   browser JIT, so this forces the token to actually emit into :root (see the ../Digital-Loans
-   B57 note on the same fix, this hero/header is out of scope on this page so nothing else
-   here references the token). */
 .footer-dark-bg { background: var(--color-green-975); }
 
-/* B57: footer gold sparkle-dust, ported verbatim from ../index.html (B55). Same
-   B24 sky-strip "small JS-generated dot + shared CSS keyframe" technique, scattered
-   inside a simple edge wrapper, revealed once you scroll down to the footer. */
 .footer-glow {
   position: absolute; top: 0; bottom: 0; width: min(28rem, 40vw);
   overflow: hidden; pointer-events: none; z-index: 0;
@@ -356,19 +274,127 @@ a:hover .arrow { transform: translateX(4px); }
   50%      { opacity: var(--spark-max, 0.9); }
 }
 
-/* placeholder media block: flat neutral surface standing in for a real screenshot/video,
-   same visual language as the "Preview coming soon" tile on ../index.html, not a new pattern */
+/* placeholder media block: flat neutral surface standing in for a real screenshot,
+   same visual language as other placeholders on this site */
 .media-placeholder {
   display: flex; align-items: center; justify-content: center;
   background: var(--color-neutral-100); border: 1px solid var(--color-border-default);
 }
 
-/* B24: pull-past-top sky strip, rolled out from ../index.html (built there
-   2026-08-10, confirmed working) to every page for consistency, since
-   someone landing directly on a case study never sees a homepage-only
-   easter egg. Same CSS/JS on all 4 pages, no shared component system on
-   this site, see the skill notes on ../index.html for the full mechanics
-   writeup. */
+/* ---- Cross-Bank Loan: bespoke page-only treatment, authorized by Ofir specifically
+   for this case study (not a new site-wide pattern). Tokens/type/spacing still pull from
+   the shared DSM vars above; only the compositions below are freehand. ---- */
+
+/* HERO: device-stack, a monitor placeholder with a phone placeholder resting on top,
+   overlapping its top-left corner, instead of two stacked blocks. */
+.device-stack { position: relative; }
+.device-stack__desktop {
+  width: 100%; height: 16rem; border-radius: 1rem;
+  box-shadow: var(--shadow-xl); transform: rotate(-1deg);
+}
+.device-stack__mobile {
+  position: absolute; left: 1.25rem; top: -1.75rem;
+  width: 6.5rem; height: 13rem; border-radius: 1.25rem;
+  box-shadow: var(--shadow-xl); transform: rotate(-4deg);
+  border: 6px solid #fff;
+}
+@media (min-width: 1024px) {
+  .device-stack__desktop { height: 26rem; }
+  .device-stack__mobile { left: 2.5rem; top: -3rem; width: 11rem; height: 22rem; }
+}
+
+/* CHALLENGE: large pull-quote carrying the section's emotional core, instead of
+   opening straight into body copy. */
+.pull-quote {
+  font-family: var(--font-brand); font-weight: 600;
+  font-size: 1.75rem; line-height: 1.3; letter-spacing: -0.01em;
+  color: var(--color-default);
+}
+@media (min-width: 1024px) {
+  .pull-quote { font-size: 2.5rem; }
+}
+
+/* STRATEGY: "manifesto" rows, ghost numerals + divider lines, instead of a card grid.
+   These are operating principles set before a single screen existed, so the treatment
+   reads as a declaration, not a spec sheet. */
+.manifesto-row {
+  display: flex; align-items: flex-start; gap: 1.5rem;
+  padding: 1.75rem 0; border-top: 1px solid var(--color-border-default);
+}
+.manifesto-row:last-child { border-bottom: 1px solid var(--color-border-default); }
+.manifesto-row__num {
+  font-family: var(--font-brand); font-weight: 700;
+  font-size: 2.5rem; line-height: 1; color: var(--color-border-strong);
+  flex-shrink: 0; width: 3.5rem;
+}
+@media (min-width: 1024px) {
+  .manifesto-row { gap: 2.5rem; padding: 2.25rem 0; }
+  .manifesto-row__num { font-size: 3.5rem; width: 5rem; }
+}
+
+/* MECHANISM: the page's one visual peak. An inset "stage" panel (quiet, cool-toned,
+   not saturated) holding a 4-node step rail matching the product's real progress
+   stepper, plus a fanned cluster of cropped-screen placeholder cards. Kept deliberately
+   calm so real screenshots, once dropped in, are the thing that pops, not the backdrop. */
+.stage-panel {
+  background: #f2f7f3; border-radius: 1.75rem;
+  padding: 2.25rem 1.25rem;
+}
+@media (min-width: 1024px) {
+  .stage-panel { padding: 3.5rem; }
+}
+.step-rail {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 0.25rem; position: relative;
+}
+.step-rail::before {
+  content: ""; position: absolute; left: 1.25rem; right: 1.25rem; top: 1.25rem;
+  height: 2px; background: var(--color-border-strong); z-index: 0;
+}
+.step-rail__node {
+  position: relative; z-index: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 0.5rem; flex: 1; text-align: center;
+}
+.step-rail__circle {
+  display: flex; align-items: center; justify-content: center;
+  width: 2.5rem; height: 2.5rem; border-radius: 999px; flex-shrink: 0;
+  background: var(--color-button); color: #fff;
+  font-family: var(--font-brand); font-weight: 700; font-size: 0.95rem;
+}
+.crop-cluster {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+}
+.crop-card {
+  width: 5.5rem; height: 7.5rem; border-radius: 0.75rem; flex-shrink: 0;
+  background: #fff; box-shadow: var(--shadow-lg); border: 1px solid var(--color-border-default);
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  margin-left: -0.85rem; padding: 0.5rem;
+}
+.crop-card:first-child { margin-left: 0; }
+.crop-card:nth-child(odd) { transform: rotate(-4deg); }
+.crop-card:nth-child(even) { transform: rotate(3deg); }
+@media (min-width: 1024px) {
+  .crop-card { width: 8rem; height: 11rem; margin-left: -1.5rem; }
+}
+
+/* LAUNCH: a single pulsing "live" badge replaces the two-point bullet grid, one clear
+   signal instead of a spec list. */
+.live-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem; width: fit-content;
+  background: var(--color-green-50); color: var(--color-button);
+  font-family: var(--font-plain); font-weight: 600; font-size: 0.85rem;
+  padding: 0.5rem 1rem; border-radius: 999px; white-space: nowrap;
+}
+.live-badge__dot {
+  width: 0.5rem; height: 0.5rem; border-radius: 999px; background: var(--color-accent);
+  animation: livePulse 1.8s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+  50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+}
+
+/* B24: pull-past-top sky strip, same on every page */
 .sky-strip {
   position: fixed; top: 0; left: 0; right: 0; height: var(--sky-strip-height, 10rem);
   background: linear-gradient(180deg, #05070d 0%, #0b1220 62%, #131d33 100%);
@@ -398,45 +424,23 @@ a:hover .arrow { transform: translateX(4px); }
   .blob-parallax { transform: none !important; }
   .sky-strip__star { animation: none; opacity: 0.4; }
   .footer-glow { transition: none; opacity: 1; transform: none; }
+  .live-badge__dot { animation: none; }
 }
 </style>
 </head>
 <body class="antialiased">
 
-  <!-- B24: hidden pull-past-top sky strip, sits behind everything below.
-       See the CSS comment above .sky-strip and the script block near the
-       end of body for the mechanics. -->
   <div class="sky-strip" id="skyStrip" aria-hidden="true">
     <div class="sky-strip__slogan">not even the sky is the limit :)</div>
   </div>
 
-  <!-- Everything else lives inside .page-shift so it can translate as one
-       sheet during the pull gesture. Closed right before </body>. -->
   <div class="page-shift" id="pageShift">
 
   <div class="scroll-progress" id="scrollProgress"></div>
 
-  <!-- NAV: reverted 2026-08-11 to point back at the homepage, see the CSS comment above.
-       B57 (2026-08-15) added the gold hairline/CTA + nav-wide treatment ported from
-       ../index.html (B55), wrapping the back-arrow + name into .site-nav-leading so
-       the wider 3-column grid has a single item for col 1.
-  ROLLBACK (pre-B57 compact nav):
-  <nav class="site-nav site-nav-dark">
-    <a href="../index.html#CreditCards" class="site-nav-back" aria-label="Back to Credit Cards on the homepage">
-      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-    </a>
-    <a href="../#" class="site-nav-name">Ofir Avitan</a>
-    <div class="hidden md:flex items-center gap-6 type-label-lg" id="navTabs">
-      <a href="../index.html#about" class="nav-link">About Me</a>
-      <a href="../index.html#case-studies" class="nav-link">Case Studies</a>
-      <a href="../index.html#skills" class="nav-link">Skills</a>
-    </div>
-    <a href="../index.html#contact" class="site-nav-cta btn-glow-accent">Let's talk</a>
-  </nav>
-  -->
   <nav class="site-nav site-nav-dark nav-dark-gold nav-wide">
     <div class="site-nav-leading">
-      <a href="../index.html#CreditCards" class="site-nav-back" aria-label="Back to Credit Cards on the homepage">
+      <a href="../index.html#CrossBankLoan" class="site-nav-back" aria-label="Back to Cross-Bank Loan on the homepage">
         <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
       </a>
       <a href="../#" class="site-nav-name">Ofir Avitan</a>
@@ -453,10 +457,8 @@ a:hover .arrow { transform: translateX(4px); }
   <header id="top" class="px-4 pb-8 pt-32 sm:pb-16 lg:px-20 lg:pb-24 lg:pt-40">
     <div class="mx-auto max-w-7xl">
       <div style="max-width:1080px;">
-        <h1 class="enter type-display-sm sm:text-5xl" style="animation-delay:80ms">Credit Cards<span class="brand-dot">.</span></h1>
-        <!-- B29 fixed-width column rollout, 2026-08-12: piloted on ../Digital-Loans/,
-             see that file's comment for the reasoning (content-driven auto columns
-             threw the label row out of even rhythm). -->
+        <h1 class="enter type-display-sm sm:text-5xl" style="animation-delay:80ms">Cross-Bank Loan<span class="brand-dot">.</span></h1>
+        <!-- Duration/Scope are first-pass placeholders, flagged to Ofir for the real figures. -->
         <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-[4rem_13rem_6rem_1fr] sm:gap-x-10" style="animation-delay:240ms">
           <div>
             <p class="type-body-md text-muted">Year</p>
@@ -468,179 +470,219 @@ a:hover .arrow { transform: translateX(4px); }
           </div>
           <div>
             <p class="type-body-md text-muted">Duration</p>
-            <p class="type-body-lg mt-1 font-medium text-default">6 months</p>
+            <p class="type-body-lg mt-1 font-medium text-default">4 months</p>
           </div>
           <div>
             <p class="type-body-md text-muted">Scope</p>
-            <p class="type-body-lg mt-1 font-medium text-default" style="max-width:495px;">Product Strategy, UX, UI, Microcopy, Usability Testing, Legal Collaboration, Design System</p>
+            <p class="type-body-lg mt-1 font-medium text-default" style="max-width:495px;">Product Strategy, UX, UI, Microcopy, Design System Governance, Cross-Functional Leadership</p>
           </div>
         </div>
-        <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms; max-width:790px;">Redesigned Bank Hapoalim's credit card experience: three functionally identical card products, sold on raw numbers and dense compliance text, became a visual-first, lifestyle-led selection flow.</p>
+        <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms; max-width:790px;">Directed the design of a loan application built for customers of any bank, not only Bank Hapoalim's own. A new product, built from zero to one and shipped in 2026.</p>
         <div class="enter mt-6 flex flex-wrap gap-2" style="animation-delay:420ms">
-          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">iOS</span>
-          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Android</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Web</span>
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Desktop</span>
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Mobile</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
         </div>
+        <a href="https://credit.bankhapoalim.co.il/ng-portals/mpc-req-loan/he/lobby" target="_blank" rel="noopener noreferrer" class="enter mt-5 inline-flex items-center gap-1.5 type-label-lg font-medium text-default hover:text-primary" style="animation-delay:480ms">
+          View the live product
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+        </a>
       </div>
 
-      <div class="enter mt-12 w-full overflow-hidden rounded-xl lg:mt-16" style="animation-delay:540ms">
-        <video id="cardsHeroVideo" class="block h-auto w-full" src="cards.mp4" muted playsinline preload="auto"></video>
+      <!-- Device-stack hero media: desktop is the base (leads with the website, since
+           desktop isn't shown on any other case study yet), mobile rests on top,
+           overlapping its top-left corner, proving full responsiveness in one glance
+           instead of two separate stacked blocks. Both placeholders until real Figma
+           exports land. -->
+      <div class="enter device-stack mt-16 lg:mt-20" style="animation-delay:600ms">
+        <div class="device-stack__desktop media-placeholder">
+          <span class="type-label-sm text-muted">Desktop — coming soon.</span>
+        </div>
+        <div class="device-stack__mobile media-placeholder">
+          <span class="type-label-sm text-muted">Mobile</span>
+        </div>
       </div>
     </div>
   </header>
 
   <!-- CHALLENGE -->
-  <!-- 2026-08-09: text-left / single-phone-right split, matching the same pattern used for
-       Digital Loans in the July deck (credit-cards-challenge.html: text = cols 1-6, phone
-       mock = cols 7-12), reusing the site's existing 12-col grid utility (see ../index.html
-       About section) rather than a new layout. Second legacy screen (old_credit_cards2.mp4,
-       the compliance/rates breakdown) deliberately held back, it maps to Strategy's
-       "Friction-Free Compliance" point once there's an "after" to pair it with. -->
   <section id="challenge" class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl border-t border-border-default pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
-      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
-        <div class="lg:col-span-6">
-          <h2 class="reveal type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
-          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Leadership asked for higher conversion in the credit card application flow. The honest diagnosis came first: the bank's three card products, Visa Gold and Mastercard Gold among them, were functionally identical, just different brand skins on the same underlying product, while competitors offered real differentiation through loyalty perks and cashback. No amount of interface polish fixes a non-differentiated product, and that reframe shaped everything that followed.</p>
+      <h2 class="reveal type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
+      <p class="reveal pull-quote mt-8 max-w-4xl">How do you earn a fast, confident answer from <span class="brand-dot-accent">someone who has no relationship with you yet</span>?</p>
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Most of our loan work starts with an existing Bank Hapoalim customer. This one doesn't. It's built for anyone, whether they bank with us or not, and that changes the whole problem.</p>
 
-          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
-            <div>
-              <span class="type-label-sm stat-accent-green">01</span>
-              <h3 class="type-headline-sm mt-2">The Commodity Trap</h3>
-              <p class="type-body-md mt-2 text-secondary">Cards were treated as generic financial utilities, forcing users to compare raw numbers and dry terms instead of emotional value.</p>
-            </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">02</span>
-              <h3 class="type-headline-sm mt-2">Compliance vs. Experience</h3>
-              <p class="type-body-md mt-2 text-secondary">Heavy regulatory disclosures overloaded the interface with dense, intimidating text blocks, creating heavy cognitive friction.</p>
-            </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">03</span>
-              <h3 class="type-headline-sm mt-2">The Aesthetic Deficit</h3>
-              <p class="type-body-md mt-2 text-secondary">The legacy interface lacked visual storytelling, failing to leverage the premium lifestyle appeal of high-tier cards, directly hurting conversion.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="lg:col-span-6">
-          <div id="challengeMedia" class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
-            <video class="h-auto w-full" src="old_credit_cards1.mp4" muted loop playsinline preload="auto"></video>
-            <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">before</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- STRATEGY -->
-  <!-- 2026-08-09: phone-left / text-right, mirrored from Challenge's text-left/phone-right
-       so the page alternates as you scroll, same 12-col grid utility, not a new pattern.
-       new_credit_cards.mp4 is the redesigned "after" screen (personalized offer, benefits,
-       simplified pricing), pairs with the "before" phone in Challenge. -->
-  <section id="strategy" class="bg-surface-alt px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl py-20 lg:py-28">
-      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
-        <div class="order-2 lg:order-1 lg:col-span-6">
-          <div id="strategyMedia" class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
-            <video class="h-auto w-full" src="new_credit_cards.mp4" muted loop playsinline preload="auto"></video>
-            <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">after</span>
-          </div>
-        </div>
-
-        <div class="order-1 lg:order-2 lg:col-span-6">
-          <h2 class="reveal type-headline-md max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
-          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Design can't fix a business-strategy gap by itself, but it can raise the ceiling within one. He wouldn't commit to a conversion target unless the business side changed the product too, so the strategy focused on what was actually in reach: making the experience feel different even where the products weren't, and getting compliance out of the user's way.</p>
-
-          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
-            <div>
-              <span class="type-label-sm stat-accent-green">01</span>
-              <h3 class="type-headline-sm mt-2">Visual-First Framework</h3>
-              <p class="type-body-md mt-2 text-secondary">When core banking terms are identical, immersive visual identity becomes the primary decision-driver.</p>
-            </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">02</span>
-              <h3 class="type-headline-sm mt-2">Lifestyle Immersion</h3>
-              <p class="type-body-md mt-2 text-secondary">Wrapping standard cards in rich contextual worlds, aviation, luxury travel, to evoke immediate emotional alignment.</p>
-            </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">03</span>
-              <h3 class="type-headline-sm mt-2">Friction-Free Compliance</h3>
-              <p class="type-body-md mt-2 text-secondary">De-risked the regulatory overhead by moving dense legal disclaimers into progressive disclosure, keeping focus on the experience.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- IMPACT -->
-  <section id="impact" class="px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl py-20 lg:py-28">
-      <h2 class="reveal type-headline-md max-w-2xl">the impact<span class="brand-dot">.</span></h2>
-      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Now in active development. High-fidelity prototypes went through four rounds of usability testing to validate the visual-first approach against regulated constraints, here's what that testing showed.</p>
-
-      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2">
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
         <div>
           <span class="type-label-sm stat-accent-green">01</span>
-          <h3 class="type-headline-sm mt-2">Validated Concepts &amp; Organizational Shift</h3>
-          <p class="type-body-md mt-2 text-secondary">High-fidelity prototypes underwent extensive usability testing to validate the visual-first approach against regulated constraints.</p>
+          <h3 class="type-headline-sm mt-2">Customers From Anywhere</h3>
+          <p class="type-body-md mt-2 text-secondary">The applicant could bank with us, with a competitor, could have already been rejected elsewhere, or could simply be shopping rates. The flow can't assume any prior relationship or trust.</p>
         </div>
         <div>
           <span class="type-label-sm stat-accent-green">02</span>
-          <h3 class="type-headline-sm mt-2">Cognitive Load Reduction</h3>
-          <p class="type-body-md mt-2 text-secondary">Usability testing showed a dramatic drop in choice paralysis, with participants navigating the selection flow seamlessly.</p>
+          <h3 class="type-headline-sm mt-2">A Fast Read, Before Commitment</h3>
+          <p class="type-body-md mt-2 text-secondary">Nobody without an existing account will sit through a long form on faith alone. The product had to give a real signal, an approval in principle, in as few steps as possible.</p>
         </div>
         <div>
           <span class="type-label-sm stat-accent-green">03</span>
-          <h3 class="type-headline-sm mt-2">Aspirational Alignment</h3>
-          <p class="type-body-md mt-2 text-secondary">Qualitative feedback confirmed lifestyle environments shifted user perception from a dry banking form to an elite experience.</p>
-        </div>
-        <div>
-          <span class="type-label-sm stat-accent-green">04</span>
-          <h3 class="type-headline-sm mt-2">De-Risked Compliance</h3>
-          <p class="type-body-md mt-2 text-secondary">Progressive disclosure satisfies legal requirements while maintaining high user engagement and flow velocity.</p>
+          <h3 class="type-headline-sm mt-2">Three Problems At Once</h3>
+          <p class="type-body-md mt-2 text-secondary">Cracking this wasn't a design problem alone. It needed a real business case, a working product mechanism, and an experience that could carry both without feeling like a hard sell.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- WHAT I LEARNED: added 2026-08-10, B25. Same pattern as Digital Loans, quiet text-only
-       closing reflection, no new visual. -->
-  <section class="px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl border-t border-border-default py-16 lg:py-20">
-      <h2 class="reveal type-headline-md max-w-2xl">what I learned<span class="brand-dot">.</span></h2>
-      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Design can't compensate for a business problem. Saying that out loud, early, instead of just shipping another polished iteration, was harder, and more useful.</p>
+  <!-- STRATEGY: the operating principles set for the team before execution, adapted (with
+       explicit permission and co-written originally) from a LinkedIn case study, reframed
+       into managerial voice, no reference to any earlier non-launch. -->
+  <section id="strategy" class="bg-surface-alt px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl py-20 lg:py-28">
+      <h2 class="reveal type-headline-md max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The operating principles I set for the team before a single screen got designed.</p>
+
+      <div class="reveal-stagger mt-10 flex flex-col">
+        <div class="manifesto-row">
+          <span class="manifesto-row__num">01</span>
+          <div>
+            <h3 class="type-headline-sm">Inherited Design Language</h3>
+            <p class="type-body-md mt-2 max-w-2xl text-secondary">We inherited the DSM from a prior flagship project instead of starting from a blank canvas: colors, type, iconography, button hierarchy, and component behavior all came from the existing style guide before a single screen got drawn. A more consistent product, a stronger brand, and a cheaper build.</p>
+          </div>
+        </div>
+        <div class="manifesto-row">
+          <span class="manifesto-row__num">02</span>
+          <div>
+            <h3 class="type-headline-sm">Built For Every Customer</h3>
+            <p class="type-body-md mt-2 max-w-2xl text-secondary">Applicants span every level of tech comfort and every age group, and none of them can be left behind. The interface stayed as simple and airy as possible, tuned equally for web and mobile, with nothing on screen that wasn't required to complete the task.</p>
+          </div>
+        </div>
+        <div class="manifesto-row">
+          <span class="manifesto-row__num">03</span>
+          <div>
+            <h3 class="type-headline-sm">Delight After Function, Never Before</h3>
+            <p class="type-body-md mt-2 max-w-2xl text-secondary">A beautiful interface that doesn't work helps no one, its polish goes unnoticed until the basics hold. Once functionality, reliability, and usability were solid, the team layered in the subtle animation and micro-interactions that make a bureaucratic process feel personal.</p>
+          </div>
+        </div>
+        <div class="manifesto-row">
+          <span class="manifesto-row__num">04</span>
+          <div>
+            <h3 class="type-headline-sm">Test, Then Refine, Together</h3>
+            <p class="type-body-md mt-2 max-w-2xl text-secondary">The flow went through repeated usability labs, watching whether real applicants understood it, moved through it easily, and took action, then back to research whenever a gap showed up. None of it happened alone: weekly reviews with product and engineering kept every screen at the bar we'd set.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- NEXT CASE STUDY: added 2026-08-11 so a reader can keep browsing without
-       being forced back to the homepage. Cyclic order matching the homepage
-       tile order (Digital Loans > Credit Cards > Internal Mortgage System > Design
-       System > wraps back to Digital Loans). Reuses the site's existing
-       label+heading+.arrow idiom (same one the hero CTA and tile "View"
-       buttons use), just without the pill button chrome. Shown at every
-       breakpoint, not mobile-only. -->
+  <!-- MECHANISM: the page's one visual peak. Instead of three abstract bullet points,
+       this walks the real four-step product flow via a step-rail + fanned screen-crop
+       cards inside a quiet inset "stage" panel, so the actual mechanism is something you
+       see, not just read. Crop cards are placeholders until real cropped exports land. -->
+  <section id="mechanism" class="px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl border-t border-border-default py-20 lg:py-28">
+      <h2 class="reveal type-headline-md max-w-2xl">the mechanism<span class="brand-dot">.</span></h2>
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The actual product decisions that turned those principles into an answer, mapped to the real four steps of the flow.</p>
+
+      <div class="reveal stage-panel mt-12">
+        <div class="step-rail">
+          <div class="step-rail__node">
+            <span class="step-rail__circle">1</span>
+            <span class="type-label-sm text-muted">Request</span>
+          </div>
+          <div class="step-rail__node">
+            <span class="step-rail__circle">2</span>
+            <span class="type-label-sm text-muted">Offer</span>
+          </div>
+          <div class="step-rail__node">
+            <span class="step-rail__circle">3</span>
+            <span class="type-label-sm text-muted">Account</span>
+          </div>
+          <div class="step-rail__node">
+            <span class="step-rail__circle">4</span>
+            <span class="type-label-sm text-muted">Done</span>
+          </div>
+        </div>
+
+        <div class="reveal-stagger crop-cluster mt-10">
+          <div class="crop-card">
+            <span class="type-label-sm text-muted">offer</span>
+          </div>
+          <div class="crop-card">
+            <span class="type-label-sm text-muted">open banking</span>
+          </div>
+          <div class="crop-card">
+            <span class="type-label-sm text-muted">account + date</span>
+          </div>
+          <div class="crop-card">
+            <span class="type-label-sm text-muted">QR</span>
+          </div>
+          <div class="crop-card">
+            <span class="type-label-sm text-muted">done</span>
+          </div>
+        </div>
+
+        <div class="reveal-stagger mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <h3 class="type-headline-sm">Request</h3>
+            <p class="type-body-md mt-2 text-secondary">State a purpose, an amount up to &#8362;50,000, and a term from 3 to 72 months. Watch the estimated payment update live.</p>
+          </div>
+          <div>
+            <h3 class="type-headline-sm">Offer</h3>
+            <p class="type-body-md mt-2 text-secondary">A tailored offer in principle within a couple of screens, personalized by purpose, optionally sharpened by connecting outside accounts through Open Banking.</p>
+          </div>
+          <div>
+            <h3 class="type-headline-sm">Account</h3>
+            <p class="type-body-md mt-2 text-secondary">Choose where the money lands and pick a payment date, then open a fee-free account by scanning a QR code, strict identity verification built in.</p>
+          </div>
+          <div>
+            <h3 class="type-headline-sm">Done</h3>
+            <p class="type-body-md mt-2 text-secondary">Funds land in the account by the next business day. Direct debit for repayments gets set up right after, not before.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAUNCH: deliberately no numbers, product is genuinely too fresh, framed honestly as
+       zero-to-one and just-launched rather than backfilled with placeholder metrics. -->
+  <section id="launch" class="bg-surface-alt px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl py-20 lg:py-28">
+      <h2 class="reveal type-headline-md max-w-2xl">the launch<span class="brand-dot">.</span></h2>
+      <div class="reveal mt-8 flex flex-col gap-6 sm:flex-row sm:items-center">
+        <span class="live-badge">
+          <span class="live-badge__dot" aria-hidden="true"></span>
+          Live now
+        </span>
+        <p class="type-body-lg max-w-prose text-secondary">This wasn't an iteration on an existing product, it was built from zero to one, with no legacy screens to inherit. Early measurement is just getting underway, too soon for a delivered number, but the first real read on usage has started.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT I LEARNED -->
+  <section class="px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl border-t border-border-default py-16 lg:py-20">
+      <h2 class="reveal type-headline-md max-w-2xl">what I learned<span class="brand-dot">.</span></h2>
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Speed and trust aren't opposites, even with someone who owes you nothing yet. The fastest way to earn a stranger's confidence turned out to be giving them a real answer quickly, not a longer form dressed up as reassurance.</p>
+    </div>
+  </section>
+
+  <!-- NEXT CASE STUDY: closes the cycle back to Digital Loans (Digital Loans > Credit Cards >
+       Internal Mortgage System > Design System > Cross-Bank Loan > back to Digital Loans).
+       Design-System's own "Next Case Study" link needs updating to point here to keep the
+       cycle intact. -->
   <section class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl border-t border-border-default py-16 text-right lg:py-20">
-      <a href="../Internal-Systems/" class="reveal inline-flex items-center gap-4">
+      <a href="../Digital-Loans/" class="reveal inline-flex items-center gap-4">
         <span class="flex flex-col text-right">
           <span class="type-label-sm text-muted">Next Case Study</span>
-          <span class="type-headline-md mt-1">Internal Mortgage System</span>
+          <span class="type-headline-md mt-1">Digital Loans</span>
         </span>
         <svg aria-hidden="true" class="arrow size-6 shrink-0 rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
       </a>
     </div>
   </section>
 
-  <!-- CONTACT / CLOSING: was a verbatim copy of the pre-B55 ../index.html closing pattern.
-       B57 (2026-08-15) ported the B55 dark-gold footer treatment: background swapped to
-       --color-green-975 (via .footer-dark-bg, see the token-emission note on that class),
-       heading/dot on hero-dark-on-primary/hero-dark-gold, soft/muted text (eyebrow,
-       paragraph, phone, copyright) on footer-text-soft (neutral-100, not the green-100
-       hero-dark-on-primary-soft, per the readability fix from ../Digital-Loans/../index.html),
-       plus the two footer-glow spark wrappers. Email me/LinkedIn button colors are
-       explicitly unchanged. -->
+  <!-- CONTACT / CLOSING: verbatim shared pattern, same as every other case study. -->
   <section id="contact" class="footer-dark-bg relative overflow-hidden px-4 lg:px-20">
     <div class="blob-parallax" style="bottom:-12rem; left:-8rem;" data-parallax="-0.1">
       <div class="hero-blob" style="width:28rem; height:28rem; bottom:0; left:0; opacity:0.25; animation-duration:33s; animation-direction:reverse;"></div>
@@ -667,26 +709,12 @@ a:hover .arrow { transform: translateX(4px); }
   <script>
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // scroll-triggered reveals, same mechanics as ../index.html (2026-08-07 mobile fix,
-    // ported here 2026-08-08: this page still had the pre-fix version, threshold 0.3 with
-    // no rootMargin and a flat 160ms delay meant tall mobile sections needed to be 30%
-    // into view before animating, so by the time they did they were already scrolled past,
-    // reading as no animation at all)
     const isMobile = window.matchMedia('(max-width: 639px)').matches;
     document.querySelectorAll('.reveal-stagger').forEach((group) => {
       Array.from(group.children).forEach((child, i) => {
         child.style.transitionDelay = `${i * (isMobile ? 70 : 160)}ms`;
       });
     });
-    // 2026-08-08: `.reveal` used to sit on a whole section's outer wrapper
-    // (heading + paragraph + cards + placeholder as one element), so the 15%
-    // threshold meant 15% of that WHOLE block's height, which on mobile
-    // single-column layouts could be 1000px+ tall, needing a lot of scroll
-    // before it counted as "visible" even though the heading itself was
-    // already on screen. Fixed by moving `.reveal` onto the individual
-    // heading/paragraph/etc instead of their shared wrapper, so each observed
-    // element is small and triggers as soon as it's actually on screen, same
-    // as `.reveal-stagger > *` already did for card grids.
     let ioStarted = false;
     const io = new IntersectionObserver((entries) => {
       const isInitialCheck = !ioStarted;
@@ -695,13 +723,6 @@ a:hover .arrow { transform: translateX(4px); }
         if (entry.isIntersecting) {
           io.unobserve(entry.target);
           if (isInitialCheck) {
-            // already inside the viewport at page load (a short hero on a
-            // tall phone screen can do this), wait until the hero's own
-            // on-load .enter sequence (staggered up to ~1.4s) has had time to
-            // finish so this doesn't visually race it. Anything reached by
-            // genuine scrolling reveals immediately, no matter how soon after
-            // load that happens, since reaching it always took longer than
-            // this delay anyway.
             setTimeout(() => entry.target.classList.add('in-view'), 1500);
           } else {
             entry.target.classList.add('in-view');
@@ -712,9 +733,6 @@ a:hover .arrow { transform: translateX(4px); }
     document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
     document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
 
-    // B57: footer gold-spark reveal, ported from ../index.html (B55). One-shot entrance,
-    // same "trigger once, unobserve, done" shape as the .reveal observer above, kept
-    // separate because it targets #contact itself, not the individual .footer-glow elements.
     (function () {
       const footerGlowLeftEl = document.getElementById('footerGlowLeft');
       const footerGlowRightEl = document.getElementById('footerGlowRight');
@@ -733,48 +751,6 @@ a:hover .arrow { transform: translateX(4px); }
       }
     })();
 
-    // hero video: the bottom-to-top card reveal is baked into the mp4 itself
-    // (not CSS-driven), so it's held paused on its first frame and started
-    // via JS after a short delay rather than autoplaying immediately, so it
-    // doesn't race the hero's own .enter fade-in and plays once, not looped.
-    const cardsHeroVideo = document.getElementById('cardsHeroVideo');
-    if (cardsHeroVideo && !prefersReducedMotion) {
-      setTimeout(() => cardsHeroVideo.play(), 1000);
-    }
-
-    // challenge section: single "before" phone recording (old_credit_cards1.mp4), sits
-    // well below the fold, so unlike the hero video a fixed page-load delay doesn't make
-    // sense, start it (and let it loop) once it actually scrolls into view instead.
-    const challengeMedia = document.getElementById('challengeMedia');
-    if (challengeMedia && !prefersReducedMotion) {
-      const challengeVideos = challengeMedia.querySelectorAll('video');
-      const challengeIo = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            challengeIo.unobserve(entry.target);
-            challengeVideos.forEach((v) => v.play());
-          }
-        });
-      }, { threshold: 0.3 });
-      challengeIo.observe(challengeMedia);
-    }
-
-    // strategy section: same play-once-in-view treatment as challengeMedia above.
-    const strategyMedia = document.getElementById('strategyMedia');
-    if (strategyMedia && !prefersReducedMotion) {
-      const strategyVideos = strategyMedia.querySelectorAll('video');
-      const strategyIo = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            strategyIo.unobserve(entry.target);
-            strategyVideos.forEach((v) => v.play());
-          }
-        });
-      }, { threshold: 0.3 });
-      strategyIo.observe(strategyMedia);
-    }
-
-    // thin progress bar tracking scroll position, same as ../index.html
     const progressBar = document.getElementById('scrollProgress');
     const updateProgress = () => {
       const doc = document.documentElement;
@@ -785,7 +761,6 @@ a:hover .arrow { transform: translateX(4px); }
     window.addEventListener('scroll', updateProgress, { passive: true });
     updateProgress();
 
-    // scroll parallax on the contact section's decorative blob, same as ../index.html
     if (!prefersReducedMotion) {
       const parallaxEls = Array.from(document.querySelectorAll('.blob-parallax[data-parallax]'));
       let ticking = false;
@@ -806,7 +781,6 @@ a:hover .arrow { transform: translateX(4px); }
       applyParallax();
     }
 
-    // B24: pull-past-top sky strip, same mechanics as ../index.html
     if (!prefersReducedMotion) {
       const pageShift = document.getElementById('pageShift');
       const skyStrip = document.getElementById('skyStrip');
@@ -826,10 +800,6 @@ a:hover .arrow { transform: translateX(4px); }
         skyStrip.appendChild(star);
       }
 
-      // B57: footer gold sparkle dust, ported verbatim from ../index.html (B55). Same
-      // generation approach as the stars just above, scattered inside each .footer-glow
-      // wrapper so they stay clipped to the edge band and never drift into the centered
-      // text column. Skipped entirely under reduced motion (whole block is guarded above).
       const SPARK_COUNT = 14;
       const footerGlowLeft = document.getElementById('footerGlowLeft');
       const footerGlowRight = document.getElementById('footerGlowRight');
@@ -857,10 +827,6 @@ a:hover .arrow { transform: translateX(4px); }
       let state = 'idle';
       let startY = 0;
       let holdTimer = null;
-      // Bugfix: pulled only flips true once a real pull offset has been
-      // applied, so touchend's close() can't fire (forcing a transform onto
-      // #pageShift and making the nav jump) for a plain scroll-down gesture
-      // that merely started at scrollY 0. See index.html for the full note.
       let pulled = false;
 
       function resistance(raw) {
