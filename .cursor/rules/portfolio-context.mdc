@@ -54,11 +54,17 @@ out to the rest.
    occurrence inside the `<style type="text/tailwindcss">` block itself (a one-property CSS class
    is enough if the real usage is inline/JS-driven).
 
-## The one non-negotiable design rule
+## Design system (DSM) — a starting point, not a mandate
 
-**Build only with the DSM's actual documented components and tokens** (color/type tokens, pill
-buttons, no shadows, no dark card skins). Never invent a new layout pattern that merely resembles
-the DSM. If something's missing, flag it to Ofir instead of freehanding it.
+The DSM (color/type tokens, pill buttons, no shadows, no dark card skins) is the site's current
+default look, not a hard requirement. Ofir is actively reconsidering whether a strict DSM
+constraint even fits a portfolio this size, and wants room to try genuinely new UI directions,
+especially on exploratory/draft files (`index-draft*.html` and similar). Feel free to depart from
+DSM tokens and patterns there if it serves the design better. It's fine to still reference or reuse
+DSM tokens where they help, no need to avoid mentioning the DSM. When you do depart from it, say
+plainly what you kept vs. changed and why, so Ofir can react to it live rather than discovering it
+buried in a diff. For the *live* homepage and existing case-study pages (not drafts), stay closer
+to the current look unless Ofir explicitly says otherwise for that specific piece of work.
 
 Visual base: white page background, near-black/deep-teal primary (`#022c22`), emerald accent used
 sparingly and never as a button color. Inter Tight for headings, Inter for body. Fully pill-shaped
