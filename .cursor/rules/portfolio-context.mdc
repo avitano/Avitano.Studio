@@ -1,0 +1,78 @@
+---
+description: Core context for Ofir's portfolio site (Avitano.Studio) — architecture, standing rules, git discipline
+alwaysApply: true
+---
+
+# Ofir's portfolio website
+
+One-page site with full case studies, deployed via GitHub Pages from this repo's `main` branch
+(GitHub: `avitano/Avitano.Studio`). Live domain connected and working.
+
+## Git discipline — read this first
+
+**Never run `git commit`, `git push`, `git add`, `git merge`, or `git reset` without asking Ofir
+first and getting an explicit go-ahead, every single time, no exceptions for "small" or "obvious"
+changes.** Ofir always runs git operations himself. When a change is ready, stop and tell him
+what changed and why, and let him review and commit it. Do not chain git write-commands into a
+larger shell command to route around a denylist either — the rule is "ask first," not "avoid the
+specific blocked command."
+
+Reading state is fine any time: `git status`, `git diff`, `git log`.
+
+`main` is what GitHub Pages deploys. Anything not ready to go live belongs on another branch.
+
+## Where things live
+
+- Repo root = site root. `index.html` is the homepage: a single self-contained file (Tailwind v4
+  browser build + inline `<style>`/`<script>`, no build step).
+- Case studies: one folder per project at repo root, each `<Project-Name>/index.html`
+  (Title-Case-With-Hyphens), e.g. `Digital-Loans/index.html`.
+- `assets/` holds images/video. `assets/source - do not touch/` is a manual backup of raw exports,
+  never write into it (it's gitignored).
+- `BACKLOG.md` (gitignored, not on GitHub) is Ofir's running task list — check it for open work.
+- `index-draft*.html` and `_to_delete/` are scratch/inert files, gitignored, not part of the live
+  site. Don't treat them as source of truth for anything.
+
+## No shared components — this matters a lot
+
+**Every HTML file is fully independent.** No include/template system. Shared chrome (nav,
+contact/footer, CSS variables, JS) is duplicated in full inside every single `index.html`. Any fix
+to shared chrome must be hand-applied to every file: the homepage plus every case-study folder.
+Trial a new shared-chrome pattern on one file first, confirm it live with Ofir, only then roll it
+out to the rest.
+
+## Tailwind v4 gotchas (silent failures, no console error)
+
+1. This site's custom CSS is **unlayered** (written directly inside
+   `<style type="text/tailwindcss">` after `@import "tailwindcss"`). An unlayered custom rule
+   always beats a layered Tailwind utility, regardless of specificity or breakpoint. Never rely on
+   a Tailwind utility class to override a property already set by a custom class on the same
+   element — write real `@media` blocks in the custom CSS instead.
+2. A CSS custom property (`--token`) that's only ever referenced inline (`style="..."` or JS)
+   never gets emitted into `:root` by the browser-JIT compiler — it silently falls back to
+   default/inherited with zero warning. Any `--token` you add or reuse needs at least one real
+   occurrence inside the `<style type="text/tailwindcss">` block itself (a one-property CSS class
+   is enough if the real usage is inline/JS-driven).
+
+## The one non-negotiable design rule
+
+**Build only with the DSM's actual documented components and tokens** (color/type tokens, pill
+buttons, no shadows, no dark card skins). Never invent a new layout pattern that merely resembles
+the DSM. If something's missing, flag it to Ofir instead of freehanding it.
+
+Visual base: white page background, near-black/deep-teal primary (`#022c22`), emerald accent used
+sparingly and never as a button color. Inter Tight for headings, Inter for body. Fully pill-shaped
+buttons, 12-column grid, generous whitespace, `px-4 lg:px-20` horizontal padding on every section.
+
+## Working style
+
+- Step-by-step on anything visual/structural/new: state the plan, wait for an explicit go, make
+  that one change, report, wait for the next instruction. Well-scoped bug fixes (a clear
+  screenshot + description, including layout/CSS bugs) can just be fixed directly.
+- No em-dashes, ever, in copy or code comments.
+- English-only copy on the site.
+- Before deleting or destructively overwriting any asset, flag it and ask, don't assume it's safe.
+- Don't backfill an unfinished section with "more to come" placeholder copy — let it end cleanly.
+- Full standing-rules reference (deeper detail than fits here) lives in the `avitano-portfolio-site-2026`
+  Claude skill, which Ofir also uses in Claude/Cowork sessions on this same repo — ask him if
+  something here seems incomplete rather than guessing.
