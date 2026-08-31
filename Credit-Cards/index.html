@@ -484,7 +484,9 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
       </div>
 
-      <div class="enter mt-12 w-full overflow-hidden rounded-xl lg:mt-16" style="animation-delay:540ms">
+      <!-- rounded-lg, not rounded-xl, 2026-08-30: one container radius site-wide. Note rounded-xl
+           resolves to 28px here, not Tailwind's 12px, because @theme overrides the scale. -->
+      <div class="enter mt-12 w-full overflow-hidden rounded-lg lg:mt-16" style="animation-delay:540ms">
         <video id="cardsHeroVideo" class="block h-auto w-full" src="cards.mp4" muted playsinline preload="auto"></video>
       </div>
     </div>

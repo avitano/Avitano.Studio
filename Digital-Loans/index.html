@@ -448,7 +448,8 @@ a:hover .arrow { transform: translateX(4px); }
 .hero-strip {
   position: relative;
   height: 9rem;
-  border-radius: var(--radius-xl, 1.75rem);
+  /* 28 -> 16, 2026-08-30: site-wide container radius, see the audit note on ../index.html. */
+  border-radius: var(--radius-lg);
   overflow: hidden;
   background: linear-gradient(to bottom, #eef4fd 0%, #eef4fd 60%, #fdf8f6 60%, #fdf8f6 100%);
 }

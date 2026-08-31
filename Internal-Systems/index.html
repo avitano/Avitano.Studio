@@ -312,13 +312,16 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    label above it, the left naming the artefact and the right saying what to look at. That
    right-hand note is the point of the pattern, since every screen on this page otherwise arrives
    without telling the reader what they are meant to notice.
-   Radii are concentric on purpose, per the DSM's Outer = Inner + Padding rule: 36px frame,
-   20px padding, 16px image. Solve it starting from the INNER radius, not the outer. Fixing the
-   outer at --radius-xl (28px) first left an 8px image corner, which is nearly square and read as
-   too sharp beside a visibly round frame, so the frame radius is derived instead: 16 + 20 = 36.
-   36px (2.25rem) is not a token today, it is one step above --radius-xl, and it exists only
-   because 20px of padding is the pattern's whole point and the inner radius has to be a real
-   --radius-lg. If this frame gets reused elsewhere, that value is a DSM-extension candidate.
+   Radii, settled 2026-08-30 after auditing every page: 16px frame, 12px mat, 4px image, concentric
+   per the DSM's Outer = Inner + Padding rule. The frame was 36px for most of the day, derived from
+   a 16px image and a 20px mat, and 36 is not a token at all.
+   The audit is what corrected it. Across the site rounded-lg (16px) is used about forty times and
+   is plainly the standard, while --radius-xl (28px) appears in exactly four places and all four are
+   HERO media: Digital Loans' .hero-strip, Credit Cards' hero video, and Design System's hero image
+   and carousel. So the site already has a two-tier rule that nobody wrote down: 28 for hero media,
+   16 for everything in the body. A 36px frame belonged to neither tier.
+   These are also the exact values Ofir tuned by eye for mobile earlier the same day, so desktop and
+   mobile now agree and the mobile radius override was deleted rather than kept in sync.
    The image radius is also the fix for the corners clipping real screenshot content, it was
    rounded-xl (12px) against a much smaller render, which ate roughly 28px of the source per
    corner. At 16px on a 61% render it eats 26px, so the frame's white mat is what actually
@@ -327,8 +330,8 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    beats any Tailwind rounded-* on this build, so a utility on the img would silently lose. */
 .shot-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1.5rem; margin-bottom: 1rem; }
 @media (max-width: 639.98px) { .shot-head { flex-direction: column; gap: 0.25rem; } }
-.shot-frame { border: 1px solid var(--color-green-100); border-radius: 2.25rem; background: var(--color-card); padding: 1.25rem; }
-.shot-frame img { display: block; width: 100%; height: auto; border-radius: var(--radius-lg); }
+.shot-frame { border: 1px solid var(--color-green-100); border-radius: var(--radius-lg); background: var(--color-card); padding: 0.75rem; }
+.shot-frame img { display: block; width: 100%; height: auto; border-radius: var(--radius-sm); }
 /* Grey hairline, not the green one the static G frames use. The frame and the menu beside it are
    one object in the switcher, and the menu is border-border-default, so a green frame next to a
    grey menu reads as two halves that do not match. Same choice ../Digital-Loans made for its own
@@ -385,7 +388,7 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    The wide card inverts rather than recolours: gold ground with the figure in the dark green the
    other two use as background. That keeps all three one family while letting the payoff number
    carry the page's rarest colour, which until now has only appeared on the CTA and the nav border. */
-.stat-card { border-radius: var(--radius-xl); background: var(--color-primary); color: var(--color-on-primary); padding: 2.25rem 1.75rem 2rem; text-align: center; }
+.stat-card { border-radius: var(--radius-lg); background: var(--color-primary); color: var(--color-on-primary); padding: 2.25rem 1.75rem 2rem; text-align: center; }
 .stat-card .stat-fig { font-family: var(--font-brand); font-weight: 700; font-size: 3rem; line-height: 1; letter-spacing: -0.02em; color: var(--color-gold-500); }
 .stat-card .stat-lbl { font-family: var(--font-brand); font-weight: 700; font-size: 1.125rem; line-height: 1.2; margin-block-start: 0.75rem; }
 .stat-card .stat-exp { font-size: 0.85rem; line-height: 1.5; color: var(--color-neutral-100); margin-block-start: 0.75rem; max-inline-size: 24ch; margin-inline: auto; }
@@ -416,8 +419,11 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 .stat-card-wide .stat-exp { max-inline-size: 44ch; }
 
 /* "what I learned" as variant J's nested card (2026-08-30): a tinted outer holding a white inner.
-   Radii are concentric per the DSM rule, and unlike J's own numbers they actually resolve: inner
-   --radius-lg (16) plus 12px padding gives outer --radius-xl (28) exactly, both real tokens.
+   Radii are concentric per the DSM rule: inner --radius-md (8) plus 8px padding gives outer
+   --radius-lg (16). Note that the nesting barely reads at all, because the outer tint is only
+   about 6% off white and the mat is thin, so what the eye actually sees is one card with a soft
+   halo. That is fine and even useful, a white card on a white page needs some edge, but it does
+   mean the inner radius is a calculation nobody can see. Do not spend effort tuning it.
    The two h3 sub-headings that used to sit here are gone, deliberately. The whole point of this
    pattern is that the highlighted phrases do the skimming work a heading would otherwise do, so
    keeping both would be the same emphasis twice. The section's own h2 is untouched.
@@ -510,7 +516,7 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
   filter: drop-shadow(-10px 6px 9px rgb(0 0 0 / 0.10)) drop-shadow(-96px 34px 44px rgb(0 0 0 / 0.32));
 }
 
-.learn-outer { background: var(--color-green-50); border-radius: var(--radius-xl); padding: 0.75rem; }
+.learn-outer { background: var(--color-green-50); border-radius: var(--radius-lg); padding: 0.5rem; }
 /* --mark-size and --mark-bleed drive BOTH the asterisk and the space kept clear for it, so the two
    cannot drift apart later. The card's bottom padding is derived: the mark's height minus the part
    that bleeds off the edge, plus a little clearance. Text therefore cannot reach the mark at any
@@ -523,7 +529,7 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
   --mark-size: 7.5rem;
   --mark-bleed: 2rem;
   position: relative; overflow: hidden;
-  background: var(--color-card); border-radius: var(--radius-lg);
+  background: var(--color-card); border-radius: var(--radius-md);
   padding: 3rem 3.25rem calc(var(--mark-size) - var(--mark-bleed) + 1rem);
 }
 .learn-cols { display: grid; gap: 2rem; }
@@ -661,7 +667,7 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 .marquee:hover .marquee-track, .marquee:focus-within .marquee-track { animation-play-state: paused; }
 @keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .marquee-tile { position: relative; flex: none; inline-size: min(1024px, 82vw); margin-inline-end: 2rem; }
-.marquee-tile img { display: block; width: 100%; height: auto; border-radius: var(--radius-lg); box-shadow: 0 24px 60px -20px rgb(2 44 34 / 0.28); }
+.marquee-tile img { display: block; width: 100%; height: auto; border-radius: var(--radius-sm); box-shadow: 0 24px 60px -20px rgb(2 44 34 / 0.28); }
 /* Reduced motion does not mean less content: the belt stops but becomes draggable, so all four
    languages stay reachable. The duplicate set is dropped so nothing appears twice. */
 @media (prefers-reduced-motion: reduce) {
@@ -936,6 +942,29 @@ a:hover .arrow { transform: translateX(4px); }
   .sky-strip__star { animation: none; opacity: 0.4; }
   .strategy-slide, .strategy-blob, .strategy-dot { transition: none !important; }
   .footer-glow { transition: none; opacity: 1; transform: none; }
+}
+
+/* MOBILE CORRECTIONS, 2026-08-30, all four the same underlying bug: values that are correct as
+   FIXED PIXELS on a 1280px layout are proportionally enormous on a 390px one, so they have to scale
+   with the viewport rather than stay put.
+   1. The device is centred. It is pinned right on desktop to open space on the left for the shadow
+      to fall into, which is meaningless once the column is the full screen.
+   2. The shadow shrinks. Its -96px offset is 7% of a desktop layout and a QUARTER of a phone, which
+      is why a projected silhouette turns into a smear. --shadow-reach comes down with it, since it
+      exists only to reserve clearance for that shadow.
+   3. Screenshot corners shrink. --radius-lg is 16px flat, and a screenshot rendered at 982px loses
+      about 49px of source per corner to it while the same 16px on a 350px render eats 138px, nearly
+      three times as much, which is what was swallowing parts of the interface. The frame's padding
+      drops with it so the radii stay concentric: 8 inner plus 12 padding is 20 outer.
+   4. Marquee tiles go from 82vw to 125vw, so each is wider than the phone. Ofir's call, and it is a
+      real trade: the section's argument is that this is the SAME WHOLE SCREEN in four languages, and
+      a tile wider than the viewport shows only part of one. Accepted because at 320px a whole screen
+      is an unreadable smudge either way, so size wins over completeness here. */
+@media (max-width: 1023.98px) {
+  .hero-device-frame { max-inline-size: 100%; margin-inline: auto; }
+  .hero-device-frame img { filter: drop-shadow(-5px 4px 6px rgb(0 0 0 / 0.10)) drop-shadow(-32px 14px 20px rgb(0 0 0 / 0.30)); }
+  .hero-metrics { --shadow-reach: 2.25rem; }
+  .marquee-tile { inline-size: min(1024px, 125vw); }
 }
 </style>
 </head>

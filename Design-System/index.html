@@ -587,15 +587,23 @@ a:hover .arrow { transform: translateX(4px); }
            needed. Radius is baked into the PNG itself (transparent corners), only shadow added
            here. Capped narrower than the hero's own 1080px width so it reads as a supporting
            visual, not a dominant one. -->
-      <!-- rounded-xl restored here: the image's own baked-in corner transparency is invisible on
+      <!-- rounded-lg restored here: the image's own baked-in corner transparency is invisible on
            this white page (transparent just reveals white behind it), and box-shadow doesn't
            follow an image's internal alpha shape anyway. border-radius is what actually clips
            the image and rounds its shadow together. -->
-      <img class="enter mx-auto mt-12 h-auto w-full max-w-2xl rounded-xl shadow-lg lg:mt-16" style="animation-delay:540ms" src="tonal-ramps.png" alt="My DSM's color tonal ramps, documented live: green, neutral, gold, and rust, each running light to dark.">
+            <!-- rounded-sm (4px), not the site's 16px container radius. The rule Ofir named on
+           2026-08-30: a screenshot's radius follows WHAT IT DEPICTS. A mobile screenshot keeps
+           16 because the rounded corner is true to the device it shows (see the six phone
+           screens in ../Digital-Loans/ happy flow). A DESKTOP screenshot goes to 4, because a
+           desktop interface has square corners and any radius there is an invention that eats
+           real interface. Both images below are desktop captures of My DSM. -->
+      <img class="enter mx-auto mt-12 h-auto w-full max-w-2xl rounded-sm shadow-lg lg:mt-16" style="animation-delay:540ms" src="tonal-ramps.png" alt="My DSM's color tonal ramps, documented live: green, neutral, gold, and rust, each running light to dark.">
     </div>
   </header>
 
   <!-- THE SPARK -->
+  <!-- Hero image and build carousel dropped from rounded-xl (28px here, the @theme scale is
+       overridden) to rounded-lg (16px) on 2026-08-30, matching every other container on the site. -->
   <section id="spark" class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl border-t border-border-default pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
       <h2 class="reveal type-headline-md max-w-2xl">the spark<span class="brand-dot">.</span></h2>
@@ -650,7 +658,7 @@ a:hover .arrow { transform: translateX(4px); }
            visitor sees more than one fragment of the system, not just this page's single
            curated screenshots. -->
       <div class="reveal mx-auto mt-12 flex w-full max-w-3xl flex-col items-center gap-4">
-        <div id="buildCarousel" class="relative w-full overflow-hidden rounded-xl shadow-lg" style="aspect-ratio: 1512 / 827;">
+        <div id="buildCarousel" class="relative w-full overflow-hidden rounded-sm shadow-lg" style="aspect-ratio: 1512 / 827;">
           <img src="build-1-tokens.png" alt="My DSM's color tokens, documented live: primitives, semantic mappings, and their tonal ramps." class="build-slide absolute inset-0 h-full w-full object-cover" data-active="true">
           <img src="build-2-card.png" alt="My DSM's Card molecule, documented live, including the full component sidebar." class="build-slide absolute inset-0 h-full w-full object-cover">
           <img src="build-3-elevation.png" alt="My DSM's elevation scale, documented live: every shadow step from subtle to glow-accent." class="build-slide absolute inset-0 h-full w-full object-cover">
@@ -695,7 +703,7 @@ a:hover .arrow { transform: translateX(4px); }
            anywhere on the real site, so it didn't actually prove anything about this portfolio.
            Asset file left in the folder untouched in case it's wanted again.
       <div class="reveal mx-auto mt-12 flex w-full max-w-3xl flex-col items-center gap-4">
-        <img src="card-live-examples.png" alt="My DSM's Card component, live in its documentation, including a self-referential example card titled Design system from scratch." class="h-auto w-full rounded-xl shadow-lg">
+        <img src="card-live-examples.png" alt="My DSM's Card component, live in its documentation, including a self-referential example card titled Design system from scratch." class="h-auto w-full rounded-lg shadow-lg">
         <span class="type-label-sm text-muted" style="letter-spacing:normal; text-transform:none;">Card, documented live</span>
       </div>
       -->
@@ -706,7 +714,7 @@ a:hover .arrow { transform: translateX(4px); }
       <h3 class="reveal mx-auto mt-14 w-full max-w-3xl text-center type-headline-sm">A real, live example<span class="brand-dot">.</span></h3>
       <div class="reveal mx-auto mt-6 flex w-full max-w-3xl flex-col items-center gap-4">
         <div class="grid w-full gap-6 sm:grid-cols-2">
-          <article class="flex flex-col rounded-xl border border-border-default bg-card shadow-sm transition-shadow duration-200 ease-out hover:shadow-md">
+          <article class="flex flex-col rounded-lg border border-border-default bg-card shadow-sm transition-shadow duration-200 ease-out hover:shadow-md">
             <div class="flex flex-col gap-2 p-6">
               <div class="flex flex-wrap gap-2">
                 <span class="inline-flex items-center rounded-full bg-neutral-bg px-2 py-1 text-xs font-medium text-secondary">Research</span>
@@ -719,7 +727,7 @@ a:hover .arrow { transform: translateX(4px); }
               <button type="button" class="inline-flex h-8 items-center justify-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-on-primary shadow-md hover:shadow-lg transition-all duration-150 ease-out hover:bg-primary-hover active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-card">View case study</button>
             </div>
           </article>
-          <article class="flex flex-col rounded-xl border border-accent bg-gradient-to-b from-surface-alt to-card shadow-glow-accent">
+          <article class="flex flex-col rounded-lg border border-accent bg-gradient-to-b from-surface-alt to-card shadow-glow-accent">
             <div class="flex flex-col gap-2 p-6">
               <div class="flex flex-wrap gap-2">
                 <span class="inline-flex items-center rounded-full bg-surface-alt px-2 py-1 text-xs font-medium text-primary-active">Featured</span>
@@ -747,7 +755,7 @@ a:hover .arrow { transform: translateX(4px); }
            with arrow, filter/sort/filtering together, etc.), not alphabetically or by insertion
            order; keep that discipline if more icons are ever added to a category. The category
            menu sits in its own bordered card (matching My DSM's own NavItem Live Example demo,
-           which wraps the same nav-item list in a `rounded-xl border bg-card p-2` panel, a real
+           which wraps the same nav-item list in a `rounded-lg border bg-card p-2` panel, a real
            detail missed on the first pass), so it reads as a contained sidebar next to the card
            grid instead of a bare list floating loose beside it. -->
       <h3 class="reveal mt-14 type-headline-sm">The icon set, live<span class="brand-dot">.</span></h3>
