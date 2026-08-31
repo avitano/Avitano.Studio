@@ -862,50 +862,32 @@ a:hover .arrow { transform: translateX(4px); }
 
       <div class="reveal-stagger mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-6 lg:auto-rows-[22rem]">
         <!-- Digital Loans -->
-        <div id="DigitalLoans" class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-3">
-          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-dl" aria-label="Preview Digital Loans">
-            <div class="absolute inset-0 overflow-hidden bg-neutral-200">
-              <video src="assets/digital%20loans.mp4" class="h-full w-full object-cover" autoplay muted loop playsinline></video>
-            </div>
-          </button>
-          <div id="case-content-dl" class="case-bar absolute inset-x-0 bottom-0 flex items-center gap-3 px-5 py-3">
-            <img src="assets/Poalim.png" alt="" class="h-10 w-10 shrink-0 rounded-lg object-cover">
-            <div class="min-w-0">
-              <h3 class="type-title-md text-white truncate">Digital Loans</h3>
-              <span class="type-label-sm block truncate" style="color:var(--color-on-primary-soft)">Bank Hapoalim</span>
-            </div>
-            <a href="Digital-Loans/" class="case-cta pointer-events-auto ml-auto inline-flex h-8 w-fit shrink-0 items-center gap-2 rounded-full px-4 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2" style="background:#fff; color:var(--color-button);">
-              View
-              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <!-- Credit Cards -->
-        <div id="CreditCards" class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-3">
-          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-cc" aria-label="Preview Credit Cards">
-            <div class="absolute inset-0 overflow-hidden bg-neutral-200">
-              <video src="assets/credit%20cards.mp4" class="h-full w-full object-cover" autoplay muted loop playsinline></video>
-            </div>
-          </button>
-          <div id="case-content-cc" class="case-bar absolute inset-x-0 bottom-0 flex items-center gap-3 px-5 py-3">
-            <img src="assets/Poalim.png" alt="" class="h-10 w-10 shrink-0 rounded-lg object-cover">
-            <div class="min-w-0">
-              <h3 class="type-title-md text-white truncate">Credit Cards</h3>
-              <span class="type-label-sm block truncate" style="color:var(--color-on-primary-soft)">Bank Hapoalim</span>
-            </div>
-            <a href="Credit-Cards/" class="case-cta pointer-events-auto ml-auto inline-flex h-8 w-fit shrink-0 items-center gap-2 rounded-full px-4 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2" style="background:#fff; color:var(--color-button);">
-              View
-              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <!-- Internal Mortgage System -->
-        <div id="InternalSystems" class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-4">
+                <!-- Tiles are rounded-lg, not rounded-xl, and the distinction matters more here than the
+             names suggest: this site defines --radius-xl in @theme, which overrides Tailwind's
+             own scale, so rounded-xl resolves to 28px rather than the usual 12px. At 28 the
+             tiles read noticeably rounder than the framed screenshots on the case-study pages,
+             which sit at --radius-lg / 16px. Lowered 2026-08-30 to match. -->
+        <!-- TILE ORDER EXPERIMENT, 2026-08-30, with a fast rollback: the whole pre-change
+             file is saved beside this one as index.html.rollback-2026-08-30, so reverting
+             is a file copy rather than an edit.
+             Order is now Internal Mortgage System, Digital Loans, Credit Cards, Design
+             System. It was Digital Loans, Credit Cards, Internal, Design.
+             Spans changed to make that fit six columns without touching any video:
+             Internal 4 -> 3 and Credit Cards 3 -> 4. Digital Loans and Design System are
+             untouched at 3 and 2. Widening a tile is safe with object-fit cover, it simply
+             reveals more of the source; narrowing crops. Internal is the one that narrows,
+             from a 2.40 tile ratio to 1.78 against a 2.426 image, so about 26% of its
+             width is now cropped and its still wants re-exporting nearer 16:9.
+             The Next Case Study links on all four detail pages follow this order and were
+             updated with it. -->
+<div id="InternalSystems" class="case-tile relative min-h-[18rem] overflow-hidden rounded-lg lg:col-span-3">
           <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-is" aria-label="Preview Internal Mortgage System">
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
-              <img src="assets/internal%20systems.png" alt="" class="h-full w-full object-cover object-right">
+              <!-- object-top, not object-right: the image was re-exported 2026-08-30 at 1708x960, a ratio of
+                 1.779 against this tile's 1.784, so it now fills the tile almost exactly and any crop
+                 falls off the BOTTOM rather than the side. object-right was correct for the old
+                 2.426 file, which could only ever be cropped horizontally. -->
+            <img src="assets/internal%20systems2.png" alt="" class="h-full w-full object-cover object-top">
             </div>
           </button>
           <!-- Subtitle carries "Mortgages" (added 2026-08-12) since "Internal System"
@@ -929,7 +911,47 @@ a:hover .arrow { transform: translateX(4px); }
 
         <!-- Design System: live, B2. Not a client project, so uses the OA favicon mark as its
              own logo and reads "My personal DSM" instead of a company name. -->
-        <div id="DesignSystem" class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-2">
+        <div id="DigitalLoans" class="case-tile relative min-h-[18rem] overflow-hidden rounded-lg lg:col-span-3">
+          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-dl" aria-label="Preview Digital Loans">
+            <div class="absolute inset-0 overflow-hidden bg-neutral-200">
+              <video src="assets/digital%20loans.mp4" class="h-full w-full object-cover" autoplay muted loop playsinline></video>
+            </div>
+          </button>
+          <div id="case-content-dl" class="case-bar absolute inset-x-0 bottom-0 flex items-center gap-3 px-5 py-3">
+            <img src="assets/Poalim.png" alt="" class="h-10 w-10 shrink-0 rounded-lg object-cover">
+            <div class="min-w-0">
+              <h3 class="type-title-md text-white truncate">Digital Loans</h3>
+              <span class="type-label-sm block truncate" style="color:var(--color-on-primary-soft)">Bank Hapoalim</span>
+            </div>
+            <a href="Digital-Loans/" class="case-cta pointer-events-auto ml-auto inline-flex h-8 w-fit shrink-0 items-center gap-2 rounded-full px-4 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2" style="background:#fff; color:var(--color-button);">
+              View
+              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Credit Cards -->
+        <div id="CreditCards" class="case-tile relative min-h-[18rem] overflow-hidden rounded-lg lg:col-span-4">
+          <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-cc" aria-label="Preview Credit Cards">
+            <div class="absolute inset-0 overflow-hidden bg-neutral-200">
+              <video src="assets/credit%20cards.mp4" class="h-full w-full object-cover" autoplay muted loop playsinline></video>
+            </div>
+          </button>
+          <div id="case-content-cc" class="case-bar absolute inset-x-0 bottom-0 flex items-center gap-3 px-5 py-3">
+            <img src="assets/Poalim.png" alt="" class="h-10 w-10 shrink-0 rounded-lg object-cover">
+            <div class="min-w-0">
+              <h3 class="type-title-md text-white truncate">Credit Cards</h3>
+              <span class="type-label-sm block truncate" style="color:var(--color-on-primary-soft)">Bank Hapoalim</span>
+            </div>
+            <a href="Credit-Cards/" class="case-cta pointer-events-auto ml-auto inline-flex h-8 w-fit shrink-0 items-center gap-2 rounded-full px-4 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2" style="background:#fff; color:var(--color-button);">
+              View
+              <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Internal Mortgage System -->
+        <div id="DesignSystem" class="case-tile relative min-h-[18rem] overflow-hidden rounded-lg lg:col-span-2">
           <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-dsys" aria-label="Preview Design System">
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
               <img src="assets/dsm.png" alt="" class="h-full w-full object-cover object-left-top">
@@ -952,7 +974,7 @@ a:hover .arrow { transform: translateX(4px); }
              sourcing exports from Figma himself), flat placeholder background for now,
              CTA already live since the case-study page itself is built. Swap the
              placeholder for real video/screenshot once he drops assets in. -->
-        <div id="CrossBankLoan" class="case-tile relative min-h-[18rem] overflow-hidden rounded-xl lg:col-span-6 hidden">
+        <div id="CrossBankLoan" class="case-tile relative min-h-[18rem] overflow-hidden rounded-lg lg:col-span-6 hidden">
           <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-cbl" aria-label="Preview Cross-Bank Loan">
             <div class="absolute inset-0 flex items-center justify-center bg-neutral-200">
               <span class="type-label-sm text-muted">Preview coming soon.</span>

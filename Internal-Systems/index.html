@@ -12,15 +12,22 @@
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ofir Avitan | Internal Mortgage System Case Study</title>
-<meta name="description" content="Internal Mortgage System case study: redesigning Bank Hapoalim's internal mortgages dashboard from dense, unprioritized tables into a guided, hierarchy-first workspace.">
+<!-- B60 (2026-08-22): the three description strings below were rewritten to the real story
+     (four legacy systems consolidated into one product) instead of the old generic "dense
+     tables became a guided dashboard" framing. Title/url/image are unchanged.
+ROLLBACK (pre-B60 description, used verbatim in all three tags):
+  "Internal Mortgage System case study: redesigning Bank Hapoalim's internal mortgages
+   dashboard from dense, unprioritized tables into a guided, hierarchy-first workspace."
+-->
+<meta name="description" content="Internal Mortgage System case study: four legacy Bank Hapoalim systems, some over 40 years old, consolidated into one product bankers use in four languages.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://avitano.studio/Internal-Systems/">
 <meta property="og:title" content="Ofir Avitan | Internal Mortgage System Case Study">
-<meta property="og:description" content="Internal Mortgage System case study: redesigning Bank Hapoalim's internal mortgages dashboard from dense, unprioritized tables into a guided, hierarchy-first workspace.">
+<meta property="og:description" content="Internal Mortgage System case study: four legacy Bank Hapoalim systems, some over 40 years old, consolidated into one product bankers use in four languages.">
 <meta property="og:image" content="https://avitano.studio/assets/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Ofir Avitan | Internal Mortgage System Case Study">
-<meta name="twitter:description" content="Internal Mortgage System case study: redesigning Bank Hapoalim's internal mortgages dashboard from dense, unprioritized tables into a guided, hierarchy-first workspace.">
+<meta name="twitter:description" content="Internal Mortgage System case study: four legacy Bank Hapoalim systems, some over 40 years old, consolidated into one product bankers use in four languages.">
 <meta name="twitter:image" content="https://avitano.studio/assets/og-image.jpg">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon.ico" sizes="any">
@@ -71,6 +78,28 @@
   --color-gold-500: #e0a52e;
   --color-gold-700: #a87a1e;
   --color-gold-900: #40310f;
+
+  /* 2026-08-30, B59 candidate on trial: warm bone. A real step off white, unlike
+     --color-surface-alt which is only about a 6% move and does not read as a surface at all.
+     Site-only for now, NOT in My DSM. It is live in exactly one place, "the mvp" cards, so Ofir
+     can judge how a warm surface sits inside an otherwise cool green system before it spreads. */
+  --color-bone: #f2ece0;
+
+  /* 2026-08-30, on trial and knowingly against an earlier ruling. Peach was rejected in B59 as a
+     second warm hue this palette does not have. It is back for one specific job: bone measures
+     only about 7% saturation, which is enough to read across a whole card surface but not behind
+     a single line of text, where there is no area for the eye to register it. Peach is about 12%.
+     Live in exactly one place, the highlight in "what it became". If it stays, it needs a real
+     decision about whether this site now has two warm accents; if it goes, the cheaper answer is
+     --color-green-100, which is more present than either and adds no new hue at all. */
+  --color-peach: #fbeade;
+
+  /* 2026-08-30, B59's near-black, brought in for one surface. Not #000: a true black next to
+     #022c22 reads as a hole rather than as a material. Live only on the impact panel's wide card.
+     B59 warns that this against the dark green measures 1.24:1 and so needs a hairline. That
+     warning is about a near-black card sitting ON a green ground, and does not apply here, where
+     the cards are separated by gaps of the light section background. */
+  --color-near-black: #0f1211;
 
   /* ---- semantics ---- */
   --color-primary: var(--color-green-950);
@@ -156,6 +185,490 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 .hero-dark-on-primary { color: var(--color-on-primary); }
 .hero-dark-on-primary-soft { color: var(--color-on-primary-soft); }
 .footer-text-soft { color: var(--color-neutral-100); }
+/* 2026-08-30: "the challenge" numbered blocks became real cards, variant B from
+   ../../card-explorations.html (B59, chosen by Ofir). The ghost numeral is fully visible and
+   never clipped: the point of it is that it fills the dead space at the bottom of a short card,
+   so a row of cards holding unequal amounts of text still reads as a row instead of as broken.
+   That is also why .ghost-card carries a large fixed bottom padding, it reserves the numeral's
+   space rather than letting it overlap the last line of a long card.
+   Written as real CSS, not utilities: the numeral is absolutely positioned and the surface is a
+   token, and on this build a token referenced only from an inline style="" never gets emitted
+   into :root at all. Radius is --radius-lg (16px) rather than the exploration's hardcoded 20px,
+   so it stays on the system. The small green "01" label above each heading is deliberately gone,
+   the ghost numeral replaces it, so the number is stated once and not twice. */
+.ghost-card { position: relative; overflow: hidden; border-radius: var(--radius-lg); background: var(--color-green-50); padding: 2rem 1.75rem 6rem; }
+.ghost-card h3, .ghost-card p { position: relative; z-index: 1; }
+/* Surface modifier. Must stay AFTER .ghost-card: both are single-class selectors so they carry
+   identical specificity and source order is what decides the winner. */
+.ghost-card-bone { background: var(--color-bone); }
+/* White + hairline. The hairline is an inset box-shadow, not a border, so it costs no layout box
+   and every ghost-card variant keeps identical geometry whichever surface it wears. */
+.ghost-card-white { background: var(--color-card); box-shadow: inset 0 0 0 1px var(--color-border-default); }
+/* 2026-08-30: highlighted phrase inside running copy, variant J from ../../card-explorations.html
+   (B59). The point of the device is that a reader who only skims still collects the two phrases
+   that carry the claim, so use it sparingly and never on more than about two phrases per passage.
+   J defined the highlight as peach. Bone was tried here first, since peach had been rejected in
+   B59, and it failed for a measurable reason worth keeping: bone is about 7% saturated, which
+   reads across a card but disappears behind one line of text because there is no area to register.
+   Peach is about 12%. So this is back on J's original colour, deliberately, see --color-peach.
+   Vertical-only padding on purpose: horizontal padding on an inline element would push the
+   surrounding words apart and make the highlight look like a button. Needs an explicit background
+   because the mark element otherwise inherits the browser's own yellow. (Tag names in words, never
+   as literal markup: one inside a stylesheet comment survives HTML-comment stripping and reads as
+   a phantom unclosed tag in a balance check.) */
+.copy-mark { background: var(--color-peach); color: var(--color-default); padding: 2px 0; }
+/* NavItem molecule, ported verbatim from ../Digital-Loans/index.html (which took it from
+   ../Design-System/index.html's icon-showcase sidebar, the same My DSM component, see B46).
+   Third use of this pattern on the site, so it is a real convention now, not a one-off.
+   Single-line labels only, deliberately: both existing uses are single-line and the standing rule
+   is to port a DSM component whole rather than to grow it mid-build. The role each screen belongs
+   to lives in the copy, not in the menu.
+   The two existing uses differ in how they swap content, and this page follows Design-System's:
+   everything stays in the DOM and visibility is toggled with the real hidden attribute plus an
+   explicit [hidden] rule. Digital-Loans swaps the img src instead, which is fine there because its
+   slots are a fixed aspect ratio, but here the five screens run 477px to 897px tall at render size
+   and an src swap leaves the box with no height while the new file decodes, so the frame would
+   collapse and snap on every click.
+   Never express that toggle as Tailwind's hidden class against a display utility: in this build
+   the pair is order-dependent in the generated output and fails silently. */
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  inline-size: 100%;
+  min-block-size: 2.75rem;
+  padding-block: 0.5rem;
+  padding-inline: 0.75rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-plain);
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  text-align: start;
+  white-space: nowrap;
+  background: transparent;
+  color: var(--color-secondary);
+  border: none;
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
+}
+.nav-item__icon { flex: none; width: 1.25rem; height: 1.25rem; color: var(--color-muted); }
+.nav-item__label { flex: 1 1 auto; }
+.nav-item:hover { background-color: var(--color-surface-alt); color: var(--color-default); }
+.nav-item:hover .nav-item__icon { color: var(--color-default); }
+.nav-item[aria-selected="true"], .nav-item.is-active {
+  background-color: var(--color-surface-pressed);
+  color: var(--color-default);
+  font-weight: 600;
+}
+.nav-item[aria-selected="true"] .nav-item__icon, .nav-item.is-active .nav-item__icon { color: var(--color-primary); }
+.nav-item[aria-selected="true"]::before, .nav-item.is-active::before {
+  content: ""; position: absolute; inset-inline-start: 0; inset-block: 0.375rem;
+  inline-size: 0.1875rem; border-radius: var(--radius-sm); background-color: var(--color-primary);
+}
+.nav-item:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-focus);
+}
+/* True crossfade with an animated height, replacing an earlier fade-out-then-fade-in (2026-08-30).
+   The sequential version emptied the frame between the two screens, so the frame read as being
+   rebuilt on every click rather than as one surface whose contents change. Ofir asked for the
+   frame to stretch instead. The technique is the FLIP idea in its simplest form: the two screens
+   overlap so they can dissolve into each other, and the box animates from its old height to its
+   new one rather than jumping.
+   Overlapping means the screens have to leave normal flow, which is what `position: absolute` does
+   here: all five sit on top of each other in the same spot, so the stage no longer gets a height
+   from its contents and the script has to state it. It computes that height from each screen's own
+   aspect ratio (the data-ratio attribute in the markup), so nothing is ever measured and there is
+   no layout thrash, and the number is right before the image has even loaded.
+   Progressive enhancement, and the reason [hidden] is still here: until the script adds .is-ready
+   the slides stay in normal flow with four of them hidden, so with no JS the block still shows
+   exactly one screen at its natural height. .is-ready is what hands control over.
+   visibility rather than display for the inactive ones: display cannot transition, and opacity
+   alone would leave invisible screens catching clicks and being read by screen readers. The
+   `visibility 0s linear <duration>` delay holds visibility until the fade has finished. */
+.shot-stage { position: relative; }
+.shot-stage.is-ready { transition: height 520ms var(--ease-out); }
+.shot-stage.is-ready .shot-slide {
+  position: absolute; inset-inline: 0; top: 0;
+  opacity: 0; visibility: hidden;
+  transition: opacity 520ms var(--ease-out), visibility 0s linear 520ms;
+}
+.shot-stage.is-ready .shot-slide.is-active {
+  opacity: 1; visibility: visible;
+  transition: opacity 520ms var(--ease-out), visibility 0s;
+}
+/* Applied for one frame while the script re-measures after a viewport resize, so the height
+   snaps to the new width instead of gliding to it. */
+.shot-stage.is-resizing, .shot-stage.is-resizing .shot-slide { transition: none; }
+.shot-slide[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .shot-stage.is-ready, .shot-stage.is-ready .shot-slide { transition: none; }
+}
+.ghost-num { position: absolute; left: 1.75rem; bottom: 1rem; z-index: 0; font-family: var(--font-brand); font-weight: 700; font-size: 5rem; line-height: 0.8; color: var(--color-green-950); opacity: 0.12; }
+/* 2026-08-30: variant G from ../../card-explorations.html (B59). A screenshot presented as a
+   designed object: hairline pale-green border, white ground, generous padding, and a two-part
+   label above it, the left naming the artefact and the right saying what to look at. That
+   right-hand note is the point of the pattern, since every screen on this page otherwise arrives
+   without telling the reader what they are meant to notice.
+   Radii are concentric on purpose, per the DSM's Outer = Inner + Padding rule: 36px frame,
+   20px padding, 16px image. Solve it starting from the INNER radius, not the outer. Fixing the
+   outer at --radius-xl (28px) first left an 8px image corner, which is nearly square and read as
+   too sharp beside a visibly round frame, so the frame radius is derived instead: 16 + 20 = 36.
+   36px (2.25rem) is not a token today, it is one step above --radius-xl, and it exists only
+   because 20px of padding is the pattern's whole point and the inner radius has to be a real
+   --radius-lg. If this frame gets reused elsewhere, that value is a DSM-extension candidate.
+   The image radius is also the fix for the corners clipping real screenshot content, it was
+   rounded-xl (12px) against a much smaller render, which ate roughly 28px of the source per
+   corner. At 16px on a 61% render it eats 26px, so the frame's white mat is what actually
+   keeps the corners clean now, not a smaller radius.
+   The img radius lives here rather than as a utility class deliberately: unlayered custom CSS
+   beats any Tailwind rounded-* on this build, so a utility on the img would silently lose. */
+.shot-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1.5rem; margin-bottom: 1rem; }
+@media (max-width: 639.98px) { .shot-head { flex-direction: column; gap: 0.25rem; } }
+.shot-frame { border: 1px solid var(--color-green-100); border-radius: 2.25rem; background: var(--color-card); padding: 1.25rem; }
+.shot-frame img { display: block; width: 100%; height: auto; border-radius: var(--radius-lg); }
+/* Grey hairline, not the green one the static G frames use. The frame and the menu beside it are
+   one object in the switcher, and the menu is border-border-default, so a green frame next to a
+   grey menu reads as two halves that do not match. Same choice ../Digital-Loans made for its own
+   filmstrip box. Worth holding as a rule: green hairline for a screenshot you only look at, grey
+   for a control you touch.
+   MUST stay after .shot-frame. Both are single-class selectors, so specificity is identical and
+   source order is the only thing deciding the winner, and .shot-frame sets the `border` shorthand,
+   which resets border-color outright rather than merging with it. This rule sat above .shot-frame
+   at first and silently did nothing. */
+.shot-frame-control { border-color: var(--color-border-default); }
+/* Language layout, 2026-08-30. Three full screens side by side rendered each of them about 400px
+   wide against a 3024px source, and Ofir confirmed at the screen that not one word was legible.
+   So the section stopped trying to make every screen readable and split the job in two: one full
+   Hebrew screen large enough to actually read, and three tight crops of the SAME element in the
+   other languages, each showing roughly 600x291 source pixels at 285px, which is near 1:1.
+   Everything here is solved, not chosen, and it solves in one direction only. Fixed first: the
+   large screen is 763px, Ofir's 20% reduction from an earlier 954. Everything else follows.
+   The crop column takes all the width that is left, 1280 - 763 - 40 = 477, because leaving it
+   short only produced dead white space beside the crops. Both columns then have to end level, so
+   3 crop heights plus 2 24px gaps must equal 763/2.06 = 370, which fixes each crop at 107px tall
+   and therefore fixes the crop RATIO at about 4.46:1. That is why the crops are 1500x336 wide
+   letterbox strips rather than the 900x340 they were: the shape is an output of the layout, not a
+   taste decision. Recrop rather than nudge if any of these numbers move.
+   Crops are anchored at the screen's own outer corner, left for LTR and right for RTL, and include
+   the dark shell (top bar and side rail) rather than starting inside the content. That is what
+   makes each one read as the corner of a real screen instead of a floating block of text, and the
+   mirrored anchor means all four show the same UI element rather than the same rectangle. The
+   mirror argument itself is carried by the large Hebrew screen, which shows the whole flipped
+   layout, so the crops are free to do the one job of showing script. */
+.lang-shot { position: relative; }
+/* 2026-08-30: the language label moved out of the screenshot and under the tile. On the image
+   there was no position that worked for all four: the app mirrors, so any side lands on the dark
+   rail in two languages and on light content in the other two, and the rail already carries the
+   product's own language code, so a label there read as a duplicate. Centred under the tile it is
+   legible on the page's own background, identical on all four, and competes with nothing.
+   Centred rather than left-aligned for two reasons. In a moving belt a side-aligned caption sits
+   next to the gap and reads as ambiguous between its own tile and the neighbouring one. And this
+   is a set built around containing both writing directions, so left-alignment would quietly take a
+   side that is wrong for half of it. Centre is the only direction-neutral option. */
+.lang-chip { display: block; margin-block-start: 0.875rem; text-align: center; }
+.lang-chip > span { background: var(--color-primary); color: var(--color-on-primary); }
+
+/* IMPACT STAT PANEL, 2026-08-30. Variant I from ../../card-explorations.html (B59), three sizes
+   inside one card: figure, then label, then explanation.
+   This is the only section on the page with no screenshot, which is exactly why it gets the
+   heaviest treatment. A dark panel here is also the page's one rhythm break after five light
+   sections in a row.
+   Two things NOT taken from variant I, both deliberate:
+   (1) I renders its third card in terracotta. That is not a colour choice, it is that file's
+   placeholder warning, and the card literally reads "No third number". The third number now exists
+   (4 systems into 1), so the warning is retired rather than copied.
+   (2) I sets the explanation line in green-100. That exact pairing was rejected in B57 as
+   unreadable on a dark green ground, which is why .footer-text-soft exists. Use neutral-100.
+   The wide card inverts rather than recolours: gold ground with the figure in the dark green the
+   other two use as background. That keeps all three one family while letting the payoff number
+   carry the page's rarest colour, which until now has only appeared on the CTA and the nav border. */
+.stat-card { border-radius: var(--radius-xl); background: var(--color-primary); color: var(--color-on-primary); padding: 2.25rem 1.75rem 2rem; text-align: center; }
+.stat-card .stat-fig { font-family: var(--font-brand); font-weight: 700; font-size: 3rem; line-height: 1; letter-spacing: -0.02em; color: var(--color-gold-500); }
+.stat-card .stat-lbl { font-family: var(--font-brand); font-weight: 700; font-size: 1.125rem; line-height: 1.2; margin-block-start: 0.75rem; }
+.stat-card .stat-exp { font-size: 0.85rem; line-height: 1.5; color: var(--color-neutral-100); margin-block-start: 0.75rem; max-inline-size: 24ch; margin-inline: auto; }
+/* The wide payoff card. Was a full gold ground and it shouted: a large saturated warm field beside
+   two dark green ones reads as a different system rather than as the third member of a set, and it
+   spent the page's rarest colour on an area instead of on a mark.
+   The rule that replaced it, worth holding site-wide: GOLD IS THE INK, NEVER THE PAPER. All three
+   grounds are dark, gold appears only as numerals, and it stays precious precisely because it is
+   never spread across a surface.
+   The concrete grain is the same feTurbulence technique used on the figures, at deliberately
+   different settings. Low baseFrequency and five octaves give broad mottling rather than fine
+   grain, because what reads as brushed metal at 48px reads as dirt across a whole panel, and the
+   opacity is far lower for the same reason. Slightly anisotropic (0.012 vs 0.018) so the mottling
+   has a faint grain direction instead of looking like uniform static.
+   Measured on this ground: gold 8.60:1, neutral-100 16.59:1, and the metal gradient's darkest stop
+   still 4.75:1, so no part of the sweep drops below legible. */
+.stat-card-wide {
+  background-color: var(--color-near-black);
+  background-image: url("data:image/svg+xml,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='300'%20height='300'><filter%20id='c'><feTurbulence%20type='fractalNoise'%20baseFrequency='0.012%200.018'%20numOctaves='5'%20stitchTiles='stitch'/><feColorMatrix%20type='saturate'%20values='0'/></filter><rect%20width='300'%20height='300'%20filter='url(%23c)'%20opacity='0.5'/></svg>");
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  background-blend-mode: overlay;
+}
+.stat-card-wide .stat-fig { font-size: 3.75rem; }
+/* 24ch is right for a narrow card and wrong for one spanning two columns, where it wrapped into a
+   tall thin ribbon in the middle of a wide surface. Still capped rather than full width, so the
+   line length stays readable. */
+.stat-card-wide .stat-exp { max-inline-size: 44ch; }
+
+/* "what I learned" as variant J's nested card (2026-08-30): a tinted outer holding a white inner.
+   Radii are concentric per the DSM rule, and unlike J's own numbers they actually resolve: inner
+   --radius-lg (16) plus 12px padding gives outer --radius-xl (28) exactly, both real tokens.
+   The two h3 sub-headings that used to sit here are gone, deliberately. The whole point of this
+   pattern is that the highlighted phrases do the skimming work a heading would otherwise do, so
+   keeping both would be the same emphasis twice. The section's own h2 is untouched.
+   The ghost went through two rejected versions, both worth recording so neither is retried.
+   First the asterisk as a TYPE GLYPH: Inter Tight's asterisk is a soft petalled shape, and at
+   10rem, clipped, it read as a leaf. The rule that a symbol survives at a glance holds for a quote
+   mark, whose silhouette is unmistakable, and does not transfer automatically to every glyph.
+   Then the DSM's Rotate Ccw icon, meaning hindsight, which reads as a refresh control instead.
+   It is now an asterisk drawn as geometry: three straight lines crossing at 60 degree steps, round
+   caps, heavy stroke. Drawing it rather than setting it is what makes it a real asterisk and not
+   whatever a given font decided an asterisk looks like, and six straight arms stay unmistakable
+   however much of the bottom is cut off, which is the property the petalled glyph lacked.
+   Two columns at full width, not one narrow card: the single column left roughly 900px of empty
+   page beside it, and the two lessons are genuinely parallel rather than sequential, so sitting
+   them side by side fills the width for a real reason rather than as a stretch. Each column lands
+   near 560px, which is still a readable measure. */
+/* HERO SPLIT, 2026-08-30, trialled on this page only before any rollout. Everything from the H1
+   down to and including the "where it stands today" card sits in the left half, the device sits in
+   the right half, so a reader sees the finished product before scrolling rather than at the bottom.
+   The frame carries NO crop: aspect-ratio matches the file's own 1422x869. An earlier export had
+   about 630px of empty shadow down its left side, and a 25% right-side crop was what pushed the
+   machine up to a useful size against that dead space. The re-export solved it at the source, the
+   device now runs edge to edge, and cropping the same 25% would start eating the machine itself.
+   The mechanism is still in place if it is ever wanted again: give the frame a narrower ratio than
+   the file's and object-fit cover trims the excess, with object-position pinned left so anything
+   removed can only come off the right edge. One number, no re-export.
+   The meta row drops to two columns here. Its four-column track (4rem 13rem 6rem 1fr) needs about
+   490px before Scope gets any width at all, which does not fit half a hero. */
+/* Hero grain, 2026-08-30. Ofir's own texture, and it is applied at FULL opacity on purpose: the 5%
+   is already baked into the file's alpha channel, whose maximum measures 13 of 255. Adding a
+   further 5% in CSS would have taken it to a quarter of a percent and erased it.
+   The source is a 2048x1536 PNG weighing 1862KB, which is unusable for something this faint. It is
+   uniform grain, measured: every row and column averages the same alpha to within a tenth, with
+   only 14 distinct values in the whole file. So a 384px square out of it is statistically identical
+   to the whole thing and simply repeats, which is 58KB instead of 1862. Noise is the worst case for
+   both lossless and lossy compression, so tiling rather than scaling is what makes it affordable.
+   It runs the full width because it sits on the header's padding box, and it ends exactly where the
+   hero ends, which is why the challenge section's own border-t was removed: the edge of the texture
+   is now the separator, and two separators in the same place would read as a mistake. */
+/* Two layers, and the split is a real saving rather than tidiness. Ofir's Figma frame is a tint
+   plus a hugely zoomed sky photo plus a separate noise layer, and he exported it flattened as
+   hero_bg2.png, 2048x1536 and 3432KB. Measured, the WEIGHT IS THE NOISE: at 1600px the flattened
+   file costs 70KB at q86 but only 13KB at q78, and the difference between those two is that q78
+   has wiped the grain out entirely. Any compression cheap enough is also destructive.
+   So the grain was separated back out. The sky layer is the flattened export with its grain
+   smoothed off, which leaves a pure diagonal gradient that compresses to 19KB, and the grain is
+   Ofir's own hero_bg.png as a 384px tile at 58KB. 77KB against 293KB for his composite at the
+   quality that keeps the texture.
+   The second benefit matters more than the bytes: in the flattened file the grain STRETCHES with
+   the image, so on a wide monitor the specks grow and blur. Tiled, the grain is a fixed size and
+   stays as crisp as it is in Figma at any viewport.
+   Order is grain first then sky, because the first background-image in the list paints on top.
+   The sky is stretched to 100% 100% rather than covered: it carries no recognisable subject, only
+   a light-to-dark diagonal, so stretching shows all of it at any hero proportion while cover would
+   crop unpredictably. No background-color: the tint is already inside the sky layer. */
+.hero-grain {
+  background-image: url("assets/hero_bg.webp"), url("assets/hero_bg_sky.webp");
+  background-repeat: repeat, no-repeat;
+  background-size: 384px 384px, 100% 100%;
+  background-position: 0 0, center;
+}
+.hero-split { display: grid; gap: 2.5rem; }
+@media (min-width: 1024px) { .hero-split { grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; } }
+/* overflow is visible, not hidden, on purpose. It was hidden while the frame carried a crop; with
+   no crop left, hiding it would only clip the drop shadow below.
+   drop-shadow rather than box-shadow: box-shadow draws around the element's rectangle, and this
+   image is a transparent PNG, so it would have produced a floating grey rectangle behind a
+   laptop-shaped hole. drop-shadow follows the alpha silhouette, so the shadow is the machine's own
+   shape. Two passes, a tight contact one and the real cast shadow. The lighting Ofir asked for is a lamp
+   aimed at the screen from the viewer's own side, so the offset is large and the BLUR IS SMALL
+   relative to it: a big offset with a big blur reads as ambient glow, while a big offset with a
+   tight blur reads as a silhouette being projected, which is what a screen blocking a direct light
+   actually does. That ratio is the whole effect, so move offset and blur together if it is retuned. Neutral black,
+   not the site's dark green: the green tint was tried and Ofir's call is that a plain shadow reads
+   better under a silver machine, where a coloured one starts looking like a glow. Ofir also
+   approved it spilling past the column edge, which it does by roughly 100px at its faintest. */
+/* 8% smaller and pinned to the right of its column, so the space that frees up opens on the LEFT,
+   which is the side the shadow is thrown toward. Shrinking it centred would have split that space
+   in two and given the shadow nowhere to land. */
+.hero-device-frame { aspect-ratio: 1422 / 869; max-inline-size: 92%; margin-inline-start: auto; }
+/* Clearance under the device, so the metrics card cannot paint over the shadow. A filter takes no
+   space in layout, so the shadow simply falls behind whatever comes next, and an opaque card then
+   covers it in a hard straight line that reads as the shadow being cut off.
+   --shadow-reach is how far the cast shadow actually extends below the machine: the big pass is
+   34px of offset plus 44px of blur, so 78px, rounded to 5rem. It MUST be changed together with the
+   filter below, which is why it is declared here rather than as a loose margin value. */
+.hero-metrics { --shadow-reach: 5rem; margin-block-start: calc(var(--shadow-reach) + 1.5rem); }
+.hero-device-frame img {
+  width: 100%; height: 100%; object-fit: cover; object-position: left center;
+  filter: drop-shadow(-10px 6px 9px rgb(0 0 0 / 0.10)) drop-shadow(-96px 34px 44px rgb(0 0 0 / 0.32));
+}
+
+.learn-outer { background: var(--color-green-50); border-radius: var(--radius-xl); padding: 0.75rem; }
+/* --mark-size and --mark-bleed drive BOTH the asterisk and the space kept clear for it, so the two
+   cannot drift apart later. The card's bottom padding is derived: the mark's height minus the part
+   that bleeds off the edge, plus a little clearance. Text therefore cannot reach the mark at any
+   viewport width, which is the guarantee an absolutely positioned overlay could not give on its
+   own, and it is the same trick used for the marquee's tile shadow.
+   Space is reserved BELOW rather than beside on purpose: reserving a side gutter would have made
+   the right column narrower than the left, and two columns of prose at visibly different measures
+   read as a mistake. */
+.learn-inner {
+  --mark-size: 7.5rem;
+  --mark-bleed: 2rem;
+  position: relative; overflow: hidden;
+  background: var(--color-card); border-radius: var(--radius-lg);
+  padding: 3rem 3.25rem calc(var(--mark-size) - var(--mark-bleed) + 1rem);
+}
+.learn-cols { display: grid; gap: 2rem; }
+@media (min-width: 1024px) { .learn-cols { grid-template-columns: 1fr 1fr; gap: 3.5rem; } }
+.learn-cols p { position: relative; z-index: 1; font-size: 1.05rem; line-height: 1.75; color: var(--color-secondary); }
+/* Sharp terminals, not round. Round was a reflex copied from the DSM's Lucide icon set, but this
+   is a typographic mark rather than an icon, real asterisks have cut ends, and the rounded arms
+   were half the reason the earlier version read as petals. */
+.learn-mark { position: absolute; z-index: 0; right: 0.5rem; bottom: calc(var(--mark-bleed) * -1); inline-size: var(--mark-size); block-size: var(--mark-size); color: var(--color-primary); }
+@media (max-width: 1023.98px) {
+  .learn-inner { --mark-size: 4.5rem; --mark-bleed: 1.5rem; padding: 1.75rem 1.5rem calc(var(--mark-size) - var(--mark-bleed) + 1rem); }
+  .learn-mark { right: 0.35rem; }
+}
+
+/* Metallic gold on the two dark cards' figures, with a one-time specular sweep (2026-08-30).
+   Gold is a material, not a hue, so a single hex always reads as mustard. What the eye recognises
+   is the tonal run from bronze up through a narrow near-white highlight and back down, which is
+   what the stops below are. The gradient is SYMMETRIC around 50% so that the two resting states,
+   before and after the sweep, are mirror images of each other rather than one being duller.
+   Background width was 250% and is now 160% (2026-08-30, Ofir: the effect read as too faint). At
+   250% only 40% of the ramp was ever visible at rest, so most of the tonal range designed into it
+   never reached the screen. At 160% that rises to about 62%, which brings both the bronze and the
+   near-white into view and is what makes it read as metal rather than as a tint.
+   The tradeoff, and it is a real change rather than a bug: the #fff6db highlight is now visible at
+   rest instead of being hidden until the animation. It sits near one side, the sweep carries it
+   across, and it settles near the other. The sweep is now a highlight travelling over a metal
+   surface rather than a flash appearing out of nowhere.
+   Every stop clears 3:1 against the card, which is the bar for text this size. The darkest,
+   #a9761f, measures 3.82:1, so even the instant the sweep is at its dimmest the number is legible.
+   The sweep runs ONCE. A looping shimmer is the established visual language of a loading skeleton,
+   which is the opposite of what a finished number should say.
+   Timing is tied to the existing reveal system rather than to page load: the card entrance is
+   650ms and the script staggers children by 160ms, so 1000ms and 1160ms put each sweep about a
+   third of a second after its own card has settled. Deep in the page, a load-triggered animation
+   would fire with nobody watching.
+   The @supports guard is not optional: background-clip:text needs color:transparent, so without
+   the guard any engine lacking it would render the numbers invisible rather than merely flat. */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  /* Two background layers, both clipped to the letterforms: fine grain on top, the metal ramp
+     underneath, blended with overlay. The grain is what turns a smooth ramp into a surface. It is
+     an inline SVG feTurbulence as a data URI, so there is no image file and nothing to download,
+     and it is desaturated to pure luminance noise so it only lightens and darkens the gold rather
+     than tinting it.
+     The grain layer is deliberately NOT animated. On real metal the surface stays put and the
+     highlight travels across it, so only the gradient's position moves during the sweep. Both
+     layers must still be listed in every background-position value, including the keyframes and
+     the reduced-motion rule, or the shorthand resets the one that is omitted. */
+  .stat-card .stat-fig {
+    background-image:
+      url("data:image/svg+xml,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='100'%20height='100'><filter%20id='g'><feTurbulence%20type='fractalNoise'%20baseFrequency='0.85'%20numOctaves='3'%20stitchTiles='stitch'/><feColorMatrix%20type='saturate'%20values='0'/></filter><rect%20width='100'%20height='100'%20filter='url(%23g)'%20opacity='0.55'/></svg>"),
+      linear-gradient(100deg, #a9761f 0%, #d9a942 16%, #edc76f 30%, #d9a942 42%, #fff6db 50%, #d9a942 58%, #edc76f 70%, #d9a942 84%, #a9761f 100%);
+    background-size: 100px 100px, 160% 100%;
+    background-position: 0 0, 100% 0;
+    background-repeat: repeat, no-repeat;
+    background-blend-mode: overlay, normal;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .stat-card.in-view .stat-fig {
+    animation: gold-sweep 1200ms cubic-bezier(0.45, 0, 0.15, 1) 1000ms 1 forwards;
+  }
+  .stat-card.in-view:nth-child(2) .stat-fig { animation-delay: 1160ms; }
+  .stat-card.in-view:nth-child(3) .stat-fig { animation-delay: 1320ms; }
+}
+@keyframes gold-sweep {
+  from { background-position: 0 0, 100% 0; }
+  to   { background-position: 0 0, 0% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stat-card.in-view .stat-fig { animation: none; background-position: 0 0, 0% 0; }
+}
+
+/* LANGUAGE MARQUEE, 2026-08-30, replacing the one-large-plus-three-crops layout above.
+   That layout kept running into the same wall: three thumbnails beside a large screen cannot be
+   both legible and height-matched, and every fix traded one for the other. Ofir's reframing is
+   what dissolved it. The reader is not meant to read these at all, only to see that the product
+   exists in several languages, and once nobody has to read them they can simply move.
+   Full bleed. The negative margins exactly cancel the section's own px-4 / lg:px-20, so this must
+   stay a direct child of the section element and NOT live inside the max-w-7xl wrapper, which
+   would cap it at 1280 and leave a gap on wide screens. Deliberately the only element on the page
+   that breaks the content column. (Tag names are spelled out in words here, never as literal
+   markup: a stray angle-bracket tag inside a stylesheet comment survives HTML-comment stripping
+   and then shows up as a phantom unclosed tag in a balance check.)
+   Seamless loop: the track holds the four tiles TWICE and animates to exactly -50%, so the moment
+   it snaps back is pixel-identical to the moment before and no jump is visible. The duplicate is
+   eight img elements pointing at four URLs, so it costs DOM nodes and paint, not four extra
+   downloads.
+   Spacing is margin-inline-end on each tile rather than flex gap, and that is load-bearing: with
+   `gap`, a track of 8 has 7 gaps, so half the track is not a whole repeat of 4 tiles + 4 gaps and
+   the -50% loop drifts by half a gap every cycle. Per-tile margin makes every tile occupy exactly
+   width + gap, so 50% is exactly one set.
+   Duration follows from that: one set is 4 x (1024 + 32) = 4224px, and 32s puts it at about
+   130px/s, slow enough to read the shape of a script as it passes.
+   The edge mask is what stops it looking cheap: tiles fade in and out rather than being cut off by
+   a hard container edge. */
+/* The fade and blur end exactly on the content column's own edge, not at some percentage of the
+   viewport, so the belt runs the full width while the part that reads as legible is bounded by the
+   same column every other section obeys. --gutter is that distance: below lg it is the section's
+   1rem padding, above it the larger of the 5rem padding and half the space left over once the
+   80rem column is centred, which is exactly where the column's edge falls at any window size.
+   Blur is layered rather than a single filter: one wide light pass across the whole gutter and one
+   narrow heavy pass at the outer half, which together read as blur that builds up toward the edge
+   instead of a hard band of frosted glass. The two fade layers are siblings of .marquee, not
+   children, because .marquee's own mask would otherwise fade them out along with the tiles and
+   cancel most of the effect. */
+.lang-bleed { --gutter: 1rem; margin-inline: -1rem; }
+@media (min-width: 1024px) { .lang-bleed { --gutter: max(5rem, (100vw - 80rem) / 2); margin-inline: -5rem; } }
+.marquee-wrap { position: relative; }
+/* The padding is not decoration, it is room for the tile shadow to exist inside the clip box.
+   overflow:hidden cannot be applied to one axis only, so clipping the tiles sideways also clipped
+   the shadow off along the bottom edge. The numbers come from the shadow itself, 0 24px 60px -20px
+   reaches about 64px below each tile and about 16px above it. Retune both together if it changes.
+   The bottom margin on the wrapper was reduced to compensate, since most of this padding reads as
+   empty space rather than as content. */
+.marquee {
+  padding-block: 1.25rem 4.5rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent 100%);
+}
+.marquee-fade { position: absolute; inset-block: 0; inline-size: var(--gutter); pointer-events: none; }
+.marquee-fade::before, .marquee-fade::after { content: ""; position: absolute; inset: 0; }
+.marquee-fade::before { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+.marquee-fade::after { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.marquee-fade-start { left: 0; }
+.marquee-fade-end { right: 0; }
+.marquee-fade-start::before { -webkit-mask-image: linear-gradient(to right, #000, transparent); mask-image: linear-gradient(to right, #000, transparent); }
+.marquee-fade-start::after { -webkit-mask-image: linear-gradient(to right, #000, transparent 55%); mask-image: linear-gradient(to right, #000, transparent 55%); }
+.marquee-fade-end::before { -webkit-mask-image: linear-gradient(to left, #000, transparent); mask-image: linear-gradient(to left, #000, transparent); }
+.marquee-fade-end::after { -webkit-mask-image: linear-gradient(to left, #000, transparent 55%); mask-image: linear-gradient(to left, #000, transparent 55%); }
+/* 40s, not 32: one tile plus its gap is 1056px and one full set is 4224px, so this is 10s per tile
+   crossing rather than 8. Ofir's call, and the number to change if it is retuned again. */
+.marquee-track { display: flex; width: max-content; animation: marquee-scroll 40s linear infinite; }
+.marquee:hover .marquee-track, .marquee:focus-within .marquee-track { animation-play-state: paused; }
+@keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-tile { position: relative; flex: none; inline-size: min(1024px, 82vw); margin-inline-end: 2rem; }
+.marquee-tile img { display: block; width: 100%; height: auto; border-radius: var(--radius-lg); box-shadow: 0 24px 60px -20px rgb(2 44 34 / 0.28); }
+/* Reduced motion does not mean less content: the belt stops but becomes draggable, so all four
+   languages stay reachable. The duplicate set is dropped so nothing appears twice. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee { overflow-x: auto; }
+  .marquee-track { animation: none; }
+  .marquee-dup { display: none; }
+}
 /* 2026-08-14, B56: same root cause, different symptom. --ease-spring was never referenced inside
    a real CSS rule in this stylesheet (only defined in @theme, then used via inline JS
    blob.style.transition on the B20 carousel dot's stretch/contract animation further down this
@@ -475,37 +988,53 @@ a:hover .arrow { transform: translateX(4px); }
   </nav>
 
   <!-- HERO -->
-  <header id="top" class="px-4 pb-8 pt-32 sm:pb-16 lg:px-20 lg:pb-24 lg:pt-40">
+  <header id="top" class="hero-grain px-4 pb-8 pt-32 sm:pb-16 lg:px-20 lg:pb-24 lg:pt-40">
     <div class="mx-auto max-w-7xl">
-      <div style="max-width:1080px;">
-        <h1 class="enter type-display-sm sm:text-5xl" style="animation-delay:80ms">Internal Mortgage System<span class="brand-dot">.</span></h1>
+      <div class="hero-split">
+      <div>
+        <!-- Dateline, 2026-08-30. Year and Duration were pulled out of the four-field grid and set
+             above the H1 as one muted line, applying B59's own principle: the four fields were never
+             equal, two are timestamps and two are substance, and pairing a two-word field beside a
+             two-line one made the grid look broken. Role and Scope now have the body to themselves. -->
+        <p class="enter type-label-sm text-muted" style="animation-delay:60ms">2025&ndash;2026 &middot; 12 months</p>
+        <h1 class="enter type-display-sm mt-3 sm:text-5xl" style="animation-delay:80ms">Internal Mortgage System<span class="brand-dot">.</span></h1>
         <!-- B29 fixed-width column rollout, 2026-08-12: piloted on ../Digital-Loans/,
              see that file's comment for the reasoning (content-driven auto columns
              threw the label row out of even rhythm). -->
-        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-[4rem_13rem_6rem_1fr] sm:gap-x-10" style="animation-delay:240ms">
-          <div>
-            <p class="type-body-md text-muted">Year</p>
-            <p class="type-body-lg mt-1 font-medium text-default">2025</p>
-          </div>
+        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-x-8" style="animation-delay:240ms">
           <div>
             <p class="type-body-md text-muted">Role</p>
             <p class="type-body-lg mt-1 font-medium text-default">Product Design Manager</p>
           </div>
           <div>
-            <p class="type-body-md text-muted">Duration</p>
-            <p class="type-body-lg mt-1 font-medium text-default">12 months</p>
-          </div>
-          <div>
             <p class="type-body-md text-muted">Scope</p>
-            <p class="type-body-lg mt-1 font-medium text-default" style="max-width:495px;">User Research, UX, UI, Microcopy, Usability Testing, Design System</p>
+            <p class="type-body-lg mt-1 font-medium text-default">User Research, UX, UI, Microcopy, Usability Testing, Design System</p>
           </div>
         </div>
+        <!-- B60 (2026-08-22): tagline replaced. The old line described handling tables; this one
+             describes a product, and it is the first line on the page that says "I led" rather
+             than "designed". Copy approved 2026-08-21, see ../../internal-mortgage-copy-draft.md
+             station 1. Delay/measure/classes unchanged.
+        ROLLBACK (pre-B60 tagline):
         <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms; max-width:790px;">Redesigned Bank Hapoalim's internal mortgages dashboard: dense, unprioritized tables that forced bankers to jump between screens became a guided, hierarchy-first workspace built around what bankers and clients actually need.</p>
+        -->
+        <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms; max-width:790px;">Bank Hapoalim's mortgage bankers worked across four separate systems, some of them over 40 years old. I led the design of one product that reads from all of them, so a banker can answer a customer without leaving the screen.</p>
         <div class="enter mt-6 flex flex-wrap gap-2" style="animation-delay:420ms">
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Web</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Internal tools</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
         </div>
+
+      </div>
+
+      <!-- Device column. Alt text describes the artefact, not the machine: the MacBook frame is
+           presentation, the analytics screen is the content. -->
+      <div class="enter" style="animation-delay:560ms">
+        <div class="hero-device-frame">
+          <img width="1422" height="869" decoding="async" src="assets/13_hero_device.webp" alt="The consolidated management dashboard open on a laptop: portfolio value, uncovered exposure, coverage over time, and coverage gaps by branch.">
+        </div>
+      </div>
+
       </div>
 
       <!-- B29 rollout, 2026-08-12: same teaser card built on ../Digital-Loans/
@@ -516,7 +1045,7 @@ a:hover .arrow { transform: translateX(4px); }
            card has 2 stats instead of 3, everything else identical to the proven
            pattern. "In Production" is accurate here too, this project is shipped
            like Digital Loans, not "in active development" like Credit Cards. -->
-      <div class="enter mt-6 rounded-lg border border-border-default bg-card p-6" style="animation-delay:480ms">
+      <div class="enter hero-metrics rounded-lg border border-border-default bg-card p-6" style="animation-delay:480ms">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span class="type-label-sm text-muted">where it stands today</span>
           <span class="inline-flex items-center gap-1.5 type-label-sm" style="color:var(--color-primary);">
@@ -538,15 +1067,27 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
       </div>
 
+
     </div>
   </header>
 
   <!-- CHALLENGE -->
   <section id="challenge" class="px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl border-t border-border-default pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+    <!-- border-t removed 2026-08-30: the hero grain now ends exactly here, so its own edge is the separator. -->
+    <div class="mx-auto max-w-7xl pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+      <!-- B60 (2026-08-22): intro paragraph and all three cards replaced wholesale. The old three
+           ("The Language Gap" / "Cognitive Load & Data Density" / "Operational Inefficiency") were
+           three ways of saying the same thing. The new set is a progression: the systems, the
+           manual workaround they forced, and the cost that workaround carried, which is what makes
+           the -8 min figure in "the impact" an answer to a question this page actually asked.
+           The paragraph carries the concrete image, so the cards deliberately do not restate it.
+           The 40-year constraint is deliberately NOT here, it is the constraint on the solution,
+           not the banker's problem, so it lives in "what we built". Copy approved 2026-08-21, see
+           ../../internal-mortgage-copy-draft.md station 2. Card grid/number/heading classes are
+           the site's existing recipe, unchanged, only the strings moved.
+      ROLLBACK (pre-B60 challenge body):
       <h2 class="reveal type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
       <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The internal banking dashboard bankers used every day spoke a different language than the clients they served. Dense, unprioritized tables and fragmented views meant no clear starting point, just a wall of data bankers had to manually cross-reference across screens, one login session at a time.</p>
-
       <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
         <div>
           <span class="type-label-sm stat-accent-green">01</span>
@@ -564,15 +1105,166 @@ a:hover .arrow { transform: translateX(4px); }
           <p class="type-body-md mt-2 text-secondary">No clear information hierarchy or intuitive navigation, driving high drop-offs and limiting the bank's ability to scale service quality.</p>
         </div>
       </div>
-
       <div class="reveal mx-auto mt-12 flex w-full max-w-2xl flex-col items-center gap-4">
-        <img src="challenge-before.jpg" alt="The original internal insurance dashboard: dense, unprioritized fields with no clear hierarchy." class="h-auto w-full rounded-xl shadow-lg">
+        <img loading="lazy" decoding="async" src="challenge-before.jpg" alt="The original internal insurance dashboard: dense, unprioritized fields with no clear hierarchy." class="h-auto w-full rounded-xl shadow-lg">
         <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">before</span>
       </div>
+      -->
+      <h2 class="reveal type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">A customer gets a mortgage offer and is asked to insure the property. To answer one question about that policy, a banker opens four systems: one for the loans inside the mortgage, one for who the borrowers are, one to log the call, and one for the insurance itself. Then they check that the policy is recorded correctly against the right loans. That last part was done on paper, with a calculator on the desk.</p>
+
+      <!-- Cards 2026-08-30: variant B (ghost numeral) from ../../card-explorations.html, see the
+           .ghost-card rule in the stylesheet for why. Previous plain-block version kept below as
+           an inert rollback. -->
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div class="ghost-card">
+          <span class="ghost-num">01</span>
+          <h3 class="type-headline-sm">Four systems, one question</h3>
+          <p class="type-body-md mt-2 text-secondary">Loans, properties, insurance and call history each lived somewhere else. Nothing connected them except the banker.</p>
+        </div>
+        <div class="ghost-card">
+          <span class="ghost-num">02</span>
+          <h3 class="type-headline-sm">Paper and a calculator</h3>
+          <p class="type-body-md mt-2 text-secondary">Checking coverage against the right loans was manual arithmetic. Every answer a customer got depended on a banker not making a mistake.</p>
+        </div>
+        <div class="ghost-card">
+          <span class="ghost-num">03</span>
+          <h3 class="type-headline-sm">A call that kept getting longer</h3>
+          <p class="type-body-md mt-2 text-secondary">Bankers read terms off the screen in the bank's own wording. Customers did not follow, so each banker improvised an explanation in their own words. Management's goal going in was simple: shorter calls, less banker time per case.</p>
+        </div>
+      </div>
+
+      <!-- ROLLBACK (pre-2026-08-30): plain blocks, small green numeral label above each heading.
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <div>
+          <span class="type-label-sm stat-accent-green">01</span>
+          <h3 class="type-headline-sm mt-2">Four systems, one question</h3>
+          <p class="type-body-md mt-2 text-secondary">Loans, properties, insurance and call history each lived somewhere else.</p>
+        </div>
+        <div>
+          <span class="type-label-sm stat-accent-green">02</span>
+          <h3 class="type-headline-sm mt-2">Paper and a calculator</h3>
+          <p class="type-body-md mt-2 text-secondary">Checking coverage against the right loans was manual arithmetic.</p>
+        </div>
+        <div>
+          <span class="type-label-sm stat-accent-green">03</span>
+          <h3 class="type-headline-sm mt-2">A call that kept getting longer</h3>
+          <p class="type-body-md mt-2 text-secondary">Bankers read terms off the screen in the bank's own wording.</p>
+        </div>
+      </div>
+      -->
+
+
+      <!-- Screenshot moved to variant G 2026-08-30, see the .shot-frame rule in the stylesheet.
+           Type weights are deliberately BELOW the section h2: that h2 is type-headline-md (1.5rem)
+           and the exploration file's own .shot-title was 1.6rem, which would have made this label
+           larger than the section it sits inside. Left label is type-title-md (1.125rem/600), one
+           step under the cards' own h3, so it reads as naming an artefact rather than opening a
+           new section. Right label is type-label-lg (0.875rem/500) in secondary, present enough to
+           be read but clearly the second voice.
+           The old "before" pill is gone, the left label carries that word instead.
+           Frame is 80% of the content column on desktop, full width below lg. At the max-w-7xl cap
+           that puts the image near 970px against a 1600px source, up from 672px, so it is still
+           downscaled and never upscaled.
+           Source replaced 2026-08-30: challenge-before.jpg had a white strip along its top edge,
+           which made the frame's top corners read as square while the bottom ones read as rounded.
+           That was an artefact of the export, not of the radius, so it was fixed at the source
+           rather than compensated for in CSS. The recapture lives with the rest of the media as
+           assets/10_challenge_before.webp. Note it is the one image on this page saved LOSSY
+           (q95): it is a capture of a legacy system rather than a clean modern UI, so it carries
+           real noise, and lossless cost 208KB against 66KB here. Every other screen on this page
+           is flat-colour UI where lossless is both smaller and exact, do not assume this file's
+           setting generalises.
+           Previous version kept below as an inert rollback. -->
+      <div class="reveal mx-auto mt-12 w-full lg:w-4/5">
+        <div class="shot-head">
+          <div class="type-title-md">The insurance system, before</div>
+          <div class="type-label-lg text-secondary">Insured sum as a bare number. Two dates, no duration.</div>
+        </div>
+        <div class="shot-frame">
+          <img width="1614" height="896" loading="lazy" decoding="async" src="assets/10_challenge_before.webp" alt="One of the four legacy systems: a Hebrew insurance data-entry form where the insured sum is typed as a bare number with no thousands separator, and the policy period is two date fields with no duration and no alert.">
+        </div>
+      </div>
+
+      <!-- ROLLBACK (pre-2026-08-30): bare centred screenshot at max-w-2xl with a "before" pill under it.
+      <div class="reveal mx-auto mt-12 flex w-full max-w-2xl flex-col items-center gap-4">
+        <img loading="lazy" decoding="async" src="challenge-before.jpg" alt="One of the four legacy systems." class="h-auto w-full rounded-xl shadow-lg">
+        <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">before</span>
+      </div>
+      -->
+
     </div>
   </section>
 
-  <!-- STRATEGY -->
+  <!-- WHAT WE BUILT (B60, 2026-08-22): replaces "the strategy" wholesale. The old section's
+       three Title-Case cards and its B20 three-image carousel are kept as an inert rollback
+       at the bottom of this section, below the new markup. The carousel's CSS (.strategy-slide
+       /.strategy-dot/.strategy-blob) and its JS are both left untouched in place: the JS is
+       already guarded by `if (strategyCarousel)`, so with the markup commented out it simply
+       no-ops, and restoring the old section is a markup swap with no other archaeology.
+       strategy-1-dashboard.jpg / strategy-2-insurance.jpg / strategy-3-loans.jpg stay on disk
+       as rollback assets even though nothing on the page references them any more.
+       Section id renamed strategy -> what-we-built: no nav or in-page link points at it (the
+       nav tabs go to homepage sections), and the fragment is visible in the address bar.
+       2026-08-30: renamed again, what we built -> "the mvp", and the id with it. The section was
+       never about the finished product, it is the insurance domain rebuilt as a web layer over
+       the legacy system. The full system is a later story and "after" belongs to that, not here,
+       which is why the screenshot's label reads MVP rather than after.
+       The earlier note here argued this section should stay prose because its three points are
+       one developing argument rather than three parallel problems. Overruled by Ofir 2026-08-30:
+       the blocks are cards in a row, same variant B ghost numeral as "the challenge", on the warm
+       bone surface rather than pale sage so the two sections are told apart by ground colour
+       instead of by layout.
+       2026-08-22, numbered points: prose alone dropped the site's numbered-point idiom that
+       every other case study uses. A first attempt put the number in a left gutter beside the
+       paragraph, which was wrong: the real idiom (see ../Credit-Cards/index.html, and the
+       About-section recipe in the skill's build-recipes) is a STACKED block, type-label-sm
+       number, then a short type-headline-sm heading, then a type-body-md description, in a
+       reveal-stagger grid with gap-8. The number never appears without a heading under it.
+       Consequence: the approved copy for this section is three headingless paragraphs, so the
+       three h3 headings below do not come from the copy draft. They are approved copy, confirmed by Ofir 2026-08-22.
+       Body copy is type-body-md, matching the idiom, not the type-body-lg used for the intro.
+       TRIAL SECTION: this pattern is live here only. Roll out to "the resistance", "what it
+       became", "the language" and "the impact" once Ofir has confirmed it live.
+       Copy approved 2026-08-21, see ../../internal-mortgage-copy-draft.md station 3. -->
+  <section id="mvp" class="bg-surface-alt px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl py-20 lg:py-28">
+      <h2 class="reveal type-headline-md max-w-2xl">the mvp<span class="brand-dot">.</span></h2>
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">We started with insurance. One domain out of four, and the one where the four systems collided.</p>
+
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div class="ghost-card ghost-card-bone">
+          <span class="ghost-num">01</span>
+          <h3 class="type-headline-sm">A layer, not a replacement</h3>
+          <p class="type-body-md mt-2 text-secondary">Nothing underneath was replaced. Those systems are decades old and still running today, so what we built is a layer that reads from them, works out what belongs with what, and puts it on one screen. That constraint shaped the design more than any preference of mine did.</p>
+        </div>
+        <div class="ghost-card ghost-card-bone">
+          <span class="ghost-num">02</span>
+          <h3 class="type-headline-sm">A customer contains their loans</h3>
+          <p class="type-body-md mt-2 text-secondary">In the old system a loan lived in one place and the people who took it lived behind a different tab. The banker held the connection between them in his head. In the new screen a customer contains their loans, and a loan opens to the people on it. The relationship is not something you look up. It is where the information sits.</p>
+        </div>
+        <div class="ghost-card ghost-card-bone">
+          <span class="ghost-num">03</span>
+          <h3 class="type-headline-sm">Actions where the information is</h3>
+          <p class="type-body-md mt-2 text-secondary">Actions moved to where the information already was: add a policy from the loans header, change borrowers from the borrower list. And amounts got commas. The old screen asked a banker to read nine hundred thousand shekels as <span class="font-medium text-primary">900000</span> and count the digits himself.</p>
+        </div>
+      </div>
+
+      <div class="reveal mx-auto mt-12 w-full lg:w-4/5">
+        <div class="shot-head">
+          <div class="type-title-md">MVP, insurance system</div>
+          <div class="type-label-lg text-secondary">Amounts with separators. A loan opens to the people on it.</div>
+        </div>
+        <div class="shot-frame">
+          <img width="1964" height="1473" loading="lazy" decoding="async" src="assets/8_mvp.webp" alt="The shipped MVP insurance screen inside the bank's own environment: one customer, their loans listed with formatted amounts, and a loan expanded in place to show the borrowers on it.">
+        </div>
+      </div>
+
+      <p class="reveal type-body-lg mt-12 max-w-prose text-secondary">It shipped in three months, to every banker, with the old system still running beside it. Once it held up, I went back to management and proposed building the rest.</p>
+    </div>
+  </section>
+
+  <!-- ROLLBACK (pre-B60 "the strategy" section, including the B20 carousel markup):
   <section id="strategy" class="bg-surface-alt px-4 lg:px-20">
     <div class="mx-auto max-w-7xl py-20 lg:py-28">
       <h2 class="reveal type-headline-md max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
@@ -598,9 +1290,9 @@ a:hover .arrow { transform: translateX(4px); }
 
       <div class="reveal mx-auto mt-12 flex w-full max-w-2xl flex-col items-center gap-4">
         <div id="strategyCarousel" class="relative w-full overflow-hidden rounded-xl shadow-lg" style="aspect-ratio: 1510 / 734;">
-          <img src="strategy-1-dashboard.jpg" alt="The redesigned control panel: prioritized metrics and tasks at a glance." class="strategy-slide absolute inset-0 h-full w-full object-cover" data-active="true">
-          <img src="strategy-2-insurance.jpg" alt="A single client's insurance record, structured and easy to scan." class="strategy-slide absolute inset-0 h-full w-full object-cover">
-          <img src="strategy-3-loans.jpg" alt="The full loan book in one guided, filterable view." class="strategy-slide absolute inset-0 h-full w-full object-cover">
+          <img loading="lazy" decoding="async" src="strategy-1-dashboard.jpg" alt="The redesigned control panel: prioritized metrics and tasks at a glance." class="strategy-slide absolute inset-0 h-full w-full object-cover" data-active="true">
+          <img loading="lazy" decoding="async" src="strategy-2-insurance.jpg" alt="A single client's insurance record, structured and easy to scan." class="strategy-slide absolute inset-0 h-full w-full object-cover">
+          <img loading="lazy" decoding="async" src="strategy-3-loans.jpg" alt="The full loan book in one guided, filterable view." class="strategy-slide absolute inset-0 h-full w-full object-cover">
         </div>
         <div id="strategyDots" class="relative flex items-center gap-3">
           <button type="button" class="strategy-dot" data-index="0" aria-label="Show screen 1 of 3" aria-current="true"></button>
@@ -611,6 +1303,438 @@ a:hover .arrow { transform: translateX(4px); }
       </div>
     </div>
   </section>
+  -->
+
+  <!-- THE RESISTANCE (B60, 2026-08-22): brand new section, no predecessor to roll back to.
+       Strongest material on the page. Deliberately does NOT claim the veterans then adopted
+       the product: there is no number for that and inventing one would be a fabrication, so
+       the section ends on the design decision, not on an outcome.
+       Media is 9_keyboard.webp, a 1270x170 crop cut from 1_banker_dashboard.webp (the search
+       field plus the keyboard hint row directly beneath it). Cropped to its own file rather
+       than CSS-cropping the full 235 KB dashboard, so the page loads 11 KB for what it shows,
+       and so the full dashboard stays unseen until "what it became". The crop sits right after
+       the "on a screenshot it reads like a power-user detail" line, which is what sets it up,
+       so it carries no pill or caption: "before"/"after" are doing specific work on the two
+       real captures above and diluting that idiom here would cost more than it adds.
+       rounded-md, not the rounded-xl used on the two full screenshots: at 1rem radius on an
+       89px-tall band the corners start reading as a pill rather than as a screenshot.
+       Copy approved 2026-08-21, see ../../internal-mortgage-copy-draft.md station 4. -->
+  <section id="resistance" class="px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl py-20 lg:py-28">
+      <h2 class="reveal type-headline-md max-w-2xl">the resistance<span class="brand-dot">.</span></h2>
+
+      <!-- Both paragraphs are substantive, neither is scene-setting, so this section has no
+           unnumbered intro line: the blocks start straight after the heading. h3 headings are approved copy, confirmed by Ofir 2026-08-22. -->
+      <!-- 2026-08-30: two cards at 50:50 on the white + hairline surface, Ofir's call. Third
+           surface in three consecutive sections (sage, bone, white) and the quietest of them, so
+           nothing on the card competes with the keyboard row underneath, which is the actual
+           evidence in this section. Two cards, not three, so this is the one row where the ghost
+           numeral's fixed bottom padding has to absorb a real length difference: block 01 runs
+           roughly three times block 02. -->
+      <div class="reveal-stagger mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div class="ghost-card ghost-card-white">
+          <span class="ghost-num">01</span>
+          <h3 class="type-headline-sm">The complaint was fair</h3>
+          <p class="type-body-md mt-2 text-secondary">Not everyone moved. The old system kept running beside the new one and nobody was forced to switch, so the bankers who had been there longest simply stayed where they were. The reason surprised me. The legacy systems are keyboard systems. Years of muscle memory, no mouse, no looking down at your hands. Our version asked them to reach for a mouse, and it made them slower at a job they were already fast at. That is not fear of change. That is a fair complaint.</p>
+        </div>
+        <div class="ghost-card ghost-card-white">
+          <span class="ghost-num">02</span>
+          <h3 class="type-headline-sm">Designed for their hands</h3>
+          <p class="type-body-md mt-2 text-secondary">So we designed for their hands. Slash opens search. Escape clears every filter. Command-K goes anywhere in the system. Arrow keys move between customer records without closing the panel. On a screenshot it reads like a power-user detail. It was the answer to the complaint.</p>
+        </div>
+      </div>
+
+      <!-- Keyboard row moved into the G frame 2026-08-30 at the same 80% width as the full screens
+           above, so the three artefacts on this page read as one family. Worth watching: this is a
+           13:1 band, so at 982px wide the image is only about 74px tall and the frame about 116px.
+           A 36px radius on a 116px-tall box is nearly a third of its height and can start reading
+           as a pill rather than as a frame, which is the same objection the old rounded-md note
+           raised, just at a different scale. If it does, the fix is more vertical padding in the
+           frame rather than a smaller radius, since the radius is what ties it to the other two. -->
+      <div class="reveal mx-auto mt-12 w-full lg:w-4/5">
+        <div class="shot-head">
+          <div class="type-title-md">Full system, search row</div>
+          <div class="type-label-lg text-secondary">The shortcuts sit on the screen, not in a manual.</div>
+        </div>
+        <div class="shot-frame">
+          <img width="1252" height="95" loading="lazy" decoding="async" src="assets/9_keyboard.webp" alt="The dashboard's keyboard hint row sitting beside the search field it acts on: press slash to search, escape to clear filters, command-K for quick search.">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT IT BECAME (B60, 2026-08-22): brand new section, no predecessor to roll back to.
+       The one section allowed more than one screen, per the copy draft's standing guardrail.
+       The pair (1_banker_dashboard / 2_underwriter_approval_desk) is the strongest single proof
+       in the case study: same two files the banker marks Pending Underwriter (MF-2026-1005,
+       MF-2026-1019) appear in the underwriter's own queue, and the roles differ in PERMISSIONS,
+       not just data (Analytics nav item + Audit Trail badge present for one, absent for the
+       other). Both captures were taken at the same zoom/width; the underwriter was 2468 tall
+       against the banker's 2434, and the difference was 40 rows of flat #f4f5f7 below the
+       pagination in both, so it was cropped to 2434. No content cut, full-height original kept
+       as the .original.png. Do not re-crop either one without re-checking the other.
+       Pair runs at full max-w-7xl width, which makes this the widest section on the page. That
+       is deliberate, it is the payoff.
+       The drawer (3_quick_look) is 806x2432, a 1:3 ratio that does not work centered like the
+       other screens, so it uses the site's existing 6/6 text/media split instead, sized by
+       width on a max-w-[18rem] wrapper. No pill: the paragraph beside it names what it is.
+       2026-08-22, split fix: was lg:items-center at max-w-[20rem] and Ofir flagged it as weird.
+       The cause was items-center, not the width: it vertically centred ~400px of text against a
+       ~966px image, leaving a large void above the text that read as broken. Now lg:items-start,
+       so text and image share a top line and the drawer simply continues down the page, which is
+       an ordinary editorial layout rather than a misalignment. Width also came down one step to
+       ~288x869 to shorten the overhang. A 1:3 image cannot be height-matched to a 400px text
+       block without shrinking to ~133px wide and becoming unreadable, so do not chase that.
+       Copy approved 2026-08-21, see ../../internal-mortgage-copy-draft.md station 5. -->
+  <section id="what-it-became" class="bg-surface-alt px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl py-20 lg:py-28">
+      <h2 class="reveal type-headline-md max-w-2xl">what it became<span class="brand-dot">.</span></h2>
+      <!-- 2026-08-30: "in four languages" added here, and deliberately as a punch line rather than
+           as an explanation. The reader has just seen two Hebrew screens (the legacy system, then
+           the MVP) and is about to see English ones, so without a cue the natural inference is that
+           the redesign moved the product off Hebrew. It did not. Naming the four languages here
+           kills that inference at the moment it forms, two stations before "the language" gets to
+           answer it properly.
+           What it must NOT do is explain that the screens below are the English locale. That reads
+           as apologising for Hebrew, which is the opposite of this site's standing framing: four
+           languages across two writing directions is the capability, not the caveat. -->
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The MVP was one screen doing one job. What management approved was <mark class="copy-mark">a system</mark>, in <mark class="copy-mark">four languages</mark>.</p>
+
+      <!-- h3 headings are approved copy, confirmed by Ofir 2026-08-22.
+           2026-08-30: all four numbered blocks moved up here into one 2x2 card grid, Ofir's call.
+           They used to be split, 01 and 02 above the role pair and 03 and 04 beside the drawer,
+           with the numbering deliberately running across both. Holding them together as one block
+           says the same thing more plainly, and it frees the drawer row to be purely media.
+           Surface is the base sage, not bone or white: those two are spoken for by "the mvp" and
+           "the resistance", and this section sits on bg-surface-alt where a warm bone card would
+           read as a repeat of the mvp section two scrolls earlier. -->
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div class="ghost-card">
+          <span class="ghost-num">01</span>
+          <h3 class="type-headline-sm">Four roles, not four filters</h3>
+          <p class="type-body-md mt-2 text-secondary">A banker opens their own pipeline. An underwriter opens a desk of exceptions. Operations and a system administrator each get a view of their own, built around what they are responsible for. The banker has no analytics. The underwriter does.</p>
+        </div>
+        <div class="ghost-card">
+          <span class="ghost-num">02</span>
+          <h3 class="type-headline-sm">One file, moving between people</h3>
+          <p class="type-body-md mt-2 text-secondary">The two views are the same file at different moments. A banker sends it up, and it lands in the underwriter's queue under the same number. You cannot hand a file between four people while it lives in four places.</p>
+        </div>
+        <div class="ghost-card">
+          <span class="ghost-num">03</span>
+          <h3 class="type-headline-sm">Four systems in one panel</h3>
+          <p class="type-body-md mt-2 text-secondary">Open a file and they arrive together. It works out what the loan requires against what the policies actually cover, and names the borrower who is short. That is the paper and the calculator, gone.</p>
+        </div>
+        <div class="ghost-card">
+          <span class="ghost-num">04</span>
+          <h3 class="type-headline-sm">Every change is signed</h3>
+          <p class="type-body-md mt-2 text-secondary">Every edit carries who made it, when, and what it changed from and to. When a file moves between four people, that history is how the next one picks it up. Audit Trail is a top-level item, and not every role can open it.</p>
+        </div>
+      </div>
+
+      <!-- 2026-08-30: the role pair became a single G-framed screen at the same 80% width as every
+           other artefact on the page, and the underwriter screen is HIDDEN TEMPORARILY at Ofir's
+           request while the layout is worked out. This is a pause, not a removal.
+           Two things to know before this state is left alone or shipped: the pair was the strongest
+           single proof in the case study, because the same two file numbers (MF-2026-1005,
+           MF-2026-1019) that the banker marks Pending Underwriter reappear in the underwriter's own
+           queue, and the two roles differ in PERMISSIONS rather than in data (Analytics nav item
+           and Audit Trail badge present for one, absent for the other). With only the banker screen
+           visible, that proof is asserted by cards 01 and 02 and shown by nothing. The right-hand
+           label below is written to set the handoff up rather than to claim it is proven.
+           The old caption pills are gone, "branch banker" moved into the left label instead. -->
+      <!-- SCREEN SWITCHER, 2026-08-30. Replaces the separate banker frame, the temporarily hidden
+           underwriter frame, and the two-image drawer row, all of which are now tabs in here.
+           Third use on this site of the NavItem-menu-plus-media pattern, after Digital-Loans'
+           purpose picker and Design-System's icon categories, so it is ported rather than invented.
+           Tab names are all nouns answering "what am I looking at", never a mix of roles, screens
+           and components: an earlier list read banker / underwriter / drawer / drawer / analytics,
+           where the first two named a person, the last named a screen and the middle two named a
+           component, so a reader had no idea what they were choosing between. Splitting the drawer
+           into Coverage and Audit trail works because those really are two different things rather
+           than one thing twice, and it makes the word "drawer" unnecessary.
+           sm:items-start is load-bearing: without it the menu stretches to whatever the current
+           screen's height is, and since the screens run 477px to 897px tall the menu would resize
+           on every click. Top-aligned, it keeps its own natural height and never moves.
+           No sticky menu, Ofir's explicit call: with the tallest screen a reader has to scroll back
+           up to switch, and that is accepted as the price of keeping this simple.
+           Widths: the menu is 224px, the gap 24px, so the frame lands near 1032px inside the
+           max-w-7xl column, which is within 10px of the 1024px the three static G frames use. The
+           four artefacts on this page therefore read as the same width without that being forced.
+           The heading above is stacked (title, then a line of text, then the screens) rather than
+           the G frame's two-part baseline head. A G head names one fixed artefact on its left and
+           says what to notice on its right, and neither of those is true when the artefact changes
+           on click. Same shape ../Digital-Loans uses above its own picker. It is also deliberately
+           general, per Ofir: this is a taste of the system, not an argument about roles. The role
+           each screen belongs to is already made by cards 01 to 04 above.
+           It sits above the whole row, not above the frame alone, because it introduces the menu
+           just as much as the media.
+           Coverage and Audit trail are the same screen at two scroll positions, so they share a
+           file size (3024x1468) and the frame does not resize when moving between them. The other
+           three do resize. -->
+      <h3 class="reveal type-headline-sm mt-16">Inside the system<span class="brand-dot">.</span></h3>
+      <p class="reveal type-body-md mt-2 max-w-prose text-secondary">A few screens, and one file moving through them.</p>
+
+      <div class="reveal mt-6 flex w-full flex-col gap-6 sm:flex-row sm:items-start" id="screenSwitcher">
+        <nav aria-label="Screens" class="rounded-lg border border-border-default bg-card p-2 sm:w-56 sm:shrink-0">
+          <ul role="tablist" aria-orientation="vertical" class="flex list-none flex-row gap-1 overflow-x-auto p-0 sm:flex-col sm:overflow-visible" id="screenMenu">
+            <li role="presentation"><button type="button" role="tab" id="tab-pipeline" aria-controls="slide-pipeline" aria-selected="true" class="nav-item" data-screen="pipeline">
+              <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
+              <span class="nav-item__label">Pipeline</span>
+            </button></li>
+            <li role="presentation"><button type="button" role="tab" id="tab-approvals" aria-controls="slide-approvals" aria-selected="false" tabindex="-1" class="nav-item" data-screen="approvals">
+              <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+              <span class="nav-item__label">Approvals</span>
+            </button></li>
+            <li role="presentation"><button type="button" role="tab" id="tab-coverage" aria-controls="slide-coverage" aria-selected="false" tabindex="-1" class="nav-item" data-screen="coverage">
+              <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+              <span class="nav-item__label">Coverage</span>
+            </button></li>
+            <li role="presentation"><button type="button" role="tab" id="tab-audit" aria-controls="slide-audit" aria-selected="false" tabindex="-1" class="nav-item" data-screen="audit">
+              <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+              <span class="nav-item__label">Audit trail</span>
+            </button></li>
+            <li role="presentation"><button type="button" role="tab" id="tab-analytics" aria-controls="slide-analytics" aria-selected="false" tabindex="-1" class="nav-item" data-screen="analytics">
+              <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+              <span class="nav-item__label">Analytics</span>
+            </button></li>
+          </ul>
+        </nav>
+
+        <div class="min-w-0 sm:flex-1">
+          <!-- data-ratio is each capture's real pixel width/height. The script sizes the stage from
+               it, so keep it in step with the file if a screen is ever recaptured at a new crop. -->
+          <div class="shot-frame shot-frame-control">
+            <div class="shot-stage" id="screenStage">
+              <div class="shot-slide" id="slide-pipeline" role="tabpanel" aria-labelledby="tab-pipeline" data-ratio="3024/2350">
+                <img width="3024" height="2350" decoding="async" src="assets/1_banker_dashboard.webp" alt="The branch banker's pipeline: the files they own in one branch, with two of them marked Pending Underwriter.">
+              </div>
+              <div class="shot-slide" id="slide-approvals" role="tabpanel" aria-labelledby="tab-approvals" data-ratio="3024/2350" hidden>
+                <img width="3024" height="2350" decoding="async" src="assets/2_underwriter_approval_desk.webp" alt="The underwriter's approval desk: the same two file numbers waiting on a decision, alongside a third from another branch, with Analytics and an Audit Trail badge the banker does not have.">
+              </div>
+              <div class="shot-slide" id="slide-coverage" role="tabpanel" aria-labelledby="tab-coverage" data-ratio="3024/1468" hidden>
+                <img width="3024" height="1468" decoding="async" src="assets/3_quick_look_full.webp" alt="One file opened from the list, with the borrower drawer over the screen showing required against covered coverage and the gap computed, and the queue still visible behind it.">
+              </div>
+              <div class="shot-slide" id="slide-audit" role="tabpanel" aria-labelledby="tab-audit" data-ratio="3024/1468" hidden>
+                <img width="3024" height="1468" decoding="async" src="assets/11_audit_trail.webp" alt="The same drawer scrolled to its audit trail: each change signed with who made it, when, and what it changed from and to.">
+              </div>
+              <div class="shot-slide" id="slide-analytics" role="tabpanel" aria-labelledby="tab-analytics" data-ratio="3024/2762" hidden>
+                <img width="3024" height="2762" decoding="async" src="assets/7_analytics.webp" alt="The portfolio view: the wider picture an underwriter can open and a branch banker cannot.">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROLLBACK (pre-2026-08-30): the two screens side by side at full max-w-7xl width with caption pills.
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div class="flex flex-col items-center gap-4">
+          <img loading="lazy" decoding="async" src="assets/1_banker_dashboard.webp" alt="The branch banker's pipeline." class="h-auto w-full rounded-xl shadow-lg">
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">branch banker</span>
+        </div>
+        <div class="flex flex-col items-center gap-4">
+          <img loading="lazy" decoding="async" src="assets/2_underwriter_approval_desk.webp" alt="The underwriter's approval desk." class="h-auto w-full rounded-xl shadow-lg">
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">underwriter</span>
+        </div>
+      </div>
+      -->
+
+
+      <!-- Drawer block restructured 2026-08-30 after the demo was recaptured. Two shots now, not one:
+           3_quick_look_full is the whole screen with the drawer open and unscrolled (context, the queue
+           still visible behind it), and 3_quick_look is the drawer alone captured at full height with
+           its scroll released (detail, 430 CSS px wide at DPR 2, so it renders near 1:1 here).
+           Their native ratios are 2.06:1 and 0.375:1, so they cannot share a row at equal height
+           without one of them becoming unreadable. The wide shot sits in the left column and the
+           tall drawer runs down the right.
+           2026-08-30, second pass: the 03/04 prose that used to sit under the wide shot moved up
+           into the section's 2x2 card grid, so this row is now purely media. That removed roughly
+           330px from the left column, which is why the alignment changed from lg:items-start to
+           lg:items-center. With text in the column, top-aligning kept the reading order honest.
+           With only an image there, centring splits the leftover height above and below the wide
+           shot instead of piling it all underneath, which reads as a deliberate composition rather
+           than as a column that ran out. Note this reverses the 2026-08-22 fix that moved this row
+           from items-center to items-start; that fix was right for a column containing text and is
+           wrong now that the text is gone. Do not "restore" it without putting the prose back too.
+           A 1:2.7 image cannot be height-matched to a 2:1 one without shrinking to roughly 185px
+           wide and becoming unreadable, so do not chase that.
+           The drawer is captured square on all four corners and fully opaque, so the rounded-xl
+           class is what gives it its radius, unlike the earlier capture which carried real alpha
+           on two corners.
+           Previous single-drawer version kept below as an inert rollback.
+           SUPERSEDED 2026-08-30 by the screen switcher above. The tall standalone drawer
+           (3_quick_look, 860x2292) is retired entirely, Ofir's call: at any width that fits the
+           page it is either unreadable or absurdly long. 3_quick_look_full survives as the
+           Coverage tab, since it shows the same drawer in context with the queue behind it. -->
+
+      <!-- ROLLBACK (pre-2026-08-30): text left, single drawer right at max-w-[18rem].
+      <div class="mt-16 grid grid-cols-1 gap-12 lg:mt-20 lg:grid-cols-12 lg:items-start">
+        <div class="order-1 lg:order-1 lg:col-span-6">
+          <div class="reveal-stagger grid grid-cols-1 gap-8">
+            <div>
+              <span class="type-label-sm stat-accent-green">03</span>
+              <h3 class="type-headline-sm mt-2">Four systems in one panel</h3>
+              <p class="type-body-md mt-2 text-secondary">Open any file and those four systems arrive in one panel.</p>
+            </div>
+            <div>
+              <span class="type-label-sm stat-accent-green">04</span>
+              <h3 class="type-headline-sm mt-2">Every change is signed</h3>
+              <p class="type-body-md mt-2 text-secondary">And every change is signed. Who did it, when, and what it changed from and to.</p>
+            </div>
+          </div>
+        </div>
+        <div class="order-2 lg:order-2 lg:col-span-6">
+          <div class="reveal mx-auto w-full max-w-[18rem]">
+            <img loading="lazy" decoding="async" src="assets/3_quick_look.webp" alt="The borrower drawer for one file." class="h-auto w-full rounded-xl shadow-lg">
+          </div>
+        </div>
+      </div>
+      -->
+
+    </div>
+  </section>
+
+  <!-- THE LANGUAGE (B60, 2026-08-22): brand new section, no predecessor to roll back to.
+       The three screens are the SAME view in three scripts, not three different screens. That
+       distinction is the whole argument: if these were three different screens the section would
+       prove nothing.
+       Trio revised 2026-08-30 (Ofir's call) to Hebrew / Arabic / Russian, dropping the English
+       tile. Every other screen on this page is already in English, so English reads as the implied
+       fourth language without spending a column on it, and the three that remain are the ones a
+       reader cannot infer. Arabic plus Hebrew still carries the right-to-left claim, which is the
+       harder one, and Russian now earns its place by covering Cyrillic, a third script rather than
+       a third language.
+       All three files are natively 3024x1468, identical, because they were recaptured together
+       from the same viewport. So there is no cropping here at all: the earlier
+       aspect-[3022/2408] + object-cover wrapper existed only to force three different native
+       ratios into one row and is gone. Radius and shadow moved onto the img itself.
+       If any of these three is ever recaptured, recapture all three in the same pass or this
+       section silently goes back to needing a crop.
+       Copy approved 2026-08-21, see ../../internal-mortgage-copy-draft.md station 6. -->
+  <!-- Section split into two children on purpose (2026-08-30): the text keeps the max-w-7xl column,
+       the marquee below it is a direct child of <section> so its negative margins can cancel this
+       element's own padding and reach the viewport edges. Putting it back inside the wrapper would
+       silently cap it at 1280px. -->
+  <section id="language" class="px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl pt-20 lg:pt-28">
+      <h2 class="reveal type-headline-md max-w-2xl">the language<span class="brand-dot">.</span></h2>
+
+      <!-- The first paragraph is scene-setting, so it stays an unnumbered type-body-lg intro
+           (same shape as "the challenge" and "what we built") and the numbered blocks run 01-03
+           from the remaining three. h3 headings are approved copy, confirmed by Ofir 2026-08-22. -->
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">A banker reads a term off the screen and says it to the customer. The customer does not know what it means. The banker explains it in their own words, and the next banker explains it differently. That is not a training problem. It is a screen problem.</p>
+
+      <!-- Cards 2026-08-30. Bone again, the second use after "the mvp": with sage, bone and white
+           each already spoken for, a fourth surface would be a new colour decision rather than a
+           reuse, and these two sections sit far enough apart to not read as a repeat. -->
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div class="ghost-card ghost-card-bone">
+          <span class="ghost-num">01</span>
+          <h3 class="type-headline-sm">Rewriting what is read aloud</h3>
+          <p class="type-body-md mt-2 text-secondary">So we rewrote the terms bankers read aloud into the words customers already use. Nothing changed in the documents, the forms, or the systems underneath. Only what appears on screen. Inside a bank that distinction is the whole negotiation, and it took a long one with Legal to put the line in the right place.</p>
+        </div>
+        <div class="ghost-card ghost-card-bone">
+          <span class="ghost-num">02</span>
+          <h3 class="type-headline-sm">Four languages, unasked</h3>
+          <p class="type-body-md mt-2 text-secondary">Then I proposed something nobody asked for. Run the entire interface in four languages: Hebrew, English, Arabic and Russian. A banker works in theirs, and the customer sitting across from them hears the terms in theirs, with nobody translating a financial term on the spot.</p>
+        </div>
+        <div class="ghost-card ghost-card-bone">
+          <span class="ghost-num">03</span>
+          <h3 class="type-headline-sm">AI translated, bankers validated</h3>
+          <p class="type-body-md mt-2 text-secondary">I translated with AI, then sat with bankers who speak each language natively and went through it line by line. The AI was fast. They were the ones who caught what would not have survived a real conversation with a customer.</p>
+        </div>
+      </div>
+
+      <!-- ROLLBACK (2026-08-30, one large Hebrew screen plus three corner crops in a column). Kept
+           because the arithmetic in it was real and may be wanted again: the columns were 763fr and
+           477fr, and the crops were 1500x336 so that three of them plus two 24px gaps ended level
+           with the large screen. It was replaced because the crops could not be both legible and
+           height-matched, not because the maths was wrong.
+      <div class="reveal-stagger lang-layout mt-12">
+        <div class="lang-shot">
+          <img loading="lazy" decoding="async" src="assets/4_hebrew.webp" alt="The banker dashboard in Hebrew." class="h-auto w-full rounded-xl shadow-lg">
+          <span class="lang-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Hebrew</span></span>
+        </div>
+        <div class="lang-stack">
+          <div class="lang-shot"><img src="assets/12_english.webp" alt="" class="h-auto w-full rounded-xl shadow-lg"></div>
+          <div class="lang-shot"><img src="assets/13_lang_ar.webp" alt="" class="h-auto w-full rounded-xl shadow-lg"></div>
+          <div class="lang-shot"><img src="assets/14_lang_ru.webp" alt="" class="h-auto w-full rounded-xl shadow-lg"></div>
+        </div>
+      </div>
+      -->
+
+      <!-- ROLLBACK (pre-2026-08-30): three full screens across, Hebrew / Arabic / Russian.
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div class="flex flex-col items-center gap-4">
+          <img loading="lazy" decoding="async" src="assets/4_hebrew.webp" alt="The banker dashboard in Hebrew." class="h-auto w-full rounded-xl shadow-lg">
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Hebrew</span>
+        </div>
+        <div class="flex flex-col items-center gap-4">
+          <img loading="lazy" decoding="async" src="assets/6_arabic.webp" alt="The same screen in Arabic." class="h-auto w-full rounded-xl shadow-lg">
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Arabic</span>
+        </div>
+        <div class="flex flex-col items-center gap-4">
+          <img loading="lazy" decoding="async" src="assets/5_russian.webp" alt="The same screen again in Russian." class="h-auto w-full rounded-xl shadow-lg">
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Russian</span>
+        </div>
+      </div>
+      -->
+
+    </div>
+
+    <!-- All four tiles are real captures at the same viewport, 3024x1468, so every tile is the
+         same screen and the same size and nothing has to be scaled to match.
+         The second set of four is decorative repetition, so it is aria-hidden and its images carry
+         empty alt text. A screen reader hears each language once. -->
+    <!-- All four tiles are real captures at the same viewport, 3024x1468, so every tile is the
+         same screen and the same size and nothing has to be scaled to match.
+         Order is English, Hebrew, Russian, Arabic (Ofir, 2026-08-30): it opens in the language a
+         visitor is already reading the page in, then moves outward through the other three.
+         The second set of four is decorative repetition, so it is aria-hidden and its images carry
+         empty alt text. A screen reader hears each language once. -->
+    <div class="reveal lang-bleed mt-12 mb-8 lg:mb-14">
+      <div class="marquee-wrap">
+        <div class="marquee">
+          <div class="marquee-track">
+          <div class="marquee-tile">
+            <img width="3024" height="1468" decoding="async" src="assets/12_english.webp" alt="The banker dashboard in English, reading left to right.">
+            <span class="lang-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">English</span></span>
+          </div>
+          <div class="marquee-tile">
+            <img width="3024" height="1468" decoding="async" src="assets/4_hebrew.webp" alt="The same screen in Hebrew, with the entire layout mirrored to read right to left.">
+            <span class="lang-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Hebrew</span></span>
+          </div>
+          <div class="marquee-tile">
+            <img width="3024" height="1468" decoding="async" src="assets/5_russian.webp" alt="The same screen in Russian, back to left to right, in Cyrillic.">
+            <span class="lang-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Russian</span></span>
+          </div>
+          <div class="marquee-tile">
+            <img width="3024" height="1468" decoding="async" src="assets/6_arabic.webp" alt="The same screen in Arabic, right to left again, in a third script.">
+            <span class="lang-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Arabic</span></span>
+          </div>
+
+          <div class="marquee-tile marquee-dup" aria-hidden="true">
+            <img width="3024" height="1468" decoding="async" src="assets/12_english.webp" alt="">
+            <span class="lang-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">English</span></span>
+          </div>
+          <div class="marquee-tile marquee-dup" aria-hidden="true">
+            <img width="3024" height="1468" decoding="async" src="assets/4_hebrew.webp" alt="">
+            <span class="lang-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Hebrew</span></span>
+          </div>
+          <div class="marquee-tile marquee-dup" aria-hidden="true">
+            <img width="3024" height="1468" decoding="async" src="assets/5_russian.webp" alt="">
+            <span class="lang-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Russian</span></span>
+          </div>
+          <div class="marquee-tile marquee-dup" aria-hidden="true">
+            <img width="3024" height="1468" decoding="async" src="assets/6_arabic.webp" alt="">
+            <span class="lang-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Arabic</span></span>
+          </div>
+          </div>
+        </div>
+        <div class="marquee-fade marquee-fade-start" aria-hidden="true"></div>
+        <div class="marquee-fade marquee-fade-end" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
 
   <!-- IMPACT: added 2026-08-12, B28/B29. First real Impact/Proof section this case
        study has ever had. Same 2-column pattern as ../Digital-Loans/'s "the proof"
@@ -618,6 +1742,90 @@ a:hover .arrow { transform: translateX(4px); }
        just one bullet since only one qualitative point plus one hard number exist
        for this project (career-master.md), no invented padding to fill a second
        or third bullet. -->
+  <!-- B60 (2026-08-22): body rewritten to the approved copy. The two numbered points became
+       three prose paragraphs; the two-column shape and the big -8 min display on the right are
+       kept, unchanged, because this section has no screen and the numeral is the only thing
+       anchoring it visually before the text-only closing section.
+       CONFIDENTIALITY, do not "helpfully" improve this: publish the absolute 8-minute drop OR a
+       percentage, NEVER both, and never the baseline. The two together recover a confidential
+       figure arithmetically. See career-master.md's hard rule on this metric. No percentage, no
+       baseline, and no before-and-after pair for this number, anywhere, ever.
+       The third paragraph is the honesty beat and it is deliberate: it says the goal was measured
+       before the project but the pitch to build the rest was not. Per the copy draft, if anything
+       in this section has to go, cut that paragraph, do not soften it.
+       Background changed white -> bg-surface-alt. NOT a copy change: with five B60 sections above
+       it the page now alternates white/tinted all the way down, and leaving this white would put
+       three white sections in a row at the end. Revert this one class if you disagree.
+       Copy approved 2026-08-21, see ../../internal-mortgage-copy-draft.md station 7. -->
+  <section id="impact" class="bg-surface-alt px-4 lg:px-20">
+    <div class="mx-auto max-w-7xl py-20 lg:py-28">
+      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+        <div class="lg:col-span-6">
+          <h2 class="reveal type-headline-md max-w-2xl">the impact<span class="brand-dot">.</span></h2>
+          <!-- First paragraph stays an unnumbered type-body-lg intro: it states the metric, and
+               it sits directly opposite the -8 min display in the right column. h3 headings are approved copy, confirmed by Ofir 2026-08-22. -->
+          <p class="reveal type-body-lg mt-6 text-secondary">Management was already measuring how long a mortgage call took, and wanted it shorter. Average call handling time dropped by eight minutes.</p>
+
+          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
+            <div>
+              <span class="type-label-sm stat-accent-green">01</span>
+              <h3 class="type-headline-sm mt-2">Not a tool they open occasionally</h3>
+              <p class="type-body-md mt-2 text-secondary">More than 150 bankers now use the system as their daily workspace, not as something they open occasionally. And they reported something the metric does not capture: the shorter calls felt better. Fewer moments of friction, more of an actual conversation.</p>
+            </div>
+            <div>
+              <span class="type-label-sm stat-accent-green">02</span>
+              <h3 class="type-headline-sm mt-2">Persuading is not proving</h3>
+              <p class="type-body-md mt-2 text-secondary">The goal was measured before we started. What I took to management when I asked to build the rest was not. That was banker feedback and a product manager who was convinced. The number came afterwards.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2026-08-30: the single big "-8 min" display became a three-card panel, and the inline
+             style="" it used went with it. That style set both size and colour directly on the
+             element, and its colour only ever resolved because --color-button happened to be
+             referenced elsewhere in the stylesheet; on this build a token used only inline is never
+             emitted at all. Everything here is a real class.
+             The third figure is 4 systems into 1, and it is the reason the row works: the page
+             opens on a banker holding four systems open to answer one question, so closing the
+             impact on 4 into 1 pays that off. An earlier plan put "4 languages" in this slot and it
+             was dropped, it describes what was built rather than what resulted, and the section
+             above it already spends a full-bleed marquee on exactly that claim.
+             CONFIDENTIALITY: the -8 min card must never gain a percentage or a baseline. See the
+             section comment above and career-master.md.
+             Old markup kept as an inert rollback. -->
+        <div class="lg:col-span-6">
+          <div class="reveal-stagger grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div class="stat-card">
+              <div class="stat-fig">4 &rarr; 1</div>
+              <div class="stat-lbl">Systems</div>
+              <div class="stat-exp">Four legacy systems answered from one screen, with all four still running underneath.</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-fig">150+</div>
+              <div class="stat-lbl">Daily users</div>
+              <div class="stat-exp">Bankers who rely on the dashboard as their workspace, not a tool they open occasionally.</div>
+            </div>
+            <div class="stat-card stat-card-wide sm:col-span-2">
+              <div class="stat-fig">-8 min</div>
+              <div class="stat-lbl">Shorter calls</div>
+              <div class="stat-exp">Average drop in call handling time per case after the redesign.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROLLBACK (pre-2026-08-30): one oversized figure, styled inline.
+        <div class="lg:col-span-6">
+          <div class="reveal mx-auto flex w-full flex-col items-center gap-3 text-center">
+            <div class="type-display-lg" style="font-size:4.5rem; color:var(--color-button);">-8 min</div>
+            <p class="type-body-lg max-w-xs text-secondary">Drop in average call handling time.</p>
+          </div>
+        </div>
+        -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ROLLBACK (pre-B60 "the impact" body):
   <section id="impact" class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl py-20 lg:py-28">
       <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
@@ -636,7 +1844,6 @@ a:hover .arrow { transform: translateX(4px); }
             </div>
           </div>
         </div>
-
         <div class="lg:col-span-6">
           <div class="reveal mx-auto flex w-full flex-col items-center gap-3 text-center">
             <div class="type-display-lg" style="font-size:4.5rem; color:var(--color-button);">-8 min</div>
@@ -646,13 +1853,63 @@ a:hover .arrow { transform: translateX(4px); }
       </div>
     </div>
   </section>
+  -->
 
   <!-- WHAT I LEARNED: added 2026-08-10, B25. Same pattern as Digital Loans, quiet text-only
        closing reflection, no new visual. -->
   <section class="px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl border-t border-border-default py-16 lg:py-20">
-      <h2 class="reveal type-headline-md max-w-2xl">what I learned<span class="brand-dot">.</span></h2>
+    <div class="mx-auto max-w-7xl py-16 lg:py-20">
+      <!-- B60 (2026-08-22): the single line here misstated the story. The softening mechanism was
+           the parallel old system, not a diluted "softer in-between version" of the UI, which was
+           never built (career-master.md: the staged rollout was expansion of SCOPE). Replaced with
+           the approved two paragraphs.
+           Numbered blocks added 2026-08-22 at Ofir's explicit request, so the idiom now runs
+           unbroken through all seven sections on this page. Note this DIVERGES from the other case
+           studies: ../Credit-Cards/index.html and ../Digital-Loans/ both close with a plain
+           unnumbered paragraph, so if that convention is ever unified, this is the section that
+           differs. Still no media, per the copy draft.
+           Closes on the resistance rather than on the project. "You have to give them their speed
+           back" is the line meant to survive the read, so nothing follows it.
+           h3 headings are approved copy, confirmed by Ofir 2026-08-22.
+           Copy approved 2026-08-21, see ../../internal-mortgage-copy-draft.md station 8.
+      ROLLBACK (pre-B60 line):
       <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Not every change happens in one leap: to bring veteran employees along, we shipped a softer in-between version first, then moved to the final design.</p>
+      -->
+      <h2 class="reveal type-headline-md max-w-2xl">what I learned<span class="brand-dot">.</span></h2>
+      <!-- 2026-08-30: the two numbered blocks became one nested card, variant J. Body copy is
+           unchanged word for word; only the 01/02 labels and their two h3 headings were retired,
+           because the highlights now do the job those headings were doing. See the .learn-outer
+           rule for why.
+           One highlight per paragraph and no more. The first is the managerial claim, resistance
+           that produces information rather than cost. The second is the line worth remembering
+           after the page is closed. .copy-mark is reused from "what it became", which makes two
+           highlighted phrases in the whole case study, both on payoff lines. Adding a third would
+           start turning the device back into ordinary coloured text.
+           Old markup kept as an inert rollback. -->
+      <div class="reveal learn-outer mt-8">
+        <div class="learn-inner">
+          <svg class="learn-mark" aria-hidden="true" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="butt"><line x1="50" y1="8" x2="50" y2="92"/><line x1="13.6" y1="29" x2="86.4" y2="71"/><line x1="86.4" y1="29" x2="13.6" y2="71"/></svg>
+          <div class="learn-cols">
+            <p>We never switched the old system off. It ran beside the new one for as long as people needed it, and nobody was made to move. That is what <mark class="copy-mark">made the resistance useful instead of expensive</mark>. The bankers who stayed put were not blocking anything, so what they told us arrived as information rather than as a problem to manage.</p>
+            <p>The part I would not have guessed is that the strongest objection came from the people who were best at the old system, and that they were right. If you take a tool away from someone who is fast with it, being modern is not enough. You have to <mark class="copy-mark">give them their speed back</mark>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROLLBACK (pre-2026-08-30): two numbered blocks with h3 headings.
+      <div class="reveal-stagger mt-8 grid max-w-prose grid-cols-1 gap-8">
+        <div>
+          <span class="type-label-sm stat-accent-green">01</span>
+          <h3 class="type-headline-sm mt-2">The old system kept running</h3>
+          <p class="type-body-md mt-2 text-secondary">We never switched the old system off. It ran beside the new one for as long as people needed it, and nobody was made to move. That is what made the resistance useful instead of expensive. The bankers who stayed put were not blocking anything, so what they told us arrived as information rather than as a problem to manage.</p>
+        </div>
+        <div>
+          <span class="type-label-sm stat-accent-green">02</span>
+          <h3 class="type-headline-sm mt-2">Modern is not enough</h3>
+          <p class="type-body-md mt-2 text-secondary">The part I would not have guessed is that the strongest objection came from the people who were best at the old system, and that they were right. If you take a tool away from someone who is fast with it, being modern is not enough. You have to give them their speed back.</p>
+        </div>
+      </div>
+      -->
     </div>
   </section>
 
@@ -666,10 +1923,13 @@ a:hover .arrow { transform: translateX(4px); }
        "heading off to the next page." Shown at every breakpoint. -->
   <section class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl border-t border-border-default py-16 text-right lg:py-20">
-      <a href="../Design-System/" class="reveal inline-flex items-center gap-4">
+      <!-- Cycles in homepage tile order, reordered 2026-08-30 to Internal Mortgage System,
+           Digital Loans, Credit Cards, Design System. Keep in step with the tile order in
+           ../index.html, the two are the same sequence. -->
+      <a href="../Digital-Loans/" class="reveal inline-flex items-center gap-4">
         <span class="flex flex-col text-right">
           <span class="type-label-sm text-muted">Next Case Study</span>
-          <span class="type-headline-md mt-1">Design System</span>
+          <span class="type-headline-md mt-1">Digital Loans</span>
         </span>
         <svg aria-hidden="true" class="arrow size-6 shrink-0 rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
       </a>
@@ -1013,6 +2273,102 @@ a:hover .arrow { transform: translateX(4px); }
         }, 160);
       }, { passive: false });
     }
+
+    /* Screen switcher (2026-08-30). Same NavItem-menu pattern as ../Digital-Loans and
+       ../Design-System, but toggling whole panels via the hidden attribute rather than swapping an
+       img src, because these five screens have different heights, see the markup comment.
+       Full tablist keyboard support is not decoration here: this case study's own argument is that
+       veteran bankers were faster on the keyboard and the product was redesigned around that, so a
+       switcher that only answered the mouse would contradict the page it sits on.
+       Roving tabindex, so the whole menu is one tab stop and arrows move within it. */
+    (function () {
+      const root = document.getElementById('screenSwitcher');
+      if (!root) return;
+      const tabs = Array.from(root.querySelectorAll('[role="tab"]'));
+      if (!tabs.length) return;
+
+      const stage = document.getElementById('screenStage');
+      const panels = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
+      if (!stage || panels.some((p) => !p)) return;
+
+      const selectedTab = () => tabs.find((t) => t.getAttribute('aria-selected') === 'true') || tabs[0];
+      const panelFor = (tab) => document.getElementById(tab.getAttribute('aria-controls'));
+
+      /* Height comes from the capture's own aspect ratio, never from measuring the DOM. That keeps
+         it correct before the image has loaded, costs no forced reflow, and means switching to a
+         screen that has not been painted yet still animates to the right height. */
+      function heightFor(panel) {
+        const [w, h] = (panel.dataset.ratio || '1/1').split('/').map(Number);
+        return stage.clientWidth * (h / w);
+      }
+
+      /* Suppress the transition for exactly one frame, for changes that are not a swap: first
+         paint, and any viewport resize. Reading offsetHeight in between forces the browser to
+         apply the new height before transitions come back on. */
+      function setHeight(panel, animate) {
+        if (!animate) stage.classList.add('is-resizing');
+        stage.style.height = heightFor(panel) + 'px';
+        if (!animate) { void stage.offsetHeight; stage.classList.remove('is-resizing'); }
+      }
+
+      /* The menu updates instantly and the stage catches up, so the control feels immediate even
+         though the crossfade takes half a second. */
+      function setMenu(tab, focus) {
+        tabs.forEach((t) => {
+          const on = t === tab;
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+          t.tabIndex = on ? 0 : -1;
+        });
+        if (focus) tab.focus();
+      }
+
+      function render(animate) {
+        const target = panelFor(selectedTab());
+        panels.forEach((p) => p.classList.toggle('is-active', p === target));
+        setHeight(target, animate);
+      }
+
+      function select(tab, focus) {
+        setMenu(tab, focus);
+        render(true);
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => select(tab, false));
+        tab.addEventListener('keydown', (e) => {
+          const i = tabs.indexOf(tab);
+          let next = null;
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+          else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+          else if (e.key === 'Home') next = tabs[0];
+          else if (e.key === 'End') next = tabs[tabs.length - 1];
+          if (!next) return;
+          e.preventDefault();
+          select(next, true);
+        });
+      });
+
+      /* Hand control to the script: drop the markup's hidden attributes, which were only there so
+         the block still shows one screen with JS off, and let .is-ready take over positioning. */
+      panels.forEach((p) => { p.hidden = false; });
+      stage.classList.add('is-ready');
+
+      /* Normalise from the markup's own initial state rather than assuming it, so the first tab
+         being selected is stated in one place. No animation on this pass, it is not a swap. */
+      setMenu(selectedTab(), false);
+      render(false);
+
+      /* A width change makes every stored height wrong, so recompute on the spot and without
+         animating: a resize is not a swap and should not look like one. */
+      if ('ResizeObserver' in window) {
+        let last = stage.clientWidth;
+        new ResizeObserver(() => {
+          if (stage.clientWidth === last) return;
+          last = stage.clientWidth;
+          render(false);
+        }).observe(stage);
+      }
+    })();
   </script>
 
   </div><!-- /.page-shift -->

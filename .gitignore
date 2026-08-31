@@ -13,3 +13,11 @@ index-draft5.html
 index-draft6.html
 _to_delete/
 Cross-Bank-Loan/ofir's references/
+
+# Figma sources for the hero background. The page only ever loads the .webp derived
+# from these; together they are ~6MB of files nothing references.
+hero_bg*.png
+# Local rollback copies of assets replaced during a session.
+superseded-*/
+# Whole-file rollbacks kept beside a page while an experiment is live.
+*.rollback-*
