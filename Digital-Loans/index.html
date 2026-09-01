@@ -76,6 +76,21 @@
   --color-gold-700: #a87a1e;
   --color-gold-900: #40310f;
 
+  /* B73, 2026-09-01: ported from ../Internal-Systems/index.html, where it was introduced in B60.
+     A warm surface that actually reads as a break from white, unlike --color-surface-alt, which is
+     about a 6% step off white and disappears. Site-only, not a DSM token. There is no shared
+     stylesheet on this site, so each page that wants it needs its own copy of this line. */
+  --color-bone: #f2ece0;
+  /* B73, 2026-09-01: ported from ../Internal-Systems/index.html (B60). A premium dark surface,
+     deliberately NOT #000. Used on one element only, the wide stat card. Note the pairing it
+     exists for: #0f1211 against --color-primary #022c22 measures 1.24:1, so a near-black card on
+     the green ground would be invisible without a separating device. */
+  --color-near-black: #0f1211;
+  /* B73, 2026-09-01: ported from ../Internal-Systems/index.html (B60). Site-only, and it has ONE
+     legitimate use: a highlight behind running text. Peach was tried as a card SURFACE in B59 and
+     rejected by Ofir as not belonging to his palette, so do not reach for it as a background. */
+  --color-peach: #fbeade;
+
   /* ---- semantics ---- */
   --color-primary: var(--color-green-950);
   --color-primary-hover: var(--color-green-900);
@@ -295,6 +310,20 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    for free, with zero artificial timing differences between cards. */
 #loanPurposeStripInner { transform: translateX(-100%); }
 #loanPurposeStrip.strip-in-view #loanPurposeStripInner { animation: strip-conveyor-in 950ms linear both; }
+/* Filmstrip scrollbar (B73, 2026-09-01). The default bar is thick, grey, and on macOS it is an
+   OVERLAY, so it floats on top of the station tags instead of sitting under them.
+   Two mechanisms on purpose, and they are not redundant. scrollbar-width/scrollbar-color are the
+   standard properties and are what modern Chrome and Firefox honour; the ::-webkit- rules cover
+   older WebKit. Note that when the standard properties are present, Chrome 121 and up IGNORES the
+   ::-webkit- pseudo-elements entirely, so the standard pair has to carry the design on its own and
+   the webkit block is a fallback, not the primary. Do not tune only one of them and expect a change.
+   The container's bottom padding is what actually keeps the bar off the tags: an overlay bar sits at
+   the very bottom edge of the scroll box, so the fix is clearance, not colour. pb-2 was 8px and the
+   tags sat inside it. */
+#loanPurposeStrip { scrollbar-width: thin; scrollbar-color: var(--color-primary) transparent; }
+#loanPurposeStrip::-webkit-scrollbar { height: 6px; }
+#loanPurposeStrip::-webkit-scrollbar-track { background: transparent; }
+#loanPurposeStrip::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 999px; }
 @keyframes strip-conveyor-in {
   from { transform: translateX(-100%); }
   to { transform: translateX(0); }
@@ -445,16 +474,35 @@ a:hover .arrow { transform: translateX(4px); }
    frame on any side, top included. Plain clipped box again. Icons are still sized taller than
    the strip (per his "increase 50%, then 10% more" instructions), so their tops now simply get
    cropped by this box, same as any oversized image inside a fixed frame. */
+/* --strip-scale (B73, 2026-09-01). ONE number scales the whole scene: band height, icon height,
+   the icons' bottom anchoring, the gaps between them, and the cloud widths. Every length below that
+   depends on the strip's size is written as calc(original * var(--strip-scale)), so the originals
+   stay readable and a future pass changes one value instead of eleven.
+   WHY IT IS SAFE. The icons are bottom-anchored (align-items: flex-end plus a small negative
+   margin-bottom) and their width derives from aspect-ratio, so scaling the HEIGHT scales them
+   proportionally and they stay pinned to the same ground line. Nothing is stretched.
+   WHY THE GAPS SCALE TOO. Shrinking the icons while leaving the gaps at full size would read as the
+   icons scattering apart rather than as the scene getting smaller. The clouds scale for the same
+   reason; their track is already a percentage of the band height, so only their widths are here.
+   ROLLBACK: set --strip-scale to 1. */
 .hero-strip {
+  --strip-scale: 0.7;
   position: relative;
-  height: 9rem;
+  height: calc(9rem * var(--strip-scale));
   /* 28 -> 16, 2026-08-30: site-wide container radius, see the audit note on ../index.html. */
   border-radius: var(--radius-lg);
+  /* B73, 2026-09-01: hairline added so the strip matches the framed panel holding the filmstrip
+     directly below it, which is `border border-border-default bg-card`. In the hero the strip stood
+     alone and needed no frame; here it is the first of two stacked panels and an unframed band
+     above a framed one read as two unrelated things.
+     Note this does NOT change the strip's height. Tailwind's base sets box-sizing: border-box, so
+     the 1px is drawn inside the height that --strip-scale computes rather than added to it. */
+  border: 1px solid var(--color-border-default);
   overflow: hidden;
   background: linear-gradient(to bottom, #eef4fd 0%, #eef4fd 60%, #fdf8f6 60%, #fdf8f6 100%);
 }
-@media (min-width: 640px) { .hero-strip { height: 11rem; } }
-@media (min-width: 1024px) { .hero-strip { height: 13.5rem; } }
+@media (min-width: 640px) { .hero-strip { height: calc(11rem * var(--strip-scale)); } }
+@media (min-width: 1024px) { .hero-strip { height: calc(13.5rem * var(--strip-scale)); } }
 
 /* two altitudes per Ofir's reference: a bigger/lower cloud track close to the ground line,
    a smaller/higher one nearer the top edge. Lives inside .hero-strip__bg so it gets
@@ -476,8 +524,8 @@ a:hover .arrow { transform: translateX(4px); }
    Ratio (~2.26:1) is close enough to the old sprite's (~2.24:1) that no width/scale retuning
    was needed, same .cloud-shape sizing rules below still apply. */
 .cloud-shape { flex: none; height: auto; display: block; }
-.hero-strip__clouds-track--back .cloud-shape { width: 2.75rem; opacity: 0.55; }
-.hero-strip__clouds-track--front .cloud-shape { width: 5rem; opacity: 0.9; }
+.hero-strip__clouds-track--back .cloud-shape { width: calc(2.75rem * var(--strip-scale)); opacity: 0.55; }
+.hero-strip__clouds-track--front .cloud-shape { width: calc(5rem * var(--strip-scale)); opacity: 0.9; }
 
 /* 2026-08-10o: reverted to the track-level drift as the main motion (2026-08-10n's fully
    per-cloud independent animation read as "everyone slowed down" to Ofir, the ±2.5rem wobble
@@ -519,25 +567,25 @@ a:hover .arrow { transform: translateX(4px); }
   height: 100%;
   display: flex;
   align-items: flex-end;
-  gap: 2.5rem;
+  gap: calc(2.5rem * var(--strip-scale));
   width: max-content;
   animation: conveyorScroll 34s linear infinite;
   animation-delay: 2.1s;
 }
-@media (min-width: 640px) { .conveyor-track { gap: 3rem; } }
-@media (min-width: 1024px) { .conveyor-track { gap: 3.5rem; } }
+@media (min-width: 640px) { .conveyor-track { gap: calc(3rem * var(--strip-scale)); } }
+@media (min-width: 1024px) { .conveyor-track { gap: calc(3.5rem * var(--strip-scale)); } }
 /* fixed rem (not percentage): a flex item's percentage height didn't reliably resolve against
    the container here. Sized 50% bigger than the previous pass per Ofir's direct call, and
    anchored lower (smaller margin-bottom) so they sit closer to the true bottom edge. */
 .conveyor-card {
   flex: none;
-  height: 13.42rem;
+  height: calc(13.42rem * var(--strip-scale));
   aspect-ratio: 780 / 1630;
-  margin-bottom: -0.61rem;
+  margin-bottom: calc(-0.61rem * var(--strip-scale));
   overflow: hidden;
 }
-@media (min-width: 640px) { .conveyor-card { height: 16.34rem; margin-bottom: -0.7425rem; } }
-@media (min-width: 1024px) { .conveyor-card { height: 19.97rem; margin-bottom: -0.9075rem; } }
+@media (min-width: 640px) { .conveyor-card { height: calc(16.34rem * var(--strip-scale)); margin-bottom: calc(-0.7425rem * var(--strip-scale)); } }
+@media (min-width: 1024px) { .conveyor-card { height: calc(19.97rem * var(--strip-scale)); margin-bottom: calc(-0.9075rem * var(--strip-scale)); } }
 /* the "finish" exports have a taller native canvas (780x1724) than the "loader" ones
    (780x1630), forcing them into the loader ratio squeezed/mis-anchored their content toward
    the top instead of sitting bottom-anchored like every other card. Give them their own ratio
@@ -637,6 +685,421 @@ a:hover .arrow { transform: translateX(4px); }
   box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-focus);
 }
 
+/* HERO TINT (B73, 2026-09-01). EXPERIMENT, not settled. Same two-layer structure as Internal's
+   .hero-grain, one real adaptation: the wash is pink instead of neutral grey, taken from the
+   product's own palette rather than from the site's.
+   Two layers, and the split is not tidiness. The grain is the same 384px tile Internal uses,
+   copied here as assets/hero_grain.webp: black speckle at 0 to 6 alpha, so it has no colour of its
+   own and reads as whatever sits beneath it. That is exactly why a pink grain needed no new export,
+   only a pink base. Tiled rather than stretched so the specks stay a fixed size and do not blur on
+   a wide monitor.
+   The wash is a CSS gradient rather than an exported image: computed per pixel at render, so it is
+   exact at any width and costs nothing. Its one real risk is banding across a long, very subtle
+   ramp, and the grain above it is what dithers that away, which is a second reason the two layers
+   belong together.
+   Vertical rather than Internal's diagonal, and it lands on white: a hero with a visible horizon
+   line behind the headline reads as a horizon. #fadbdb was chosen over #ffe7e6 because the lighter
+   one is roughly 24 units off white and simply vanishes once it starts fading.
+   Order is grain first then wash, because the first background-image in the list paints on top.
+   Sits on the header's padding box, so the texture ends exactly where the hero ends, which is why
+   "the challenge" lost its border-t: the edge of the texture is now the separator and two
+   separators in the same place read as a mistake. */
+/* Peak moved off the top edge, 2026-09-01. In the first version the deepest pink sat at 0%, which
+   is behind the nav, an area with no content in it: the strongest colour on the page was landing
+   where the eye had nothing to read. Now the very top starts one step lighter and the full #fadbdb
+   lands at 26%, which is roughly where the H1 sits, so the colour peaks with the headline instead
+   of above it.
+   The trade being made: a ramp that darkens and then lightens can produce a soft horizontal band
+   at the turn. At this saturation, with the grain dithering it, it should not read as a line, but
+   that is the thing to look for if this ever feels wrong.
+   ROLLBACK (peak at the top edge): linear-gradient(to bottom, #fadbdb 0%, #fdf3f2 55%, #ffffff 100%) */
+/* Pass 3, 2026-09-01: less pink, more texture.
+   TONE. Desaturated, NOT darkened, and the distinction is the point. This wash sits around 92
+   percent lightness already, so taking lightness down again would make it vanish rather than soften
+   it. What reads as "too much pink" over an area this large is the gap between the red channel and
+   the other two: at #fadbdb that gap was 31, at #fce4e4 it was 24, and it is now 19 at the peak
+   with every other stop scaled by the same proportion. Adjust the CHANNEL GAP here, not the
+   brightness.
+   ROLLBACK (more saturated): #fdf0f0 0%, #fce4e4 26%, #fef7f6 62%, #ffffff 100%
+   GRAIN. The tile is Internal's, unmodified: alpha 0 to 6, so under 2.4 percent. It was briefly
+   re-encoded at 2.2x alpha ON TOP of the second layer below, which stacked to roughly 4.4x the
+   original and was far too heavy. Keep the tile as-is; the second layer alone is the whole effect.
+   If the grain ever needs retuning, change the number of layers or their sizes before touching the
+   tile's alpha, since alpha and layer count multiply rather than add.
+   A SECOND copy of the same tile is drawn at 768px, double size, and offset by half a tile. That
+      is what makes it read as COARSE rather than merely darker: the scaled-up copy has visibly
+      bigger specks, and because the two layers repeat on different intervals their interference
+      pattern is much longer than either one, so the tiling stops being detectable.
+   Order is fine grain, coarse grain, wash, because the first background-image in the list paints on
+   top. Sizes and positions are positional lists and must stay in that same order.
+   ROLLBACK (less grain): delete the second url(), the second `repeat`, `768px 768px,` and
+   `192px 192px,` to go back to a single fine layer.
+   ROLLBACK (pass 2): one grain layer at 384px over
+   linear-gradient(to bottom, #fcebeb 0%, #fadbdb 26%, #fdf3f2 62%, #ffffff 100%) */
+.hero-tint {
+  background-image: url("assets/hero_grain.webp"), url("assets/hero_grain.webp"), linear-gradient(to bottom, #fdf3f3 0%, #fce9e9 26%, #fefaf9 62%, #ffffff 100%);
+  background-repeat: repeat, repeat, no-repeat;
+  background-size: 384px 384px, 768px 768px, 100% 100%;
+  background-position: 0 0, 192px 192px, center;
+}
+
+/* HERO SPLIT (B73, 2026-09-01). Ported from ../Internal-Systems/index.html, which is the reference
+   implementation for this pattern. That file carries the full reasoning on every value here: why
+   drop-shadow and not box-shadow (this is a transparent PNG, box-shadow would draw a grey rectangle
+   behind a device-shaped hole), why the offset is large while the blur stays tight (a big offset
+   with a big blur reads as ambient glow, a big offset with a tight blur reads as a silhouette
+   projected by a light in front), and why the frame is pinned right at 92 percent (the freed space
+   opens on the LEFT, which is the side the shadow is thrown toward).
+   Two deliberate differences on this page:
+   1. aspect-ratio is this composite's own 1422/833, not Internal's 1422/869.
+   2. The media is TWO devices, a laptop with a phone in front of it. A filter follows the MERGED
+      alpha silhouette, so the phone cannot cast a shadow onto the laptop the way a baked Figma
+      shadow could. Ofir's explicit call is to try the CSS shadow anyway rather than bake one, so
+      the values below are Internal's verbatim and are the starting point, not a settled result. */
+.hero-split { display: grid; gap: 2.5rem; }
+@media (min-width: 1024px) { .hero-split { grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; } }
+.hero-device-frame { aspect-ratio: 1422 / 833; max-inline-size: 92%; margin-inline-start: auto; }
+.hero-device-frame img {
+  width: 100%; height: 100%; object-fit: cover; object-position: left center;
+  filter: drop-shadow(-10px 6px 9px rgb(0 0 0 / 0.10)) drop-shadow(-96px 34px 44px rgb(0 0 0 / 0.32));
+}
+/* Clearance under the device so the metrics card cannot paint over the shadow. A filter takes no
+   space in layout, so an opaque card below would cut the shadow off in a hard straight line.
+   --shadow-reach is how far the cast shadow actually extends: 34px offset plus 44px blur is 78px,
+   rounded to 5rem. It MUST move together with the filter above, which is why it is declared as a
+   custom property here rather than as a loose margin value. */
+.hero-metrics { --shadow-reach: 5rem; margin-block-start: calc(var(--shadow-reach) + 1.5rem); }
+/* Mobile: the same fixed-pixel problem documented on Internal. Pinning right is meaningless once
+   the column is the whole screen, and a -96px offset that is 7 percent of a desktop layout is a
+   quarter of a phone, so a projected silhouette turns into a smear. --shadow-reach comes down with
+   it, since it exists only to reserve clearance for that shadow. */
+@media (max-width: 1023.98px) {
+  .hero-device-frame { max-inline-size: 100%; margin-inline: auto; }
+  .hero-device-frame img { filter: drop-shadow(-5px 4px 6px rgb(0 0 0 / 0.10)) drop-shadow(-32px 14px 20px rgb(0 0 0 / 0.30)); }
+  .hero-metrics { --shadow-reach: 2.25rem; }
+}
+
+/* STEP CARD (B73, 2026-09-01). One of TWO card types on this site. Read this before adding a card
+   to any case study, and before assuming a class name means the same thing on another page.
+
+   THE TWO TYPES, AND THE RULE THAT PICKS ONE.
+   .ghost-card, live on ../Internal-Systems/index.html: a large ghosted numeral in the bottom corner,
+     with a reserved bottom band so text never reaches it. That page is finished and is NOT changing.
+   .step-card, this file: a small numeral on the reading line above the heading. Different component,
+     different name, on purpose.
+   THE RULE IS CARD WIDTH. A narrow card has its dead space at the BOTTOM, which is exactly what a
+   corner numeral fills. A wide card has no dead bottom, it has a wide empty stripe, and the same
+   treatment leaves a small mark stranded at one end of it. Right component, wrong axis.
+   IN PRACTICE, media orientation decides the width, so Ofir's own shorthand works: landscape media
+   (Internal, and Design System when it is done) pushes cards into a row or across the full width, so
+   they are NARROW and take .ghost-card; portrait phone media (this page, and Credit Cards) puts
+   cards in a column beside the phone, so they are WIDE and take .step-card. Treat desktop-versus-
+   mobile as the trigger but WIDTH as the reason: a mobile case study whose cards ever sit in a row
+   below the media still wants the ghost, and the width rule gives that answer while the
+   desktop-mobile shorthand does not.
+   A second, harder constraint on this page: the phone beside these cards already fills the viewport
+   on a 14 inch MacBook, so it cannot grow, which means the text column has to come DOWN to meet it.
+   The ghost variant reserved about 100px of bottom band per card and this section cannot afford it.
+   NOTE for anyone worried about legibility: the ghost numeral does not sit behind readable text on
+   Internal either. It reserves its own clearance and the copy is lifted above it, so they never
+   overlap. That objection applies to a version nobody built.
+
+   HOW THE STEP CARD IS DRAWN, and every decision here was argued down from something louder.
+   A NUMBER IS A MARKER, NOT A HEADING. It sits BELOW the heading in the visual hierarchy and must
+   never be the first thing the eye lands on, because the card exists to carry a sentence of story.
+   Three treatments were built and rejected on exactly this ground: the corner ghost at 5rem, variant
+   F run in on the heading baseline at 2.75rem, and variant E at its own 2.25rem, which is nearly
+   double the 1.25rem heading. That size is right on a demo page where the numeral IS the subject.
+   TYPE COMES FROM THE SITE, NEVER FROM ../../card-explorations.html. That file carries its own scale
+   for a standalone demo. The numeral uses .type-label-sm, this site's real eyebrow and meta class,
+   0.75rem at weight 500, which is also what this page used for these numbers before B73. Find the
+   site class that already matches; do not copy a font-size or font-weight out of the explorations.
+   COLOUR is --color-gold-700 (#a87a1e), not the --color-gold-500 the explorations file specifies.
+   Measured on the sage card at #ecfdf5: gold-500 is 2.08:1, gold-700 is 3.65:1. Gold-500 held at
+   2.25rem because the letterforms were large and vanished at 0.75rem. Colour has to move with size.
+   Radius is --radius-lg (16px), the site's container standard, not the explorations file's 20px. No
+   border and no shadow: the surface is the container.
+   SURFACE MODIFIERS use the same names Internal already established, -bone and -white, so both card
+   types share one palette. On Internal the white variant draws its hairline as an inset box-shadow
+   rather than a border, so every variant keeps identical geometry; match that if it is added here.
+
+   ROLLBACK (the ghost variant, if this page ever needs it). Restore this block AND move the numeral
+   span out of its place above the heading to the end of the card:
+   .step-card { --ghost-size: 5rem; --ghost-inset: 1rem; position: relative;
+     border-radius: var(--radius-lg); background: var(--color-green-50);
+     padding: 2rem 1.75rem; padding-block-end: calc(var(--ghost-size) * 0.8 + var(--ghost-inset) * 2); }
+   .step-card is greater-than :not(.step-card__num) { position: relative; z-index: 1; }
+   .step-card__num { position: absolute; inset-inline-start: 1.75rem; inset-block-end: var(--ghost-inset);
+     z-index: 0; font-family: var(--font-brand); font-weight: 700; font-size: var(--ghost-size);
+     line-height: 0.8; color: var(--color-primary); opacity: 0.12; } */
+.step-card {
+  border-radius: var(--radius-lg);
+  background: var(--color-green-50);
+  padding: 1.75rem;
+}
+.step-card__num { display: block; color: var(--color-gold-700); margin-block-end: 0.5rem; }
+/* Surface modifier, named to match ../Internal-Systems/index.html's .ghost-card-bone so both card
+   types share one palette. MUST STAY AFTER .step-card: both are single-class selectors carrying
+   identical specificity, so source order alone decides which background wins. Moving this line up
+   would silently turn every bone card sage again. */
+.step-card-bone { background: var(--color-bone); }
+/* White plus a hairline, the third surface. The hairline is an INSET BOX-SHADOW rather than a
+   border, copied from ../Internal-Systems/index.html's .ghost-card-white: a border adds a real
+   layout box, so a bordered variant would be 2px taller and wider than its sage and bone siblings
+   and the three would not line up in a stack. An inset shadow costs no geometry. Same source-order
+   rule as the bone modifier above. */
+.step-card-white { background: var(--color-card); box-shadow: inset 0 0 0 1px var(--color-border-default); }
+
+/* STAT CARDS (B73, 2026-09-01). Ported verbatim from ../Internal-Systems/index.html, where this
+   pattern was designed and confirmed. Every comment below is that file's own reasoning, kept intact
+   because each paragraph records a decision that was argued and would otherwise be re-litigated.
+   The ONE thing to know before touching it: GOLD IS THE INK, NEVER THE PAPER. A full gold panel was
+   built there and rejected, because a large saturated warm field beside two dark green ones reads as
+   a different system rather than as the third member of a set. All three grounds stay dark and gold
+   appears only as numerals. */
+.stat-card { border-radius: var(--radius-lg); background: var(--color-primary); color: var(--color-on-primary); padding: 2.25rem 1.75rem 2rem; text-align: center; }
+.stat-card .stat-fig { font-family: var(--font-brand); font-weight: 700; font-size: 3rem; line-height: 1; letter-spacing: -0.02em; color: var(--color-gold-500); }
+.stat-card .stat-lbl { font-family: var(--font-brand); font-weight: 700; font-size: 1.125rem; line-height: 1.2; margin-block-start: 0.75rem; }
+.stat-card .stat-exp { font-size: 0.85rem; line-height: 1.5; color: var(--color-neutral-100); margin-block-start: 0.75rem; max-inline-size: 24ch; margin-inline: auto; }
+/* The wide payoff card. Was a full gold ground and it shouted: a large saturated warm field beside
+   two dark green ones reads as a different system rather than as the third member of a set, and it
+   spent the page's rarest colour on an area instead of on a mark.
+   The rule that replaced it, worth holding site-wide: GOLD IS THE INK, NEVER THE PAPER. All three
+   grounds are dark, gold appears only as numerals, and it stays precious precisely because it is
+   never spread across a surface.
+   The concrete grain is the same feTurbulence technique used on the figures, at deliberately
+   different settings. Low baseFrequency and five octaves give broad mottling rather than fine
+   grain, because what reads as brushed metal at 48px reads as dirt across a whole panel, and the
+   opacity is far lower for the same reason. Slightly anisotropic (0.012 vs 0.018) so the mottling
+   has a faint grain direction instead of looking like uniform static.
+   Measured on this ground: gold 8.60:1, neutral-100 16.59:1, and the metal gradient's darkest stop
+   still 4.75:1, so no part of the sweep drops below legible. */
+.stat-card-wide {
+  background-color: var(--color-near-black);
+  background-image: url("data:image/svg+xml,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='300'%20height='300'><filter%20id='c'><feTurbulence%20type='fractalNoise'%20baseFrequency='0.012%200.018'%20numOctaves='5'%20stitchTiles='stitch'/><feColorMatrix%20type='saturate'%20values='0'/></filter><rect%20width='300'%20height='300'%20filter='url(%23c)'%20opacity='0.5'/></svg>");
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  background-blend-mode: overlay;
+}
+.stat-card-wide .stat-fig { font-size: 3.75rem; }
+/* 24ch is right for a narrow card and wrong for one spanning two columns, where it wrapped into a
+   tall thin ribbon in the middle of a wide surface. Still capped rather than full width, so the
+   line length stays readable. */
+.stat-card-wide .stat-exp { max-inline-size: 44ch; }
+
+/* Metallic gold on the two dark cards' figures, with a one-time specular sweep (2026-08-30).
+   Gold is a material, not a hue, so a single hex always reads as mustard. What the eye recognises
+   is the tonal run from bronze up through a narrow near-white highlight and back down, which is
+   what the stops below are. The gradient is SYMMETRIC around 50% so that the two resting states,
+   before and after the sweep, are mirror images of each other rather than one being duller.
+   Background width was 250% and is now 160% (2026-08-30, Ofir: the effect read as too faint). At
+   250% only 40% of the ramp was ever visible at rest, so most of the tonal range designed into it
+   never reached the screen. At 160% that rises to about 62%, which brings both the bronze and the
+   near-white into view and is what makes it read as metal rather than as a tint.
+   The tradeoff, and it is a real change rather than a bug: the #fff6db highlight is now visible at
+   rest instead of being hidden until the animation. It sits near one side, the sweep carries it
+   across, and it settles near the other. The sweep is now a highlight travelling over a metal
+   surface rather than a flash appearing out of nowhere.
+   Every stop clears 3:1 against the card, which is the bar for text this size. The darkest,
+   #a9761f, measures 3.82:1, so even the instant the sweep is at its dimmest the number is legible.
+   The sweep runs ONCE. A looping shimmer is the established visual language of a loading skeleton,
+   which is the opposite of what a finished number should say.
+   Timing is tied to the existing reveal system rather than to page load: the card entrance is
+   650ms and the script staggers children by 160ms, so 1000ms and 1160ms put each sweep about a
+   third of a second after its own card has settled. Deep in the page, a load-triggered animation
+   would fire with nobody watching.
+   The @supports guard is not optional: background-clip:text needs color:transparent, so without
+   the guard any engine lacking it would render the numbers invisible rather than merely flat. */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  /* Two background layers, both clipped to the letterforms: fine grain on top, the metal ramp
+     underneath, blended with overlay. The grain is what turns a smooth ramp into a surface. It is
+     an inline SVG feTurbulence as a data URI, so there is no image file and nothing to download,
+     and it is desaturated to pure luminance noise so it only lightens and darkens the gold rather
+     than tinting it.
+     The grain layer is deliberately NOT animated. On real metal the surface stays put and the
+     highlight travels across it, so only the gradient's position moves during the sweep. Both
+     layers must still be listed in every background-position value, including the keyframes and
+     the reduced-motion rule, or the shorthand resets the one that is omitted. */
+  .stat-card .stat-fig {
+    background-image:
+      url("data:image/svg+xml,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='100'%20height='100'><filter%20id='g'><feTurbulence%20type='fractalNoise'%20baseFrequency='0.85'%20numOctaves='3'%20stitchTiles='stitch'/><feColorMatrix%20type='saturate'%20values='0'/></filter><rect%20width='100'%20height='100'%20filter='url(%23g)'%20opacity='0.55'/></svg>"),
+      linear-gradient(100deg, #a9761f 0%, #d9a942 16%, #edc76f 30%, #d9a942 42%, #fff6db 50%, #d9a942 58%, #edc76f 70%, #d9a942 84%, #a9761f 100%);
+    background-size: 100px 100px, 160% 100%;
+    background-position: 0 0, 100% 0;
+    background-repeat: repeat, no-repeat;
+    background-blend-mode: overlay, normal;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .stat-card.in-view .stat-fig {
+    animation: gold-sweep 1200ms cubic-bezier(0.45, 0, 0.15, 1) 1000ms 1 forwards;
+  }
+  .stat-card.in-view:nth-child(2) .stat-fig { animation-delay: 1160ms; }
+  .stat-card.in-view:nth-child(3) .stat-fig { animation-delay: 1320ms; }
+}
+@keyframes gold-sweep {
+  from { background-position: 0 0, 100% 0; }
+  to   { background-position: 0 0, 0% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stat-card.in-view .stat-fig { animation: none; background-position: 0 0, 0% 0; }
+}
+
+
+/* HIGHLIGHTED PHRASE IN RUNNING COPY (B73, 2026-09-01), variant J from ../../card-explorations.html,
+   ported from ../Internal-Systems/index.html. A reader who only skims still collects the phrase that
+   carries the claim. ONE PER PARAGRAPH AND NO MORE: a third instance turns the device back into
+   ordinary coloured text. Note bone was tried for this on Internal and measurably failed, since it
+   is only about 7% saturated and disappears behind a single line where there is no area to register. */
+.copy-mark { background: var(--color-peach); color: var(--color-default); padding: 2px 0; }
+
+/* "what I learned" as variant J's nested card (2026-08-30): a tinted outer holding a white inner.
+   Radii are concentric per the DSM rule: inner --radius-md (8) plus 8px padding gives outer
+   --radius-lg (16). Note that the nesting barely reads at all, because the outer tint is only
+   about 6% off white and the mat is thin, so what the eye actually sees is one card with a soft
+   halo. That is fine and even useful, a white card on a white page needs some edge, but it does
+   mean the inner radius is a calculation nobody can see. Do not spend effort tuning it.
+   The two h3 sub-headings that used to sit here are gone, deliberately. The whole point of this
+   pattern is that the highlighted phrases do the skimming work a heading would otherwise do, so
+   keeping both would be the same emphasis twice. The section's own h2 is untouched.
+   The ghost went through two rejected versions, both worth recording so neither is retried.
+   First the asterisk as a TYPE GLYPH: Inter Tight's asterisk is a soft petalled shape, and at
+   10rem, clipped, it read as a leaf. The rule that a symbol survives at a glance holds for a quote
+   mark, whose silhouette is unmistakable, and does not transfer automatically to every glyph.
+   Then the DSM's Rotate Ccw icon, meaning hindsight, which reads as a refresh control instead.
+   It is now an asterisk drawn as geometry: three straight lines crossing at 60 degree steps, round
+   caps, heavy stroke. Drawing it rather than setting it is what makes it a real asterisk and not
+   whatever a given font decided an asterisk looks like, and six straight arms stay unmistakable
+   however much of the bottom is cut off, which is the property the petalled glyph lacked.
+   Two columns at full width, not one narrow card: the single column left roughly 900px of empty
+   page beside it, and the two lessons are genuinely parallel rather than sequential, so sitting
+   them side by side fills the width for a real reason rather than as a stretch. Each column lands
+   near 560px, which is still a readable measure. */
+/* HERO SPLIT, 2026-08-30, trialled on this page only before any rollout. Everything from the H1
+   down to and including the "where it stands today" card sits in the left half, the device sits in
+   the right half, so a reader sees the finished product before scrolling rather than at the bottom.
+   The frame carries NO crop: aspect-ratio matches the file's own 1422x869. An earlier export had
+   about 630px of empty shadow down its left side, and a 25% right-side crop was what pushed the
+   machine up to a useful size against that dead space. The re-export solved it at the source, the
+   device now runs edge to edge, and cropping the same 25% would start eating the machine itself.
+   The mechanism is still in place if it is ever wanted again: give the frame a narrower ratio than
+   the file's and object-fit cover trims the excess, with object-position pinned left so anything
+   removed can only come off the right edge. One number, no re-export.
+   The meta row drops to two columns here. Its four-column track (4rem 13rem 6rem 1fr) needs about
+   490px before Scope gets any width at all, which does not fit half a hero. */
+/* Hero grain, 2026-08-30. Ofir's own texture, and it is applied at FULL opacity on purpose: the 5%
+   is already baked into the file's alpha channel, whose maximum measures 13 of 255. Adding a
+   further 5% in CSS would have taken it to a quarter of a percent and erased it.
+   The source is a 2048x1536 PNG weighing 1862KB, which is unusable for something this faint. It is
+   uniform grain, measured: every row and column averages the same alpha to within a tenth, with
+   only 14 distinct values in the whole file. So a 384px square out of it is statistically identical
+   to the whole thing and simply repeats, which is 58KB instead of 1862. Noise is the worst case for
+   both lossless and lossy compression, so tiling rather than scaling is what makes it affordable.
+   It runs the full width because it sits on the header's padding box, and it ends exactly where the
+   hero ends, which is why the challenge section's own border-t was removed: the edge of the texture
+   is now the separator, and two separators in the same place would read as a mistake. */
+/* Two layers, and the split is a real saving rather than tidiness. Ofir's Figma frame is a tint
+   plus a hugely zoomed sky photo plus a separate noise layer, and he exported it flattened as
+   hero_bg2.png, 2048x1536 and 3432KB. Measured, the WEIGHT IS THE NOISE: at 1600px the flattened
+   file costs 70KB at q86 but only 13KB at q78, and the difference between those two is that q78
+   has wiped the grain out entirely. Any compression cheap enough is also destructive.
+   So the grain was separated back out. The sky layer is the flattened export with its grain
+   smoothed off, which leaves a pure diagonal gradient that compresses to 19KB, and the grain is
+   Ofir's own hero_bg.png as a 384px tile at 58KB. 77KB against 293KB for his composite at the
+   quality that keeps the texture.
+   The second benefit matters more than the bytes: in the flattened file the grain STRETCHES with
+   the image, so on a wide monitor the specks grow and blur. Tiled, the grain is a fixed size and
+   stays as crisp as it is in Figma at any viewport.
+   Order is grain first then sky, because the first background-image in the list paints on top.
+   The sky is stretched to 100% 100% rather than covered: it carries no recognisable subject, only
+   a light-to-dark diagonal, so stretching shows all of it at any hero proportion while cover would
+   crop unpredictably. No background-color: the tint is already inside the sky layer. */
+.hero-grain {
+  background-image: url("assets/hero_bg.webp"), url("assets/hero_bg_sky.webp");
+  background-repeat: repeat, no-repeat;
+  background-size: 384px 384px, 100% 100%;
+  background-position: 0 0, center;
+}
+.hero-split { display: grid; gap: 2.5rem; }
+@media (min-width: 1024px) { .hero-split { grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; } }
+/* overflow is visible, not hidden, on purpose. It was hidden while the frame carried a crop; with
+   no crop left, hiding it would only clip the drop shadow below.
+   drop-shadow rather than box-shadow: box-shadow draws around the element's rectangle, and this
+   image is a transparent PNG, so it would have produced a floating grey rectangle behind a
+   laptop-shaped hole. drop-shadow follows the alpha silhouette, so the shadow is the machine's own
+   shape. Two passes, a tight contact one and the real cast shadow. The lighting Ofir asked for is a lamp
+   aimed at the screen from the viewer's own side, so the offset is large and the BLUR IS SMALL
+   relative to it: a big offset with a big blur reads as ambient glow, while a big offset with a
+   tight blur reads as a silhouette being projected, which is what a screen blocking a direct light
+   actually does. That ratio is the whole effect, so move offset and blur together if it is retuned. Neutral black,
+   not the site's dark green: the green tint was tried and Ofir's call is that a plain shadow reads
+   better under a silver machine, where a coloured one starts looking like a glow. Ofir also
+   approved it spilling past the column edge, which it does by roughly 100px at its faintest. */
+/* 8% smaller and pinned to the right of its column, so the space that frees up opens on the LEFT,
+   which is the side the shadow is thrown toward. Shrinking it centred would have split that space
+   in two and given the shadow nowhere to land. */
+.hero-device-frame { aspect-ratio: 1422 / 869; max-inline-size: 92%; margin-inline-start: auto; }
+/* Clearance under the device, so the metrics card cannot paint over the shadow. A filter takes no
+   space in layout, so the shadow simply falls behind whatever comes next, and an opaque card then
+   covers it in a hard straight line that reads as the shadow being cut off.
+   --shadow-reach is how far the cast shadow actually extends below the machine: the big pass is
+   34px of offset plus 44px of blur, so 78px, rounded to 5rem. It MUST be changed together with the
+   filter below, which is why it is declared here rather than as a loose margin value. */
+.hero-metrics { --shadow-reach: 5rem; margin-block-start: calc(var(--shadow-reach) + 1.5rem); }
+.hero-device-frame img {
+  width: 100%; height: 100%; object-fit: cover; object-position: left center;
+  filter: drop-shadow(-10px 6px 9px rgb(0 0 0 / 0.10)) drop-shadow(-96px 34px 44px rgb(0 0 0 / 0.32));
+}
+
+.learn-outer { background: var(--color-green-50); border-radius: var(--radius-lg); padding: 0.5rem; }
+/* --mark-size and --mark-bleed drive BOTH the asterisk and the space kept clear for it, so the two
+   cannot drift apart later. The card's bottom padding is derived: the mark's height minus the part
+   that bleeds off the edge, plus a little clearance. Text therefore cannot reach the mark at any
+   viewport width, which is the guarantee an absolutely positioned overlay could not give on its
+   own, and it is the same trick used for the marquee's tile shadow.
+   Space is reserved BELOW rather than beside on purpose: reserving a side gutter would have made
+   the right column narrower than the left, and two columns of prose at visibly different measures
+   read as a mistake. */
+.learn-inner {
+  --mark-size: 7.5rem;
+  --mark-bleed: 2rem;
+  position: relative; overflow: hidden;
+  background: var(--color-card); border-radius: var(--radius-md);
+  padding: 3rem 3.25rem calc(var(--mark-size) - var(--mark-bleed) + 1rem);
+}
+.learn-cols { display: grid; gap: 2rem; }
+@media (min-width: 1024px) { .learn-cols { grid-template-columns: 1fr 1fr; gap: 3.5rem; } }
+.learn-cols p { position: relative; z-index: 1; font-size: 1.05rem; line-height: 1.75; color: var(--color-secondary); }
+/* Sharp terminals, not round. Round was a reflex copied from the DSM's Lucide icon set, but this
+   is a typographic mark rather than an icon, real asterisks have cut ends, and the rounded arms
+   were half the reason the earlier version read as petals. */
+.learn-mark { position: absolute; z-index: 0; right: 0.5rem; bottom: calc(var(--mark-bleed) * -1); inline-size: var(--mark-size); block-size: var(--mark-size); color: var(--color-primary); }
+@media (max-width: 1023.98px) {
+  .learn-inner { --mark-size: 4.5rem; --mark-bleed: 1.5rem; padding: 1.75rem 1.5rem calc(var(--mark-size) - var(--mark-bleed) + 1rem); }
+  .learn-mark { right: 0.35rem; }
+}
+@media (max-width: 1023.98px) {
+  .learn-inner { --mark-size: 4.5rem; --mark-bleed: 1.5rem; padding: 1.75rem 1.5rem calc(var(--mark-size) - var(--mark-bleed) + 1rem); }
+  .learn-mark { right: 0.35rem; }
+}
+
+/* SPLIT SCOPE AND INTRO WIDTH (B73, 2026-09-01), shared by "the challenge" and "the mvp". The intro sits ABOVE the split, so max-w-prose
+   (65ch) let it run wider than the card column beneath it and the two left edges agreed while the
+   right edges did not. It is now capped to exactly one column of the split.
+   ONE SOURCE OF TRUTH: --split-gap feeds both the grid's gap and this cap, so a six-of-twelve
+   column is literally (100% - gap) / 2 and the two cannot drift apart if the gutter is ever retuned.
+   Writing 3rem in both places would have looked identical today and silently broken later.
+   THE MEDIA QUERY IS LOAD-BEARING, not a nicety. This site's custom CSS is unlayered, so it beats
+   any Tailwind utility regardless of specificity or source order. An unscoped max-inline-size here
+   would override max-w-prose at EVERY width, including mobile, where the grid is a single column
+   and half of it is far too narrow to read. Scoping to lg leaves max-w-prose in charge below it. */
+.case-scope { --split-gap: 3rem; }
+.case-split { gap: var(--split-gap); }
+@media (min-width: 1024px) {
+  .case-intro { max-inline-size: calc((100% - var(--split-gap)) / 2); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .enter { animation: none; opacity: 1; filter: none; }
   .reveal, .reveal-stagger > * { transition: none; opacity: 1; transform: none; }
@@ -702,10 +1165,17 @@ a:hover .arrow { transform: translateX(4px); }
   </nav>
 
   <!-- HERO -->
-  <header id="top" class="px-4 pb-8 pt-32 sm:pb-16 lg:px-20 lg:pb-24 lg:pt-40">
+  <header id="top" class="hero-tint px-4 pb-8 pt-32 sm:pb-16 lg:px-20 lg:pb-24 lg:pt-40">
     <div class="mx-auto max-w-7xl">
-      <div style="max-width:1080px;">
-        <h1 class="enter type-display-sm sm:text-5xl" style="animation-delay:80ms">Digital Loans<span class="brand-dot">.</span></h1>
+      <div class="hero-split">
+      <div>
+        <!-- Dateline (B73, 2026-09-01), same move as ../Internal-Systems/index.html: Years and
+             Duration were pulled out of the four-field grid and set above the H1 as one muted line.
+             The four fields were never equal, two are timestamps and two are substance, and here
+             the imbalance was worse than on Internal because Duration was a two-line value sitting
+             beside three one-line ones. Role and Scope now have the body to themselves. -->
+        <p class="enter type-label-sm text-muted" style="animation-delay:60ms">2022&ndash;2026 &middot; 6 months, 2 phases</p>
+        <h1 class="enter type-display-sm mt-3 sm:text-5xl" style="animation-delay:80ms">Digital Loans<span class="brand-dot">.</span></h1>
         <!-- B29 pilot, 2026-08-12 v3: switched from content-driven auto_auto_auto_1fr
              columns to fixed widths for Year/Role/Duration (Scope stays flexible).
              Auto-sizing made each column exactly as wide as its own value, so the
@@ -721,31 +1191,79 @@ a:hover .arrow { transform: translateX(4px); }
              4rem->7rem to fit "2022-2026" on one line, Duration widened 6rem->9rem to fit
              "6 months" / "(2 phases)" on two lines (Ofir's ask). This file's own inline grid template only, doesn't touch
              the other 2 case studies' copies of this same pattern. -->
-        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-[7rem_13rem_9rem_1fr] sm:gap-x-10" style="animation-delay:240ms">
-          <div>
-            <p class="type-body-md text-muted">Years</p>
-            <p class="type-body-lg mt-1 font-medium text-default">2022&ndash;2026</p>
-          </div>
+        <!-- B73, 2026-09-01: down to two fields, matching ../Internal-Systems/index.html. The old
+             four fixed-width columns (7rem/13rem/9rem/1fr) are gone with Years and Duration, which
+             now live in the dateline above. -->
+        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-x-8" style="animation-delay:240ms">
           <div>
             <p class="type-body-md text-muted">Role</p>
             <p class="type-body-lg mt-1 font-medium text-default">Product Design Manager</p>
           </div>
           <div>
-            <p class="type-body-md text-muted">Duration</p>
-            <p class="type-body-lg mt-1 font-medium text-default">6 months<br>(2 phases)</p>
-          </div>
-          <div>
             <p class="type-body-md text-muted">Scope</p>
-            <p class="type-body-lg mt-1 font-medium text-default" style="max-width:495px;">Product Strategy, UX, UI, Microcopy, Usability Testing, Legal Collaboration, Design System, Animations</p>
+            <!-- B73, 2026-09-01: eight items down to six. B59's fourth principle is that fields have
+                 to be RANKED, not merely separated, and eight comma-separated items at flat weight
+                 is a list nobody reads. Design System came off because it is its own case study on
+                 this site, and Animations because the media already shows them and it reads as a
+                 deliverable rather than a responsibility. Usability Testing STAYS: it was briefly
+                 cut on the grounds that it also appears on Internal Mortgage System, which is the
+                 wrong test for a factual field. This project carried lab testing with real
+                 customers, customer-journey work and Glassbox, so it is earned here.
+            ROLLBACK (all eight): Product Strategy, UX, UI, Microcopy, Usability Testing, Legal Collaboration, Design System, Animations -->
+            <p class="type-body-lg mt-1 font-medium text-default">Product Strategy, UX, UI, Microcopy, Usability Testing, Legal Collaboration</p>
           </div>
         </div>
+        <!-- B73 copy pass, 2026-09-01, second version. The first pass replaced "Redesigned" (which
+             describes a task) with "I flipped the order" (which describes an action). This one goes
+             one step further and says what the change was WORTH, because a hero that reports a
+             reordering is reporting a mechanism, not a result.
+             THE RULE THIS SETTLED, and it should govern every other hero tagline on this site: the
+             opening paragraph summarises what the PROJECT was, not what Ofir did about it. The
+             advocacy, the disagreement and the credit belong in the body, where there is room to
+             evidence them. Two revisions were rejected on exactly this ground, "I argued for asking
+             first" and then "I proposed asking first", both of which lead with the role instead of
+             the work. Note that "argued" also carries a combative note in English that reads as
+             boastful in a portfolio, so avoid it regardless.
+             Authorship is restored by ONE word instead: "My strategy" rather than "The strategy".
+             The strategy is anonymous otherwise, and a reader cannot tell whose idea it was. It
+             also echoes this page's own "the strategy." section heading further down, tying the
+             opening to the body, which "My approach" would not do.
+             The sentence then runs as problem, then strategy in three beats, and those three beats
+             are the page's own reading order: challenge, mvp, strategy.
+             "four or five offers" was dropped because that detail now carries card 01 in "the
+             challenge", one scroll below. No fact should be spent twice that close together.
+             44 words.
+        ROLLBACK (first B73 pass):
+        <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms;">Bank Hapoalim's loan flow opened with four or five offers before anyone checked whether the customer qualified. I flipped the order: eligibility comes first, and everything after it is shaped by the reason the customer came.</p>
+        ROLLBACK (pre-B73 tagline):
         <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms; max-width:790px;">Redesigned Bank Hapoalim's loan request flow: offers used to appear before eligibility was ever checked. Flipped the order and personalized what's left around the customer's stated purpose.</p>
+        -->
+        <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms;">Bank Hapoalim's loan flow showed offers before checking whether anyone qualified for them. My strategy was to invert it: ask for the amount and the purpose first, check eligibility on the opening screen, and let the reason for the loan shape everything that follows.</p>
         <div class="enter mt-6 flex flex-wrap gap-2" style="animation-delay:420ms">
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">iOS</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Android</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Web</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Banking</span>
         </div>
+      </div>
+
+      <!-- Device column (B73, 2026-09-01). Ofir's own Figma composite: the web flow on a MacBook
+           with the app flow on a phone in front of it, which is right for this project because the
+           product genuinely shipped on both surfaces, unlike Internal's laptop-only dashboard.
+           Alt text describes the two screens, not the hardware: the frames are presentation, the
+           flow is the content. -->
+      <!-- 560ms -> 380ms (B73, 2026-09-01). The delays came over from Internal, where the laptop is
+           a quieter element. Here the composite is the largest thing on the screen, and at 560ms it
+           was arriving AFTER the metrics card that sits below it, so the entrance ran down the left
+           column, jumped to the bottom of the page, then jumped back up to the right. At 380ms it
+           lands alongside the tags, so the two columns resolve together as one hero and the metrics
+           card closes the sequence. Only two numbers changed, this one and the card's. -->
+      <div class="enter" style="animation-delay:380ms">
+        <div class="hero-device-frame">
+          <img width="1422" height="833" decoding="async" src="assets/01_hero_device.webp" alt="The loan request flow on both surfaces: the app asking what the loan is for, with a vacation illustration selected, and the web screen searching for an offer that matches.">
+        </div>
+      </div>
+
       </div>
 
       <!-- B29 pilot, 2026-08-12 v4: moved out of the 1080px text wrapper above (was
@@ -772,7 +1290,9 @@ a:hover .arrow { transform: translateX(4px); }
            breadcrumb, category pill, and Challenge/Redesign hero summary since
            those aren't sourced from career-master.md and overlap with the
            still-undecided B34 synopsis block). -->
-      <div class="enter mt-6 rounded-lg border border-border-default bg-card p-6" style="animation-delay:480ms">
+      <!-- B73, 2026-09-01: `mt-6` swapped for `.hero-metrics`, which derives its own top margin from
+           --shadow-reach so this card can never paint over the device's cast shadow. -->
+      <div class="enter hero-metrics rounded-lg border border-border-default bg-card p-6" style="animation-delay:560ms">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span class="type-label-sm text-muted">where it stands today</span>
           <span class="inline-flex items-center gap-1.5 type-label-sm" style="color:var(--color-primary);">
@@ -809,80 +1329,10 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
       </div>
 
-      <!-- 2026-08-10: hero strip. Sky/ground two-tone background matches the app's own loader
-           screens (colors sampled from Ofir's reference screenshot), CSS cloud blobs drift
-           slowly in the sky band, and 12 animations (each product's "loader" + "finish" state,
-           see Digital-Loans/*-loader.json and *-finish.json) sit on the strip at their natural
-           portrait ratio, bottom-anchored, no card/border. Icon track A carries the staggered
-           "landing" entrance, track B is an unanimated duplicate so the sideways loop wraps
-           seamlessly, both fed the same 12 files. Added 2026-08-10j: the original 6 loaders
-           alone read as repetitive on a loop this long, per Ofir. -->
-      <div class="enter hero-strip mt-12 w-full lg:mt-16" style="animation-delay:540ms">
-        <div class="hero-strip__clouds" aria-hidden="true">
-          <div class="hero-strip__clouds-track hero-strip__clouds-track--back">
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-          </div>
-          <div class="hero-strip__clouds-track hero-strip__clouds-track--front">
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
-          </div>
-        </div>
-        <div class="conveyor-track">
-          <div class="conveyor-card land" data-lottie="car-loader.json" style="animation-delay:1.5s"></div>
-          <div class="conveyor-card land" data-lottie="car-finish.json" style="animation-delay:1.6s"></div>
-          <div class="conveyor-card land" data-lottie="debt-coverage-loader.json" style="animation-delay:1.7s"></div>
-          <div class="conveyor-card land" data-lottie="debt-coverage-finish.json" style="animation-delay:1.8s"></div>
-          <div class="conveyor-card land" data-lottie="loan-request-loader.json" style="animation-delay:1.9s"></div>
-          <div class="conveyor-card land" data-lottie="loan-request-finish.json" style="animation-delay:2.0s"></div>
-          <div class="conveyor-card land" data-lottie="medical-loader.json" style="animation-delay:2.1s"></div>
-          <div class="conveyor-card land" data-lottie="medical-finish.json" style="animation-delay:2.2s"></div>
-          <div class="conveyor-card land" data-lottie="studies-loader.json" style="animation-delay:2.3s"></div>
-          <div class="conveyor-card land" data-lottie="studies-finish.json" style="animation-delay:2.4s"></div>
-          <div class="conveyor-card land" data-lottie="vacation-loader.json" style="animation-delay:2.5s"></div>
-          <div class="conveyor-card land" data-lottie="vacation-finish.json" style="animation-delay:2.6s"></div>
-          <div class="conveyor-card" data-lottie="car-loader.json"></div>
-          <div class="conveyor-card" data-lottie="car-finish.json"></div>
-          <div class="conveyor-card" data-lottie="debt-coverage-loader.json"></div>
-          <div class="conveyor-card" data-lottie="debt-coverage-finish.json"></div>
-          <div class="conveyor-card" data-lottie="loan-request-loader.json"></div>
-          <div class="conveyor-card" data-lottie="loan-request-finish.json"></div>
-          <div class="conveyor-card" data-lottie="medical-loader.json"></div>
-          <div class="conveyor-card" data-lottie="medical-finish.json"></div>
-          <div class="conveyor-card" data-lottie="studies-loader.json"></div>
-          <div class="conveyor-card" data-lottie="studies-finish.json"></div>
-          <div class="conveyor-card" data-lottie="vacation-loader.json"></div>
-          <div class="conveyor-card" data-lottie="vacation-finish.json"></div>
-        </div>
-      </div>
+      <!-- The sky/lottie strip that used to close this hero now lives in "happy flow" further
+           down the page. It was not decoration there and it is not a rollback here: its twelve
+           animations are the loader and finish states of the six loan purposes, so it belongs where
+           the page introduces those purposes. Full reasoning sits with the markup in that section. -->
     </div>
   </header>
 
@@ -902,32 +1352,97 @@ a:hover .arrow { transform: translateX(4px); }
        to the meta description/OG/Twitter tags, hero subheading, and "the mvp." section's point 01
        below. -->
   <section id="challenge" class="px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl border-t border-border-default pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
-      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
-        <div class="lg:col-span-6">
-          <h2 class="reveal type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
+    <!-- B73, 2026-09-01: border-t dropped. The hero's tint now ends exactly at this boundary, so
+         the edge of the texture is the separator. Same call as on ../Internal-Systems/index.html.
+         ROLLBACK: re-add `border-t border-border-default` to the div below. -->
+    <div class="case-scope mx-auto max-w-7xl pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+      <!-- B73, 2026-09-01. The heading and the intro moved OUT of the left column and now sit full
+           width above the split, which contains only cards and media.
+           WHY, and it is an alignment argument rather than a tidiness one. The heading and intro are
+           the section's frame; the cards and the phone are its evidence. Lifting the frame out lets
+           the two evidence columns share a real top edge, so the reader sees one horizontal line
+           where both sides begin. The alternative Ofir weighed, centring the phone against card 02,
+           creates no shared edge at all: it balances mass around a midpoint the eye cannot see.
+           It also survives editing. The split previously carried `lg:items-center`, which centred
+           the phone against heading plus intro plus three cards, so the phone straddled the
+           paragraph and the cards. Any centring, on the column or on card 02, drifts silently every
+           time a line of copy is added. A shared top edge does not move.
+           NO MAGIC NUMBERS. The alignment falls out of the structure. The alternative was to leave
+           the heading inside the column and push the media down by a measured margin, which would
+           break on the next copy edit and on every viewport where the intro wraps differently.
+           The intro keeps max-w-prose, so going full width does not stretch it to an unreadable
+           measure. -->
+      <h2 class="reveal type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
+          <!-- B73 copy pass, 2026-09-01. The old paragraph asserted the problem; this one opens
+               with the evidence for it, which is the research Ofir actually ran. It also stops
+               duplicating the hero: the four-or-five offers and the fifteen backend templates now
+               live in card 01 below, one scroll away, and no fact should be spent twice that close
+               together.
+          ROLLBACK (pre-B73):
           <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The loan request flow, in the app and website, for existing private customers. It opened straight into 4-5 offers at different amounts, drawn from roughly 15 loan-type templates behind the scenes, before ever asking what the customer actually needed. Customers picked an offer and ran the calculator first, only finding out whether they were eligible deep into the flow.</p>
+          -->
+      <p class="case-intro reveal type-body-lg mt-6 max-w-prose text-secondary">The loan request flow in Bank Hapoalim's app and website, for existing private customers. I watched what people actually did in it: they worked through the options one at a time, gave up, came back, and often could not say what they had just applied for.</p>
 
-          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
-            <div>
-              <span class="type-label-sm stat-accent-green">01</span>
-              <h3 class="type-headline-sm mt-2">Multi-Platform Friction</h3>
-              <p class="type-body-md mt-2 text-secondary">Built around internal banking structures, not user intent, driving high drop-offs.</p>
+      <div class="case-split mt-12 grid grid-cols-1 lg:mt-16 lg:grid-cols-12 lg:items-start">
+        <div class="lg:col-span-6">
+          <!-- B73, 2026-09-01. The copy inside these cards is UNCHANGED and still pending its own
+               pass, so do not read the current wording as final.
+               The blocks STAY in the text column beside the phone, stacked one under another, and
+               they are now cards rather than bare numbered paragraphs. A first pass moved them out
+               to a full-width three-across row below the split and that was wrong: the media here
+               is a tall portrait phone, so pulling the text out leaves a short paragraph floating
+               beside a tall video, and the stacked column is what gives the split two sides of
+               comparable height. A row across the bottom is right when the media is landscape, not
+               when it is a phone.
+               Four blocks became three. "The Core Dilemma" is parked below and is moving to "the
+               mvp": it describes a decision Ofir made while designing the fix (how many offers to
+               show, in what order, and by what logic), not a problem the customer met. The other
+               three are all customer-facing, so the set is now consistent. Numbering closed up, the
+               old 04 is now 03.
+               PARKED, to be rewritten into "the mvp" against the real ranking logic recorded in
+               career-master.md (interest rate, closeness to the requested amount, and immediacy of
+               approval), which is a far better answer than this placeholder ever was:
+               <span class="type-label-sm stat-accent-green">03</span>
+               <h3 class="type-headline-sm mt-2">The Core Dilemma</h3>
+               <p class="type-body-md mt-2 text-secondary">How many offers to show, in what order, and which metadata truly drives the decision.</p>
+          -->
+          <div class="reveal-stagger grid grid-cols-1 gap-6">
+            <!-- B73 copy pass, 2026-09-01. All three rewritten into the 35 to 44 word range from a
+                 13 to 20 word spread, and every heading now makes a claim that its paragraph then
+                 proves rather than restates.
+                 SOURCES, all in career-master.md under Digital Loans: the old lobby screen and its
+                 tile wording; the ~15 backend loan types and the fact they sat BEHIND the screen
+                 while only four or five tiles showed, which is the easy mistake here; the full old
+                 sequence including the simulated calculator; and the dry, legalistic tone.
+                 TWO NAMING RULES THAT APPLY TO EVERY SECTION OF THIS PAGE:
+                 1. The six loan purposes are fixed strings that appear in the happy-flow menu below,
+                    Vacation, Car, Medical, Studies, Debt Coverage, Shopping. Never paraphrase them.
+                    An earlier draft of card 03 said "a family holiday", which silently broke that.
+                 2. Card 01 quotes real tiles from the OLD lobby, which are marketing headlines and
+                    not purposes. "Upgrading the holiday" was one of them and was deliberately
+                    swapped out because it collided with Vacation. The pair used instead, an employer
+                    loan beside a wait-for-payday loan, also demonstrates the incoherence better.
+                 CONFIDENTIALITY: Ofir's real example named a specific external employer. It is
+                 written generically here on purpose. Do not restore a brand name.
+            ROLLBACK (pre-B73 wording):
+                 01 Multi-Platform Friction: Built around internal banking structures, not user intent, driving high drop-offs.
+                 02 Eligibility Came Last: Customers explored offers and ran the calculator before ever finding out, late in the flow, whether they qualified.
+                 03 The Transactional Gap: Dry, legalistic, intimidating: disconnected from the user's real milestone.
+            -->
+            <div class="step-card">
+              <span class="step-card__num type-label-sm" aria-hidden="true">01</span>
+              <h3 class="type-headline-sm">A Lobby, Not a Product</h3>
+              <p class="type-body-md mt-2 text-secondary">A loan for one employer's staff, up to 50,000. No need to wait for payday, up to 7,000 at 500 a month. Every new loan type added another tile, around fifteen behind the screen, and nothing explained how one differed from the next.</p>
             </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">02</span>
-              <h3 class="type-headline-sm mt-2">Eligibility Came Last</h3>
-              <p class="type-body-md mt-2 text-secondary">Customers explored offers and ran the calculator before ever finding out, late in the flow, whether they qualified.</p>
+            <div class="step-card">
+              <span class="step-card__num type-label-sm" aria-hidden="true">02</span>
+              <h3 class="type-headline-sm">Eligibility Came Last</h3>
+              <p class="type-body-md mt-2 text-secondary">Pick a tile, run a simulated calculator, keep going, and only then get asked what the loan was for and whether the bank would approve it. If the answer was no, that was the end, several screens after the hope had already been built.</p>
             </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">03</span>
-              <h3 class="type-headline-sm mt-2">The Core Dilemma</h3>
-              <p class="type-body-md mt-2 text-secondary">How many offers to show, in what order, and which metadata truly drives the decision.</p>
-            </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">04</span>
-              <h3 class="type-headline-sm mt-2">The Transactional Gap</h3>
-              <p class="type-body-md mt-2 text-secondary">Dry, legalistic, intimidating: disconnected from the user's real milestone.</p>
+            <div class="step-card">
+              <span class="step-card__num type-label-sm" aria-hidden="true">03</span>
+              <h3 class="type-headline-sm">A Transaction, Not a Milestone</h3>
+              <p class="type-body-md mt-2 text-secondary">Every screen read like a contract. The same dry, legalistic wording ran whether the money was for a vacation or for medical treatment, with nothing in it acknowledging that the person on the other side was doing something that mattered to them.</p>
             </div>
           </div>
         </div>
@@ -972,8 +1487,31 @@ a:hover .arrow { transform: translateX(4px); }
   </div>
   -->
   <section id="mvp" class="bg-surface-alt px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl py-20 lg:py-28">
-      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+    <div class="case-scope mx-auto max-w-7xl py-20 lg:py-28">
+      <!-- B73, 2026-09-01. Same structure as "the challenge" above: heading and intro lifted to full
+           width, and the split below carries only cards and media so the two share one top edge.
+           The zigzag is preserved, media LEFT and cards RIGHT here, opposite of the challenge, so
+           the three 50/50 blocks down this page still alternate rather than repeating a side.
+           SURFACE: bone, against the challenge's sage. Consecutive card sections need different
+           surfaces or five card grids in a row read as one repeated block. The section keeps its
+           bg-surface-alt ground; bone is warm and surface-alt is cool, so they separate by hue
+           rather than by value. If that reads muddy on a real screen, the fix is to move this
+           section to white, not to change the card.
+           The intro is capped to one column like the challenge's, so both sections read at the same
+           measure. Note it aligns with the MEDIA column here rather than with the cards, because the
+           cards sit right on this section. That is still one shared left edge down the page, which
+           is what matters; forcing the intro to the right to chase the cards would break it. -->
+      <h2 class="reveal type-headline-md max-w-2xl">the mvp<span class="brand-dot">.</span></h2>
+      <!-- B73 copy pass, 2026-09-01. Absorbs the old card 02, "A Backend Constraint, Reframed",
+           which was saying the same thing this paragraph already said. First person, and it names
+           the layer the fix moved to rather than calling it "the UX layer", which is jargon a
+           recruiter reads past. 44 words.
+      ROLLBACK (pre-B73):
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The first proposal was to simplify the ~15 loan types behind the scenes, bank-wide. That was blocked by backend and organizational constraints, so the fix moved to the UX layer instead: change what the user is asked, not what the bank offers.</p>
+      -->
+      <p class="case-intro reveal type-body-lg mt-6 max-w-prose text-secondary">My first proposal was to reduce the roughly fifteen loan types themselves, bank-wide. Backend and internal constraints ruled that out, so the fix moved to the only layer I could actually change: not what the bank offers, but what it asks for, and when.</p>
+
+      <div class="case-split mt-12 grid grid-cols-1 lg:mt-16 lg:grid-cols-12 lg:items-start">
         <div class="order-2 lg:order-1 lg:col-span-6">
           <div id="mvpMedia" class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
             <video class="h-auto w-full" src="loan_mvp.mp4" muted loop playsinline preload="auto"></video>
@@ -982,24 +1520,42 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
 
         <div class="order-1 lg:order-2 lg:col-span-6">
-          <h2 class="reveal type-headline-md max-w-2xl">the mvp<span class="brand-dot">.</span></h2>
-          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The first proposal was to simplify the ~15 loan types behind the scenes, bank-wide. That was blocked by backend and organizational constraints, so the fix moved to the UX layer instead: change what the user is asked, not what the bank offers.</p>
-
-          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
-            <div>
-              <span class="type-label-sm stat-accent-green">01</span>
-              <h3 class="type-headline-sm mt-2">Intent-Based Discovery</h3>
-              <p class="type-body-md mt-2 text-secondary">Invert the order: capture amount and purpose first, check eligibility in a loader, then surface offers, before the customer ever touches a calculator.</p>
+          <!-- B73 copy pass, 2026-09-01. Three cards, all rewritten against career-master.md.
+               01 now carries the story the page never told: the product manager wanted the
+               eligibility check late so the bank could collect a lead, and the counter-argument is
+               why it moved. The regulation does NOT dictate order, so never imply the inversion was
+               compliance; it was a proposal, and it was argued for.
+               02 is the offer-ranking engine, which arrived here from "the challenge", where it had
+               been a vague block called "The Core Dilemma". It shipped in the MVP, backend included.
+               The percentage threshold that decides whether a third immediate-approval offer appears
+               is deliberately absent: Ofir recalls it near 10 percent but is not confident, so it is
+               treated as vague, same class as the 8-minute metric on Internal Mortgage System.
+               03 replaced "Continuous Iteration", which said something general about balancing
+               compliance against psychology. The claim is now the practice, measurement through
+               Glassbox and dashboards, with the desktop tile fix as ONE illustration of it rather
+               than as the subject. Ofir's framing: the product was always live, so do not describe
+               this project as two finished chapters despite the hero's "2 phases".
+               NO PER-PHASE NUMBERS anywhere in this section, per the 18% guardrail.
+          ROLLBACK (pre-B73 wording):
+               01 Intent-Based Discovery: Invert the order: capture amount and purpose first, check eligibility in a loader, then surface offers, before the customer ever touches a calculator.
+               02 A Backend Constraint, Reframed: Reducing the loan-type logic itself wasn't possible in one move. Reordering the flow around it was.
+               03 Continuous Iteration: Balance compliance with user psychology through testing: smart bundling resolves best rate versus full amount.
+          -->
+          <div class="reveal-stagger grid grid-cols-1 gap-6">
+            <div class="step-card step-card-bone">
+              <span class="step-card__num type-label-sm" aria-hidden="true">01</span>
+              <h3 class="type-headline-sm">Stop People Early, Not Late</h3>
+              <p class="type-body-md mt-2 text-secondary">Amount and purpose moved to the opening screen, then the eligibility check, then offers. The product manager wanted that check late, so the bank could collect a lead along the way. But a lead that ends in a refusal was never a lead.</p>
             </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">02</span>
-              <h3 class="type-headline-sm mt-2">A Backend Constraint, Reframed</h3>
-              <p class="type-body-md mt-2 text-secondary">Reducing the loan-type logic itself wasn't possible in one move. Reordering the flow around it was.</p>
+            <div class="step-card step-card-bone">
+              <span class="step-card__num type-label-sm" aria-hidden="true">02</span>
+              <h3 class="type-headline-sm">Ranked, Not Listed</h3>
+              <p class="type-body-md mt-2 text-secondary">Ask for 80,000 and the first offer might be 70,000, because it clears instantly and at a better rate. The full amount sits below it, approved by a banker. Rate, closeness to what was asked, and speed of approval decide the order.</p>
             </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">03</span>
-              <h3 class="type-headline-sm mt-2">Continuous Iteration</h3>
-              <p class="type-body-md mt-2 text-secondary">Balance compliance with user psychology through testing: smart bundling resolves best rate versus full amount.</p>
+            <div class="step-card step-card-bone">
+              <span class="step-card__num type-label-sm" aria-hidden="true">03</span>
+              <h3 class="type-headline-sm">Nothing Shipped Finished</h3>
+              <p class="type-body-md mt-2 text-secondary">Glassbox and dashboards showed what people did rather than what they said. On desktop they clicked whole offer tiles instead of the button inside them, so the tiles went from a stack to a row, which fixed the clicks and made the offers comparable.</p>
             </div>
           </div>
         </div>
@@ -1093,27 +1649,61 @@ a:hover .arrow { transform: translateX(4px); }
        mvp/strategy were split earlier and with how the rest of the page already works (no borders
        between top-level sections, only bg differences). -->
   <section id="strategy" class="px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl py-20 lg:py-28">
-      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
-        <div class="lg:col-span-6">
-          <h2 class="reveal type-headline-md max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
-          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Declaring the loan's purpose is a mandatory field for every credit provider in Israel, not a design choice. Instead of treating it as a compliance checkbox, it became the engine for the entire experience's tone, illustration, and closing moment.</p>
+    <div class="case-scope mx-auto max-w-7xl py-20 lg:py-28">
+      <!-- B73, 2026-09-01. Same structure as the two sections above: heading and intro at full width,
+           split below carrying only cards and media, sharing one top edge.
+           Cards go LEFT here, matching "the challenge", because "the mvp" between them put them
+           right. The three 50/50 blocks down this page therefore alternate rather than repeating a
+           side, which is the arrangement the page already had before B73.
+           SURFACE: white with a hairline, the third of three. Sage on "the challenge", bone on "the
+           mvp", white here, so no card surface repeats on consecutive sections and five card grids
+           in a row do not read as one block. -->
+      <h2 class="reveal type-headline-md max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
+      <!-- B73 copy pass, 2026-09-01. The old paragraph said the field "became the engine", which is
+           the claim the cards below then repeat. This one adds the fact that makes it land: the
+           answer feeds the eligibility check itself, so the field was never decoration.
+           REGULATORY ACCURACY, and this is easy to get wrong. Under Israel's credit data law the
+           check runs on amount PLUS purpose together, and the mandatory purpose field IS that
+           requirement, not a second one beside it. The law does NOT dictate WHEN they are collected,
+           so nothing on this page may imply the reordering was compliance; that was Ofir's proposal
+           and it is told in "the mvp". 44 words.
+      ROLLBACK (pre-B73):
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Declaring the loan's purpose is a mandatory field for every credit provider in Israel, not a design choice. Instead of treating it as a compliance checkbox, it became the engine for the entire experience's tone, illustration, and closing moment.</p>
+      -->
+      <p class="case-intro reveal type-body-lg mt-6 max-w-prose text-secondary">Declaring what the loan is for is not a design choice. Every credit provider in Israel has to ask it, and the answer feeds the eligibility check itself. It arrived as a compliance field, and it was the most useful thing on the screen.</p>
 
-          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
-            <div>
-              <span class="type-label-sm stat-accent-green">01</span>
-              <h3 class="type-headline-sm mt-2">A Regulatory Step, Reframed</h3>
-              <p class="type-body-md mt-2 text-secondary">A field the bank is required to ask becomes the reason the rest of the flow feels considered instead of generic.</p>
+      <div class="case-split mt-12 grid grid-cols-1 lg:mt-16 lg:grid-cols-12 lg:items-start">
+        <div class="lg:col-span-6">
+          <!-- B73 copy pass, 2026-09-01. All three rewritten from career-master.md.
+               02 is the real Hebrew microcopy Ofir wrote, translated: the car loader, the vacation
+               loader, and the debt-coverage loader. The debt-coverage contrast is the point of the
+               card, since it shows the tone tracking an emotional register rather than swapping an
+               illustration. Do not invent further examples; only the ones logged in career-master.md
+               are confirmed.
+               ATTRIBUTION GUARDRAIL: the male/female Hebrew microcopy mechanism is an existing
+               app-wide system that Ofir leveraged, NOT something he built. It is deliberately absent
+               from these cards. Purpose-based personalisation is the part he owns.
+               03 uses the six fixed purpose names exactly as the happy-flow menu below spells them.
+          ROLLBACK (pre-B73 wording):
+               01 A Regulatory Step, Reframed: A field the bank is required to ask becomes the reason the rest of the flow feels considered instead of generic.
+               02 Emotional and Human-Centric: Turn a dry transaction into an aspirational milestone with contextual visual worlds and reassuring microcopy.
+               03 Six Distinct Journeys: Vacation, car, medical, studies, debt coverage, or shopping, each with its own illustration, loader microcopy, and closing moment.
+          -->
+          <div class="reveal-stagger grid grid-cols-1 gap-6">
+            <div class="step-card step-card-white">
+              <span class="step-card__num type-label-sm" aria-hidden="true">01</span>
+              <h3 class="type-headline-sm">One Answer, Everything Downstream</h3>
+              <p class="type-body-md mt-2 text-secondary">Whichever purpose someone picks on the first screen decides the illustration they see, the wording of the loader while eligibility runs, and the sentence that greets them at the end. One required field, collected once, shaping every screen after it.</p>
             </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">02</span>
-              <h3 class="type-headline-sm mt-2">Emotional &amp; Human-Centric</h3>
-              <p class="type-body-md mt-2 text-secondary">Turn a dry transaction into an aspirational milestone with contextual visual worlds and reassuring microcopy.</p>
+            <div class="step-card step-card-white">
+              <span class="step-card__num type-label-sm" aria-hidden="true">02</span>
+              <h3 class="type-headline-sm">Written for the Moment, Not the Product</h3>
+              <p class="type-body-md mt-2 text-secondary">A car loan waits behind &ldquo;your car is almost here&rdquo;. A vacation says &ldquo;packing your offers&rdquo;. Debt coverage drops the cheer entirely and says we are here to help you get back on balance. The same screen, six different rooms.</p>
             </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">03</span>
-              <h3 class="type-headline-sm mt-2">Six Distinct Journeys</h3>
-              <p class="type-body-md mt-2 text-secondary">Vacation, car, medical, studies, debt coverage, or shopping, each with its own illustration, loader microcopy, and closing moment.</p>
+            <div class="step-card step-card-white">
+              <span class="step-card__num type-label-sm" aria-hidden="true">03</span>
+              <h3 class="type-headline-sm">A Loan Is a Product, Not a Procedure</h3>
+              <p class="type-body-md mt-2 text-secondary">Vacation, Car, Medical, Studies, Debt Coverage and Shopping are six different states of mind, not six labels. Someone borrowing for treatment is not in the same place as someone booking a flight, and a bank that writes to both identically is writing to neither.</p>
             </div>
           </div>
         </div>
@@ -1130,9 +1720,103 @@ a:hover .arrow { transform: translateX(4px); }
 
   <!-- HAPPY FLOW -->
   <section id="happy-flow" class="bg-surface-alt px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl py-20 lg:py-28">
+    <div class="case-scope mx-auto max-w-7xl py-20 lg:py-28">
       <span class="reveal type-label-sm text-muted">The Full Product</span>
       <h2 class="reveal type-headline-md mt-4 max-w-2xl">happy flow<span class="brand-dot">.</span></h2>
+      <!-- B73, 2026-09-01. This section had no prose at all: an eyebrow, a heading, then straight
+           into a menu and a filmstrip, with nothing telling the reader what they were looking at.
+           One paragraph now introduces BOTH the strip below it and the picker below that, which is
+           why it is written to point forward twice. 44 words. -->
+      <p class="case-intro reveal type-body-lg mt-6 max-w-prose text-secondary">The animations below are the loader and closing moments from all six purposes at once. Pick one from the menu underneath and that purpose&rsquo;s whole flow plays in order, from the opening request through the eligibility check to the screen confirming the money moved.</p>
+
+      <!-- PURPOSE STRIP, moved here from the hero (B73, 2026-09-01). Nothing visual changed: same
+           sky and ground, same clouds, same radius, same sizes. Only its position and its trigger.
+           WHY HERE, and the order is the whole argument. A marquee says "there are many of these";
+           a picker says "here are several different things, look at one at a time". Those are
+           complementary only in this sequence: six worlds first, then one walked end to end. After
+           the picker it would be a repetition of something the reader had already been shown.
+           It also stops being decoration. Two of the filmstrip's six stations are Loader and Finish,
+           which is exactly what these twelve animations are, so the strip now reads as the flavour
+           and the filmstrip as the same moments in context.
+           TRIGGER CHANGED, and this is the one non-visual edit. In the hero it used `enter` plus
+           load-time delays, correct for something above the fold. Down here every one of those
+           animations would have finished about three seconds after page load, long before anyone
+           scrolled to it, so the entrance was simply lost. The wrapper now uses `reveal`, the
+           scroll system already running everywhere else on this page, and the per-card landing is
+           applied by an IntersectionObserver at the bottom of this file instead of being baked into
+           the markup.
+           DELAYS SHIFTED by 1.4s, from a 1.5-2.6s window to 0.1-1.2s. The 100ms spacing between
+           cards is the visual character and is untouched; the 1.4s head start existed only to wait
+           out the hero's own entrance animation and is dead air once the trigger is scroll.
+           ROLLBACK: restore `class="enter hero-strip mt-12 w-full lg:mt-16" style="animation-delay:540ms"`,
+           put `land` back on the first twelve cards, add 1.4s to each delay, and delete the
+           observer named purposeStrip in the script below. -->
+      <div class="reveal hero-strip mt-10 w-full lg:mt-12" id="purposeStrip">
+        <div class="hero-strip__clouds" aria-hidden="true">
+          <div class="hero-strip__clouds-track hero-strip__clouds-track--back">
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+          </div>
+          <div class="hero-strip__clouds-track hero-strip__clouds-track--front">
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+            <span class="cloud-drift"><img class="cloud-shape" src="cloud.png" alt=""></span>
+          </div>
+        </div>
+        <div class="conveyor-track">
+          <div class="conveyor-card" data-land data-lottie="car-loader.json" style="animation-delay:0.1s"></div>
+          <div class="conveyor-card" data-land data-lottie="car-finish.json" style="animation-delay:0.2s"></div>
+          <div class="conveyor-card" data-land data-lottie="debt-coverage-loader.json" style="animation-delay:0.3s"></div>
+          <div class="conveyor-card" data-land data-lottie="debt-coverage-finish.json" style="animation-delay:0.4s"></div>
+          <div class="conveyor-card" data-land data-lottie="loan-request-loader.json" style="animation-delay:0.5s"></div>
+          <div class="conveyor-card" data-land data-lottie="loan-request-finish.json" style="animation-delay:0.6s"></div>
+          <div class="conveyor-card" data-land data-lottie="medical-loader.json" style="animation-delay:0.7s"></div>
+          <div class="conveyor-card" data-land data-lottie="medical-finish.json" style="animation-delay:0.8s"></div>
+          <div class="conveyor-card" data-land data-lottie="studies-loader.json" style="animation-delay:0.9s"></div>
+          <div class="conveyor-card" data-land data-lottie="studies-finish.json" style="animation-delay:1.0s"></div>
+          <div class="conveyor-card" data-land data-lottie="vacation-loader.json" style="animation-delay:1.1s"></div>
+          <div class="conveyor-card" data-land data-lottie="vacation-finish.json" style="animation-delay:1.2s"></div>
+          <div class="conveyor-card" data-lottie="car-loader.json"></div>
+          <div class="conveyor-card" data-lottie="car-finish.json"></div>
+          <div class="conveyor-card" data-lottie="debt-coverage-loader.json"></div>
+          <div class="conveyor-card" data-lottie="debt-coverage-finish.json"></div>
+          <div class="conveyor-card" data-lottie="loan-request-loader.json"></div>
+          <div class="conveyor-card" data-lottie="loan-request-finish.json"></div>
+          <div class="conveyor-card" data-lottie="medical-loader.json"></div>
+          <div class="conveyor-card" data-lottie="medical-finish.json"></div>
+          <div class="conveyor-card" data-lottie="studies-loader.json"></div>
+          <div class="conveyor-card" data-lottie="studies-finish.json"></div>
+          <div class="conveyor-card" data-lottie="vacation-loader.json"></div>
+          <div class="conveyor-card" data-lottie="vacation-finish.json"></div>
+        </div>
+      </div>
 
       <div class="reveal mt-12 flex w-full flex-col gap-6 sm:flex-row sm:items-start" id="loanPurposeShowcase">
           <nav aria-label="Loan purpose" class="rounded-lg border border-border-default bg-card p-2 sm:w-56 sm:shrink-0">
@@ -1165,7 +1849,7 @@ a:hover .arrow { transform: translateX(4px); }
           </nav>
 
           <div class="min-w-0 rounded-lg border border-border-default bg-card p-4 sm:flex-1 sm:p-6">
-            <div class="snap-x snap-mandatory overflow-x-auto pb-2" id="loanPurposeStrip">
+            <div class="snap-x snap-mandatory overflow-x-auto pb-5" id="loanPurposeStrip">
             <div class="flex w-max gap-4" id="loanPurposeStripInner">
               <div class="flex w-56 shrink-0 snap-start flex-col items-center gap-2" data-slot="1">
                 <div class="aspect-[195/431] w-full overflow-hidden rounded-lg border border-border-default bg-neutral-100 shadow-md" data-slot-media>
@@ -1212,33 +1896,106 @@ a:hover .arrow { transform: translateX(4px); }
 
   <!-- PROOF -->
   <section id="proof" class="px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl py-20 lg:py-28">
-      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+    <div class="case-scope mx-auto max-w-7xl py-20 lg:py-28">
+
+      <div class="case-split mt-12 grid grid-cols-1 lg:mt-16 lg:grid-cols-12 lg:items-start">
+        <!-- HEADING AND INTRO STAY INSIDE THIS COLUMN, unlike the three sections above, and the
+             reason is measurable rather than stylistic. Everywhere else the left column carries
+             three cards against a tall portrait phone, so both sides come out roughly level and
+             lifting the heading to full width costs nothing. Here the left is two short blocks and
+             the right is a stack of three dark cards, one of them wide and tall. Lifting the heading
+             out opened two holes at once: empty space to the RIGHT of the intro, and empty space
+             BELOW the text blocks. Putting it back raises the stat cards to the top of the section
+             and lengthens this column, which closes both.
+             NOTE THIS DOES NOT BREAK THE PAGE'S LEFT SPINE. The column starts at the container's own
+             left edge, so "the proof." still sits at exactly the same x as the other three headings.
+             Only the vertical relationship changes. That is why the change is free.
+             Same arrangement as ../Internal-Systems/index.html's impact section, which is where the
+             imbalance was noticed by comparing the two side by side.
+             The intro drops .case-intro here: that class caps a paragraph to ONE COLUMN measured
+             against the full container, which inside a half-width column would cap it again to a
+             quarter. max-w-prose plus the column itself already give the right measure. -->
         <div class="lg:col-span-6">
-          <h2 class="reveal type-headline-md max-w-2xl">the proof<span class="brand-dot">.</span></h2>
-          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
+      <h2 class="reveal type-headline-md max-w-2xl">the proof<span class="brand-dot">.</span></h2>
+      <!-- B73, 2026-09-01. This section had NO intro paragraph at all, it went straight from the
+           heading into numbered blocks.
+           SCOPE WARNING on the figures in this paragraph, and they must not be merged. The million
+           and a half is BANK-WIDE digital traffic, already logged in career-master.md as a Bank
+           Hapoalim company-scale number. The ~180,000 is the loan flow specifically. The sentence is
+           built so one is a subset of the other, which is what makes the smaller number legible as
+           large; collapsing them into a single claim would be wrong. 45 words. -->
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The digital channel is the bank's largest branch. If it had a door, a million and a half people would walk through it every month, and roughly 180,000 of them come to ask about a loan. Getting that flow right was never a small fix.</p>
+
+          <!-- B73 copy pass, 2026-09-01. Three blocks became two cards, and the division of labour
+               is the point: the dark cards on the right say HOW MUCH, these say what no number
+               carries. Same split as ../Internal-Systems/index.html's impact section.
+               What was dropped and why:
+               "Self-Service Shift" held 80% and 180,000 inside prose; both are now figures on the
+               right, where a figure belongs, and repeating them here would be the third appearance
+               of the same numbers on one page after the hero's metrics card.
+               "Streamlined Decision Making" is absorbed into card 01, which makes the same claim
+               with the research behind it instead of asserting it.
+               "Cross-Squad Alignment" and its "4 autonomous business lines" are gone entirely. That
+               is an outcome of Ofir's ROLE, not of this project, so it never belonged in a proof
+               section. Separately, career-master.md flags the number itself for an accuracy pass:
+               he managed designers across five tribes over time but never five at once, three to
+               four concurrently, so "4" is a reasonable rounding rather than a fact. The same
+               phrase is still live in About Me on ../index.html and still needs that decision.
+               Card 02 carries no figure on purpose. "Hundreds of inquiries a month" is Ofir's own
+               confirmed wording and there is no exact number behind it; do not invent one.
+          ROLLBACK (pre-B73 wording):
+               01 Self-Service Shift: Migrated 80% of loan applications to digital self-service, cutting call-center dependency for roughly 180,000 people who enter the flow every month.
+               02 Streamlined Decision Making: Fewer drop-offs by removing choice paralysis and simplifying the metadata needed to pick an offer.
+               03 Cross-Squad Alignment: Unified design guidelines across 4 autonomous business lines, a baseline for scale.
+          -->
+          <!-- NOT step-cards, and that is deliberate. This is the one section on the page where the text
+                 column is NOT the main event: the dark stat cards on the right are. Wrapping these in
+                 cards too made both sides read at the same weight and flattened the hierarchy, which
+                 is exactly why ../Internal-Systems/index.html leaves its impact-section blocks bare.
+                 A card is a container, and containers compete. Only the numeral treatment carries
+                 over, so the page still looks like one page. Spacing does the work the padding used
+                 to, hence gap-8 rather than gap-6. -->
+            <div class="reveal-stagger grid grid-cols-1 gap-8">
             <div>
-              <span class="type-label-sm stat-accent-green">01</span>
-              <h3 class="type-headline-sm mt-2">Self-Service Shift</h3>
-              <p class="type-body-md mt-2 text-secondary">Migrated <span class="font-medium text-primary">80%</span> of loan applications to digital self-service, cutting call-center dependency for roughly <span class="font-medium text-primary">180,000</span> people who enter the flow every month.</p>
+              <span class="step-card__num type-label-sm" aria-hidden="true">01</span>
+              <h3 class="type-headline-sm">What People Left With</h3>
+              <p class="type-body-md mt-2 text-secondary">The flow now answers the two questions it used to leave open: can I get this, and is it right for me. People reach the end knowing what they signed up for, which the old one could not claim even of those who finished.</p>
             </div>
             <div>
-              <span class="type-label-sm stat-accent-green">02</span>
-              <h3 class="type-headline-sm mt-2">Streamlined Decision Making</h3>
-              <p class="type-body-md mt-2 text-secondary">Fewer drop-offs by removing choice paralysis and simplifying the metadata needed to pick an offer.</p>
-            </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">03</span>
-              <h3 class="type-headline-sm mt-2">Cross-Squad Alignment</h3>
-              <p class="type-body-md mt-2 text-secondary">Unified design guidelines across <span class="font-medium text-primary">4 autonomous business lines</span>, a baseline for scale.</p>
+              <span class="step-card__num type-label-sm" aria-hidden="true">02</span>
+              <h3 class="type-headline-sm">The Phones Went Quieter</h3>
+              <p class="type-body-md mt-2 text-secondary">Hundreds of inquiries a month stopped reaching the call centre. Customers were phoning to ask whether they qualified and what the numbers meant, and both of those now arrive on screen before anyone reaches for the phone.</p>
             </div>
           </div>
         </div>
 
+        <!-- Stat cards, the pattern from ../Internal-Systems/index.html. Two narrow then one wide
+             spanning both columns, and the wide one is the payoff, so the headline figure sits LAST
+             rather than first. Internal closes on -8 min the same way.
+             THE +18% EXPLANATION IS A GUARDRAIL, not just copy. career-master.md forbids ever
+             splitting or inferring a per-phase figure, for a real professional-risk reason: phase
+             level numbers could be triangulated against the bank's own financial reporting. Saying
+             "across the whole redesign, not a single release" closes that door in the copy itself.
+             The three figures also appear on the hero's metrics card. That is deliberate and matches
+             Internal: the hero teases where it stands, this section explains it, so the wording of
+             the captions here is different rather than repeated verbatim. -->
         <div class="lg:col-span-6">
-          <div class="reveal mx-auto flex w-full flex-col items-center gap-3 text-center">
-            <div class="type-display-lg" style="font-size:4.5rem; color:var(--color-button);">+18%</div>
-            <p class="type-body-lg max-w-xs text-secondary">Cumulative growth in loan conversions.</p>
+          <div class="reveal-stagger grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div class="stat-card">
+              <div class="stat-fig">80%</div>
+              <div class="stat-lbl">Self-service</div>
+              <div class="stat-exp">Share of loan applications now completed digitally, without a banker.</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-fig">~180K</div>
+              <div class="stat-lbl">Monthly entries</div>
+              <div class="stat-exp">People starting the loan flow every month, in the app and on the web.</div>
+            </div>
+            <div class="stat-card stat-card-wide sm:col-span-2">
+              <div class="stat-fig">+18%</div>
+              <div class="stat-lbl">Loan conversions</div>
+              <div class="stat-exp">Cumulative growth across the whole redesign, not a single release.</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1250,7 +2007,60 @@ a:hover .arrow { transform: translateX(4px); }
   <section class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl border-t border-border-default py-16 lg:py-20">
       <h2 class="reveal type-headline-md max-w-2xl">what I learned<span class="brand-dot">.</span></h2>
+      <!-- B73, 2026-09-01. Rewritten and given variant J's nested card, the same treatment as
+           ../Internal-Systems/index.html's closing section.
+           WHY THE OLD PARAGRAPH HAD TO GO, and it is a repetition problem this pass created rather
+           than found. It said the ambition was to fix the loan structure bank-wide, that this was
+           too complex organisationally, and that scoping down still delivered. "the mvp" now opens
+           with exactly that, two sections earlier, so the closing reflection was re-telling the
+           middle of the page. The lesson itself is real and is Ofir's; it simply already has a home.
+           WHAT REPLACED IT. Two reflections, both first person, neither retelling a section.
+           The first is Ofir's own answer to what he actually took away, and it went through two
+           rejected drafts worth recording so neither is retried. Draft one explained why there is no
+           per-phase 18% number: that is a caveat about a statistic, not a lesson, and the guardrail
+           is already stated on the stat card anyway. Draft two said the lobby screen accumulated
+           because nobody owned the sum of the decisions, and Ofir's read was that it comes across as
+           condescending, criticising an organisation rather than saying what he believes.
+           The version that stands says what he believes, which is what this section is for.
+           WORDING CHECKED AGAINST THE REST OF THE PAGE. "states of mind" appears once already, in
+           "the strategy" card 03, so this paragraph deliberately avoids it and says "where someone
+           is when they ask" instead, which also adds something the card does not: the difference is
+           between PEOPLE, not only between purposes. "feel" appears nowhere else on the page, and
+           "psychology" and "emotional" appear nowhere at all, which is why the plain word lands.
+           The second paragraph reframes the eligibility decision as DISAPPOINTMENT MANAGEMENT, which
+           is how Ofir actually thinks about it. Two drafts were rejected here too.
+           Draft one said the business would not get the lead it wanted. That is accurate but it was
+           already delivered, almost word for word, by "the mvp" card 01, so the closing section was
+           re-telling a punchline instead of adding one.
+           Draft two rewrote it as winning an argument. VOICE RULE, and it applies to every case
+           study on this site: "argument", "persuade", "the case that worked", "negotiation" and
+           "I convinced them" are not Ofir's words. He does not describe himself as arguing; he
+           explains why something does not make sense. A line claiming he has used an argument "in
+           every negotiation since" reads as boastful and stubborn at once.
+           What stands is the reasoning itself, from the customer's side, with no product manager in
+           it at all. The insight is about WHO THE CUSTOMER BLAMES: a refusal at the end is the bank
+           saying no, while the same refusal on the opening screen, arriving straight after the
+           credit registry is queried, reads as the customer's own credit data answering. Recorded in
+           career-master.md as the version to use in copy and interviews.
+           ONE HIGHLIGHT PER PARAGRAPH AND NO MORE, per the .copy-mark rule. Both sit on the closing
+           line of their paragraph, which is the line worth carrying away.
+           NO SUB-HEADINGS. The highlights do the skimming work a heading would do, and keeping both
+           would be the same emphasis twice. The section's own h2 stays.
+      ROLLBACK (pre-B73):
       <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">I originally wanted to fix the loan structure bank-wide, not just in the digital channel, but that was too complex organizationally to take on. Scoping down to digital still delivered real impact, and knowing when to make that trade-off is its own skill.</p>
+      -->
+      <div class="reveal learn-outer mt-8">
+        <div class="learn-inner">
+          <!-- The mark is drawn as geometry, three straight lines crossing at 60 degree steps, NOT
+               set as a type glyph. Internal recorded why and it is worth not rediscovering: Inter
+               Tight's asterisk is a soft petalled shape and at this size it reads as a leaf. -->
+          <svg class="learn-mark" aria-hidden="true" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="butt"><line x1="50" y1="8" x2="50" y2="92"/><line x1="13.6" y1="29" x2="86.4" y2="71"/><line x1="86.4" y1="29" x2="13.6" y2="71"/></svg>
+          <div class="learn-cols">
+            <p>A loan is not a product anyone expects to feel like anything. But two people asking for the same amount can be in completely different places, and I came out of this convinced that <span class="copy-mark">where someone is when they ask is part of the product, not a layer applied on top</span>.</p>
+            <p>I also learned something about disappointment. A refusal at the end of the flow is the bank turning you down. The same refusal on the opening screen, right after the credit registry answers, is your own credit data speaking. <span class="copy-mark">Same result, and a completely different thing to walk away with</span>.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1744,7 +2554,7 @@ a:hover .arrow { transform: translateX(4px); }
         });
       }
       // 2026-08-14: conveyor entrance for the strip's 6 cards (CSS transform/keyframes live in the
-      // <style> block above) - fires the first time the strip scrolls into view, same "observe once
+      // stylesheet block above) - fires the first time the strip scrolls into view, same "observe once
       // then unobserve" pattern used for challengeMedia/strategyMedia's video-autoplay triggers below
       // (this only controls the FIRST play; every later purpose switch replays it via
       // replayStripEntrance() above, called from the nav click handler). Skipped entirely under
@@ -1761,6 +2571,31 @@ a:hover .arrow { transform: translateX(4px); }
           });
         }, { threshold: 0.2 });
         stripIo.observe(strip);
+      }
+
+      // B73, 2026-09-01: the purpose strip's staggered "landing" entrance, moved out of page-load
+      // timing. It used to live in the hero with `land` baked into the markup and load-time delays,
+      // which was correct above the fold. Down here in "happy flow" those animations would all have
+      // finished about three seconds after load, long before anyone scrolled to them, so the
+      // entrance was being spent on an empty screen. The class is now added when the strip actually
+      // comes into view. The CSS is untouched: .conveyor-card.land still owns the animation, and the
+      // per-card delays still come from each card's own inline style, just shifted 1.4s earlier.
+      // unobserve on first hit, so this plays once and the sideways loop takes over, matching how
+      // every other reveal on this page behaves. Skipped under reduced motion, where the CSS block
+      // already forces the cards to their final visible state, so nothing is lost by not attaching.
+      var purposeStrip = document.getElementById('purposeStrip');
+      if (purposeStrip && !prefersReducedMotion) {
+        var purposeStripIo = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              purposeStripIo.unobserve(entry.target);
+              entry.target.querySelectorAll('[data-land]').forEach(function (card) {
+                card.classList.add('land');
+              });
+            }
+          });
+        }, { threshold: 0.2 });
+        purposeStripIo.observe(purposeStrip);
       }
     })();
   </script>
