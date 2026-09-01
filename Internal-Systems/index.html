@@ -1058,7 +1058,16 @@ a:hover .arrow { transform: translateX(4px); }
 
       <!-- Device column. Alt text describes the artefact, not the machine: the MacBook frame is
            presentation, the analytics screen is the content. -->
-      <div class="enter" style="animation-delay:560ms">
+      <!-- 560ms -> 380ms (2026-09-01). The device was arriving AFTER the metrics card that sits
+           BELOW it, so on load the entrance ran down the left column, jumped to the bottom of the
+           hero, then jumped back up to the right. At 380ms it lands alongside the tags, the two
+           columns resolve together as one hero, and the metrics card closes the sequence.
+           Found while building the same hero on ../Digital-Loans/index.html, where the composite is
+           the largest thing on the screen and the wrong order was obvious. It is subtler here
+           because the laptop is quieter, but it is the same mistake. Only two numbers change, this
+           one and the card's below.
+           ROLLBACK: device 560ms, metrics 480ms. -->
+      <div class="enter" style="animation-delay:380ms">
         <div class="hero-device-frame">
           <img width="1422" height="869" decoding="async" src="assets/13_hero_device.webp" alt="The consolidated management dashboard open on a laptop: portfolio value, uncovered exposure, coverage over time, and coverage gaps by branch.">
         </div>
@@ -1074,7 +1083,7 @@ a:hover .arrow { transform: translateX(4px); }
            card has 2 stats instead of 3, everything else identical to the proven
            pattern. "In Production" is accurate here too, this project is shipped
            like Digital Loans, not "in active development" like Credit Cards. -->
-      <div class="enter hero-metrics rounded-lg border border-border-default bg-card p-6" style="animation-delay:480ms">
+      <div class="enter hero-metrics rounded-lg border border-border-default bg-card p-6" style="animation-delay:560ms">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span class="type-label-sm text-muted">where it stands today</span>
           <span class="inline-flex items-center gap-1.5 type-label-sm" style="color:var(--color-primary);">
