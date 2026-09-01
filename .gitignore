@@ -21,3 +21,9 @@ hero_bg*.png
 superseded-*/
 # Whole-file rollbacks kept beside a page while an experiment is live.
 *.rollback-*
+
+# WebM trial. Converting the phone-mockup videos to WebM was meant to give transparent
+# corners as well as smaller files. The size win is real (283KB vs 447KB) but the alpha
+# is not: these encode as yuv420p, and a conversion cannot invent transparency the MP4
+# source never had. Needs a WebM-with-alpha export straight out of Figma to be worth it.
+*.webm
