@@ -1955,7 +1955,13 @@ a:hover .arrow { transform: translateX(4px); }
                  A card is a container, and containers compete. Only the numeral treatment carries
                  over, so the page still looks like one page. Spacing does the work the padding used
                  to, hence gap-8 rather than gap-6. -->
-            <div class="reveal-stagger grid grid-cols-1 gap-8">
+            <!-- mt-12 (B73, 2026-09-01). Everywhere else on this page the top margin lives on the
+               split's own grid, but here the heading and intro sit INSIDE this column, so the
+               blocks hang directly off the paragraph and need their own clearance. It went missing
+               when the heading moved back in, and the gap only reads as a bug on mobile, where the
+               two columns stack and nothing else separates them. Matches Internal Mortgage System's
+               impact section exactly. -->
+          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
             <div>
               <span class="step-card__num type-label-sm" aria-hidden="true">01</span>
               <h3 class="type-headline-sm">What People Left With</h3>
