@@ -33,13 +33,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&display=swap" rel="stylesheet">
 <!-- 2026-08-14: pinned to an exact version instead of the loose "@4" tag, so the CDN always serves
-     the identical, already-verified build rather than re-resolving "latest 4.x" on every request.
-     NOTE: this was an initial guess at the cause of the Contact-dot bug (a "Refused to apply
-     style .../tailwindcss" console error, native @import fallback) that turned out to be a red
-     herring - that same error fires on every page of the site, including ones where the dot
-     renders correctly, so it's unrelated. The real bug and real fix are the .brand-dot-accent
-     class near .brand-dot below. Keeping this pin anyway since it's a harmless stability
-     improvement on its own merits, just don't mistake it for what actually fixed the dot. -->
+     the same verified build. NOTE: this was an initial (wrong) guess at fixing the Contact-dot
+     bug - that console error fires on every page, including ones where the dot renders fine, so
+     it's unrelated. The real fix is .brand-dot-accent near .brand-dot below. Pin kept anyway for
+     its own stability value, just don't credit it with fixing the dot. -->
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3"></script>
 <style type="text/tailwindcss">
 @import "tailwindcss";
@@ -87,6 +84,11 @@
   --color-gold-500: #e0a52e;
   --color-gold-700: #a87a1e;
   --color-gold-900: #40310f;
+
+  /* B80, 2026-09-01: ported from the case-study pages, where it is already a real site-only
+     token. Peach is a TEXT HIGHLIGHT only and never a surface, which is the rule it arrived
+     with. Used here by .copy-mark further down, which is a real CSS rule, so the token emits. */
+  --color-peach: #fbeade;
 
   /* ---- semantics ---- */
   --color-primary: var(--color-green-950);
@@ -181,6 +183,103 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    Geist labels were not adopted. Button colors (gold CTA, gold nav border)
    are also explicitly unchanged, the sketch's own green buttons were not
    adopted either, Ofir's call. */
+/* B80, 2026-09-01: the highlighted-phrase device, ported verbatim from the case-study pages so
+   the homepage speaks the same language. The standing rule that came with it: ONE highlight per
+   paragraph and no more, or it stops being a signal and turns back into ordinary coloured text.
+   It exists so a reader who only skims still collects the line that matters. */
+.copy-mark { background: var(--color-peach); color: var(--color-default); padding: 2px 0; }
+/* TRACK RECORD, rebuilt B80, 2026-09-01. The old block put TWO different arguments inside one
+   container: the ARC (where he has been, how he moved) and the ARENA (how big those places were),
+   split left and right inside a single bordered card per company. That is most of why it read as
+   coarse: a large frame carrying two arguments looks loaded rather than rich, and the three green
+   figures were the largest type in the section, bigger than the company name itself.
+   The rebuild separates them. A row per employer carries the arc, and the scale figures drop to one
+   quiet line inside the row, because their job is to tell an outsider how big Bank Hapoalim and Cal
+   are, not to be an achievement of his.
+   HIERARCHY IS BUILT FROM LENGTH, NOT FROM DECORATION. Hapoalim and Cal are detailed because they
+   have something to say. Aviv Pos and Unit 8200 are one line each. Nothing is coloured or shrunk to
+   signal importance, the amount of content does it.
+   That is also what closes the gap Ofir spotted: Cal read "8 yrs" while showing a single 4.5-year
+   role, because the Help Desk years were left out as irrelevant. They are back, inside the Cal row,
+   and they corroborate rather than dilute.
+   The hairline is an INSET BOX-SHADOW, not a border, the same trick the case-study cards use: a
+   border adds a real layout box, so a bordered row would be 2px larger than its siblings and a
+   stack of them would not line up.
+   Width note: this block is capped well under the full column on purpose. It is going to become the
+   right half of a 50:50 composition, so it is previewed at roughly its future width rather than
+   stretched across 80rem and then re-tuned. */
+/* One row per line: label left, its own date range right, baselines shared. Every line in the
+   column uses it, the company line included, so a date always sits opposite the thing it dates
+   instead of being centred against a block of several lines. */
+.rec-line { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: 1rem; }
+/* THE SPINE. One line through the centre of every mark, so four employers read as one career
+   instead of four items. Every length here derives from --node so the line cannot drift off the
+   marks when the size changes: the line sits at half a node from the left, and is inset top and
+   bottom by half a node so it starts and ends at the first and last centres rather than running
+   past them into empty space.
+   The marks paint the page surface behind themselves and sit above the line, which is what makes
+   the line look interrupted by each one rather than drawn over them. */
+/* tabular-nums on the whole column, not on the date spans alone. Inter's default figures are
+   PROPORTIONAL, so a 1 is narrower than a 2 and two right-aligned ranges of the same length still
+   start at different x positions. Tabular figures give every digit one width, which is what makes
+   a stack of year ranges line up digit under digit. It costs nothing and it is why the numbers in
+   any real table are set this way. */
+.rec-spine { --node: 2rem; --head-line: 1.25rem; --rail-gap: 2rem; --rail-clear: 0.5rem; display: flex; flex-direction: column; gap: var(--rail-gap); font-variant-numeric: tabular-nums; }
+/* The company name sits on the mark's CENTRE line, not its top edge. The mark is 2rem and the name
+   line is 1.25rem, so the text column drops by half the difference. Both lengths are tokens, so
+   resizing the mark keeps the two centred instead of quietly drifting apart. */
+.rec-entry > div { margin-block-start: calc((var(--node) - var(--head-line)) / 2); }
+.rec-entry { position: relative; display: flex; align-items: flex-start; gap: 1rem; }
+/* THE SPINE, drawn as one CONNECTOR PER ENTRY rather than a single line on the container, and this
+   is not a detail. A container line is not a child of .reveal-stagger, so it painted itself in
+   full before a single entry had arrived. A per-entry segment reveals with the entry it belongs
+   to, which is the only way the line can build as the career builds.
+   It also gives the geometry the two things a continuous line could not: --rail-clear holds it off
+   the marks at both ends so it never touches one, and the last entry has no connector, so the line
+   stops short of the final mark instead of running past it into nothing.
+   The bottom reaches into the flex gap by exactly (--rail-gap - --rail-clear), so both ends of
+   every segment derive from the same two tokens as the gap itself and cannot drift apart. */
+.rec-entry::before { content: ""; position: absolute; left: calc(var(--node) / 2 - 0.5px); top: calc(var(--node) + var(--rail-clear)); bottom: calc(var(--rail-clear) - var(--rail-gap)); inline-size: 1px; background: var(--color-border-default); }
+.rec-entry:last-child::before { content: none; }
+/* A marker per role, drawn as a pseudo-element so the markup stays two children inside .rec-line
+   and its space-between is untouched. Deliberately the same shape as the marks on the spine, one
+   size down: a big node is a company, a small dot is a role inside it. The dots land in their own
+   vertical rail beside the spine, which gives the column a second, quieter rhythm. */
+.rec-role::before { content: ""; display: inline-block; inline-size: 0.375rem; block-size: 0.375rem; border-radius: 999px; background: var(--color-muted); margin-inline-end: 0.5rem; vertical-align: middle; }
+/* THE SCALE FIGURES. These are the most important content in the column and were the least
+   readable thing in it: one long muted sentence set in uppercase label type, which is the worst
+   possible setting for numbers. As free-flowing tags they were no better, since each one claimed
+   a whole line in a column this narrow.
+   Now: one soft grey panel spanning the full text column, split into three equal cells by
+   hairlines. Figure and label separate by BOTH weight and colour, Inter Tight 600 in the site's
+   green over Inter 400 in muted, which is the same figure-over-caption pattern as the metrics
+   card on the case-study pages, one size down to suit a 100px cell.
+   Kept deliberately small. At 1.125rem the figure is a step above the company name beside it and
+   still nowhere near a display number, which is the point: it is scale, not an achievement.
+   grid, not flex: three EQUAL cells whatever each label's length, so the hairlines line up with
+   the thirds instead of landing wherever the text happens to end.
+   Radius is 8, not 16: this is a small thing nested inside a column, not a container in its own
+   right. */
+.rec-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-radius: var(--radius-md); background: var(--color-surface-alt); }
+/* min-inline-size: 0 lets a grid cell shrink below its content, and overflow-wrap: anywhere lets a
+   single long word break inside itself rather than pushing out of the panel. Both are needed: the
+   first alone still overflows, because an unbreakable word has no smaller size to shrink to. Same
+   pair the icon showcase on the Design System page uses, for the same reason. */
+.rec-metric { padding: 0.625rem 0.75rem; min-inline-size: 0; text-align: center; overflow-wrap: anywhere; }
+.rec-metric + .rec-metric { border-inline-start: 1px solid var(--color-border-default); }
+.rec-metric-lbl { font-family: var(--font-plain); font-weight: 400; font-size: 0.75rem; line-height: 1.35; color: var(--color-muted); margin-block-start: 0.125rem; }
+.rec-logo { inline-size: var(--node); block-size: var(--node); border-radius: var(--radius-md); object-fit: cover; flex: none; }
+/* SAME SIZE as .rec-logo above, on purpose. Earlier passes shrank these marks to signal hierarchy;
+   Ofir's call was to make them identical, since the ONLY difference between entries should be the
+   amount of detail each carries. That principle is now the whole section: the surface difference
+   is gone too, so content is the only signal left.
+   So this class differs from .rec-logo in KIND, not in size. Poalim and Cal are square app icons
+   that fill their own canvas, so they get object-fit: cover and a tile radius. Aviv Pos's letter
+   and Unit 8200's masked emblem are marks on transparent grounds, so they get contain and NO
+   radius: rounding a transparent mark implies a tile edge that is not there. Contain, never cover,
+   because cover would crop a mark that is taller than it is wide, and Aviv Pos's ink measures
+   1423 by 2048 inside a padded square canvas. */
+.rec-mark { block-size: var(--node); inline-size: var(--node); object-fit: contain; flex: none; }
 .hero-dark {
   /* .site-nav-dark deliberately keeps using --color-primary (green-950,
      unchanged) rather than following suit, that's what makes the nav read
@@ -656,57 +755,31 @@ a:hover .arrow { transform: translateX(4px); }
 </head>
 <body class="antialiased">
 
-  <!-- B24: hidden pull-past-top sky strip, sits behind everything below.
-       See the CSS comment above .sky-strip and the script block near the
-       end of body for the mechanics. -->
+  <!-- B24: hidden pull-past-top sky strip, behind everything below. See the .sky-strip
+       CSS comment and the script block near end of body for the mechanics. -->
   <div class="sky-strip" id="skyStrip" aria-hidden="true">
     <div class="sky-strip__slogan">not even the sky is the limit :)</div>
   </div>
 
-  <!-- Everything else lives inside .page-shift so it can translate as one
-       sheet during the pull gesture. Closed right before </body>. -->
+  <!-- Everything else lives in .page-shift so it translates as one sheet during the
+       pull gesture. Closed right before </body>. -->
   <div class="page-shift" id="pageShift">
 
   <div class="scroll-progress" id="scrollProgress"></div>
 
   <!-- NAV -->
-  <!--
-    ROLLBACK (2026-08-08 nav redesign): this is the previous nav (light glass
-    pill, logo, 4 tab links). To restore it: delete the "site-nav-dark" nav
-    below and uncomment this block instead. No CSS cleanup needed either
-    way, .site-nav's own base rules were never touched, the redesign only
-    adds new classes alongside them (see .site-nav-dark and friends above).
-
-  <nav class="site-nav">
-    <a href="#top" class="flex items-center gap-2 pe-2">
-      <img src="assets/logo-nav.png" alt="Ofir Avitan" class="size-8 object-contain">
-    </a>
-    <div class="hidden md:flex items-center gap-6 type-label-lg text-secondary">
-      <a href="#about" class="nav-link hover:text-default transition-colors">About Me</a>
-      <a href="#case-studies" class="nav-link hover:text-default transition-colors">Case Studies</a>
-      <a href="#skills" class="nav-link hover:text-default transition-colors">Skills</a>
-      <a href="#contact" class="nav-link hover:text-default transition-colors">Contact</a>
-    </div>
-    <a href="#contact" class="inline-flex h-8 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-border-strong px-4 text-sm font-medium text-default btn-glow-nav transition-all duration-150 ease-out max-md:hover:bg-surface-alt active:border-button md:border-0 md:bg-button md:text-on-primary md:shadow-md md:active:bg-button-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface">Let's talk</a>
-  </nav>
-  -->
   <nav class="site-nav site-nav-dark nav-dark-gold nav-wide">
     <a href="#" class="site-nav-name">Ofir Avitan</a>
     <span class="site-nav-phrase" id="navPhrase">Hi, glad you're here</span>
     <a href="#contact" class="site-nav-cta">Let's talk</a>
   </nav>
 
-  <!-- HERO — B55: centered-stack layout, adapted from Ofir's Figma sketch
-       (photo ring / name+role / headline / description / CTA row, all
-       centered, single column). See the .hero-dark CSS comment above for
-       the background/nav color reasoning. Two things intentionally NOT
-       adopted from the sketch: its serif headline/Geist labels (fonts stay
-       Inter/Inter Tight, Ofir's explicit call) and its green button colors
-       (buttons and the nav's gold border stay as originally built). The
-       decorative green blob stays dropped. Centering the photo (was hidden
-       below lg before) is the point of this layout per Ofir, it's now
-       small enough (168px, was 224-288px) to show at every breakpoint
-       without crowding mobile. -->
+  <!-- HERO — B55: centered-stack layout, adapted from Ofir's Figma sketch (photo ring /
+       name+role / headline / description / CTA, all centered). See .hero-dark CSS comment
+       for the color reasoning. Not adopted from the sketch: serif headline/Geist labels
+       (fonts stay Inter/Inter Tight, Ofir's call) and its green buttons (kept as originally
+       built). Green blob stays dropped. Photo is now centered and shrunk (168px, was
+       224-288px) so it shows at every breakpoint, per Ofir. -->
   <header id="top" class="hero-dark relative overflow-hidden px-4 lg:px-20">
     <div class="relative mx-auto flex max-w-3xl flex-col items-center gap-6 pt-40 max-sm:pt-[137px] pb-24 text-center lg:pt-48 lg:pb-32">
       <div class="enter-scale relative" style="animation-delay:60ms">
@@ -734,121 +807,261 @@ a:hover .arrow { transform: translateX(4px); }
     </div>
   </header>
 
-  <!-- ABOUT — B55: dropped the top hairline (border-t) here, per Ofir, once
-       the hero above goes dark, the color break itself is the divider, the
-       line on top of it was redundant. -->
+  <!-- ABOUT — B55: dropped the top hairline here, per Ofir - once the hero above goes
+       dark, the color break itself is the divider, so the line was redundant. -->
   <section id="about" class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl py-20 lg:py-28">
+      <!-- B80 move 1b, 2026-09-01: two-column header collapsed to one column. The split only
+           worked because the three cards below closed the empty left quadrant; with the cards
+           gone it read as a hole, and Ofir caught it on screen. Collapses to the site's settled
+           shape (from Digital Loans/Internal Mortgage System): heading and intro run full width,
+           Track record follows from a shared top edge. Widths stay capped deliberately. -->
       <span class="reveal type-label-sm text-muted">About Me</span>
-      <div class="mt-6 grid grid-cols-1 gap-12 lg:grid-cols-12">
-        <h2 class="reveal type-headline-md lg:col-span-6">Product design leadership, hands-on<span class="brand-dot">.</span></h2>
-        <div class="lg:col-span-6">
-          <p class="reveal type-body-lg text-secondary">Over a decade of UX expertise driving product strategy for high-scale fintech and regulated banking.</p>
-          <p class="reveal type-body-lg mt-4 text-secondary">My degree is in education, but I trained for UX properly, through a full certification program, not a bootcamp shortcut. I built the rest through technical support and hands-on work. It's still the foundation for how I lead: people first, process after.</p>
+      <h2 class="reveal type-headline-md mt-4 max-w-2xl">Product design leadership, hands-on<span class="brand-dot">.</span></h2>
+      <!-- B80, 2026-09-01: both paragraphs replaced by one - this section is now ABOUT him, not
+           his work history. Old copy repeated the hero almost word for word, then defended his
+           education against no real challenge. New copy is his leadership philosophy from
+           career-master.md: making his team successful is how he succeeds, so "So" ties the exec
+           fact to that belief rather than hanging it on after. Confirmed with Ofir: the C-level
+           asked designers directly, not just him; roles stay unitemized to avoid name-dropping.
+           The career route isn't lost, it moves to Track record as dates. -->
+      <p class="reveal type-body-lg mt-4 max-w-prose text-secondary">My job is to make the designers on my team successful, and that is how I measure myself. So they present their own work, and the bank's C-level asks them questions directly.</p>
+
+      <!-- B80, 2026-09-01: three cards replacing the deleted ones, and a different KIND of card -
+           each carries a fact only Ofir can state (from career-master.md), proving the heading
+           rather than restating it. No numerals: these are facets, not a sequence, so treatment
+           stays plain for now (card type is a later decision, against card-explorations.html).
+           Card 1 absorbs old B75: domains are named, not counted (5 over tenure, 4 concurrent).
+           Card 2 was corrected from "not in my job description" (false) to the truer, stronger
+           fact: the Guild sat on top of his own team and reached others - past tense since he left
+           in April 2026. Card 3 was rewritten to drop an apologetic frame; research is his method's
+           first step every time, and he asks Customer Journeys for the study rather than doing it
+           himself. Dealership line stays first person, he was there. -->
+      <!-- B80, 2026-09-01: 50:50 composition, Ofir's idea, side by side rather than stacked.
+           Echoes the case-study hero split but differs in kind - both halves are cards here, left
+           tinted, right white with a hairline. items-start, not stretch: the columns differ in
+           length, so they start from a shared top edge instead of padding the shorter one. Left
+           label is PROVISIONAL - may want different weight than Track record's eyebrow; settle
+           both together. -->
+      <!-- B80, 2026-09-02: the exact 50:50 is gone. Both columns are made of filled or bordered
+           containers, so with an even split and a 3rem gap the two sides read as one wall of
+           boxes and neither is legible on its own. The content also wants different widths: the
+           right column is a record with a date column and needs room, while the left is prose
+           that was running near 68 characters a line, above a comfortable measure.
+           So: left wide, right narrow, on the site's 12-column grid rather than as grid-cols-3,
+           since 12 is the grid already in use elsewhere on the page and 3 and 6 divide into it,
+           so a third column count is not introduced for one section.
+           It started as an exact 2:1 (8 and 4) and then gave up one column from the LEFT for air:
+           7, one empty, 4 starting at 9. The left is prose in a card and loses 60px without
+           noticing, while the right is a record whose dates were the original complaint.
+           Note what a released column actually costs, since it surprises: dropping a span by one
+           frees a track AND the gap beside it, so the gutter goes from one 48px gap to roughly
+           48 plus 63 plus 48. The exact 2:1 is gone, which is fine. The ratio is a choice, the
+           grid is the system, and an empty column used as a gutter is what a 12-column grid is
+           for rather than a break of it.
+           The narrow right column is also what stops the dates in each record sitting a long way
+           from the role they date, without needing any grid inside the card.
+           Reverting is a matter of putting grid-cols-2 back on this one line. -->
+      <div class="mt-12 grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">
+        <div class="lg:col-span-7">
+          <!-- No eyebrow here. "How I lead" was a placeholder that never earned its keep: the
+               three headings already say what this column is, and a label repeating that only
+               competed with Track record's own eyebrow across the gutter. The card therefore
+               starts at the column's top edge, with no leading offset.
+               Icons are lifted VERBATIM from the curated set on the Design System page (Users,
+               Share2, Search), not drawn here. A symbol, not a numeral: these three are facets
+               and a numeral would assert a sequence that does not exist. Each sits in its own
+               narrow column so the heading and the paragraph share one left edge. -->
+          <!-- Three separate cards on the SAME pattern as Beyond the work further down the page:
+               card-lift, hairline border, icon in a grey rounded square beside the text. Reusing
+               that block verbatim rather than inventing a second card for the same job, and it is
+               back to reveal-stagger because each card now carries its own frame, so a card and
+               its content arrive as one thing.
+               Icons stay at the Design System set's own 1.5 stroke, but drop to 20px to match the
+               badge Beyond the work uses. -->
+          <div class="reveal-stagger space-y-6">
+            <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
+              <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
+                <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+              </span>
+              <div class="min-w-0">
+                <h3 class="type-headline-sm">Embedded in five Tribes</h3>
+                <p class="type-body-md mt-2 text-secondary">Seven designers across Loans, Credit Cards, Mortgages, Deposits and a Design Centre of Excellence, four running at once. Every Tribe has its own building, its own product managers and its own Tribe Lead. The designers sit inside them. <mark class="copy-mark">They still belong to one team.</mark></p>
+              </div>
+            </div>
+            <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
+              <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
+                <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+              </span>
+              <div class="min-w-0">
+                <h3 class="type-headline-sm">I scale what works</h3>
+                <p class="type-body-md mt-2 text-secondary">I was the first designer in our studio to work in agile, before I was a manager. Once I was, I ran the Agile Guild that took it studio-wide. It sat on top of managing my designers and <mark class="copy-mark">reached teams that were not mine.</mark></p>
+              </div>
+            </div>
+            <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
+              <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
+                <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+              </span>
+              <div class="min-w-0">
+                <h3 class="type-headline-sm">Research is the first step, every time</h3>
+                <p class="type-body-md mt-2 text-secondary">A new requirement is where research starts, not where design starts. I check what we know, and when that is thin I ask for a customer journey study. For car loans, <mark class="copy-mark">standing in dealerships</mark> and talking to salespeople and customers before anyone drew a screen.</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="reveal-stagger mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
-        <div class="card-lift rounded-lg bg-card p-6 border border-border-default">
-          <span class="type-label-sm stat-accent-green">01</span>
-          <h3 class="type-headline-sm mt-2">Cross-Squad Leadership</h3>
-          <p class="type-body-md mt-2 text-secondary">One design language across 4 autonomous business lines, each its own world of stakeholders and constraints.</p>
-        </div>
-        <div class="card-lift rounded-lg bg-card p-6 border border-border-default">
-          <span class="type-label-sm stat-accent-green">02</span>
-          <h3 class="type-headline-sm mt-2">Unified Experience</h3>
-          <p class="type-body-md mt-2 text-secondary">Aligning squads and tech leads to eliminate product silos.</p>
-        </div>
-        <div class="card-lift rounded-lg bg-card p-6 border border-border-default">
-          <span class="type-label-sm stat-accent-green">03</span>
-          <h3 class="type-headline-sm mt-2">People &amp; Process Focused</h3>
-          <p class="type-body-md mt-2 text-secondary">Leveraging an educational background to mentor teams and workflows.</p>
+
+      <!-- B80 move 1, 2026-09-01: the three About cards are deleted, nothing replaces them - a
+           read of all four homepage areas found they carried almost no information (card 02
+           restated card 01, card 03 restated the paragraph above it). Card 01's one real fact, the
+           business lines, isn't lost - it moves to the leadership section, named rather than
+           counted. Card 02's tech-lead detail can fold in there later if needed. Section keeps its
+           heading, paragraphs and Track record; case studies now arrive a screen earlier. -->
+
+      <!-- Track record: one card per company, roles stacked most recent first so the Hapoalim
+           promotion (Senior UX to PDM) reads as real progression.
+           B80, 2026-09-02, a subtraction pass. Three things went:
+           1. Role lines were type-body-md plus an INLINE font-weight:600, but there is no
+              600-weight body class on this site, so that was an invented weight. They are
+              type-label-lg now (Inter 500, same size), which is what softened the block. The
+              company name deliberately stays at type-title-md: the real step below it is a
+              different font at 400, so lowering it would mean inventing a weight too. It reads
+              quieter because everything under it got lighter, not because it changed.
+           2. Months are gone, years only, everywhere. The date column was the widest thing in
+              the card, and when he left the bank is a tense question across the whole site
+              rather than something a table column should answer.
+           3. "Customer Experience Studio" is gone: it existed on one card of four, and
+              uniformity across the four is worth more than that one detail.
+           Total years moved out of the stacked text block and is pinned right on the company
+           line, so that line is now a single row level with the logo.
+           B80 again, later the same day: the CARD is gone too. The four entries hang off a single
+           vertical spine that runs through the logo centres, which is what makes four separate
+           employers read as one continuous career. The line is now what unifies them, so no
+           container has to. Each mark sits on the page surface to break the line behind it.
+           The scale figures were one long muted sentence, the smallest and least readable thing
+           in a section where they are the most important. They are separate soft grey tags now. -->
+
+        <div class="lg:col-span-4 lg:col-start-9">
+          <span class="reveal type-label-sm text-muted">Track record</span>
+          <!-- reveal, NOT reveal-stagger: the four entries are one career, and staggering them
+               made the spine build a segment at a time, which read as four separate arrivals. -->
+          <div class="reveal rec-spine mt-6">
+
+          <div class="rec-entry">
+            <img src="assets/Poalim.png" alt="" class="rec-logo">
+            <div class="min-w-0 flex-1">
+              <div class="rec-line">
+                <h3 class="type-label-lg">Bank Hapoalim</h3>
+                <span class="type-label-sm text-muted whitespace-nowrap">6 yrs</span>
+              </div>
+              <div class="mt-2 space-y-1">
+                <div class="rec-line">
+                  <span class="rec-role type-body-md text-secondary">Product Design Manager</span>
+                  <span class="type-label-sm text-muted whitespace-nowrap">2022 &ndash; 2026</span>
+                </div>
+                <div class="rec-line">
+                  <span class="rec-role type-body-md text-secondary">Senior UX Designer</span>
+                  <span class="type-label-sm text-muted whitespace-nowrap">2020 &ndash; 2022</span>
+                </div>
+              </div>
+              <div class="rec-metrics mt-4">
+                <div class="rec-metric">
+                  <div class="type-title-md stat-accent-green">2.5M+</div>
+                  <div class="rec-metric-lbl">private customers</div>
+                </div>
+                <div class="rec-metric">
+                  <div class="type-title-md stat-accent-green">200K+</div>
+                  <div class="rec-metric-lbl">business customers</div>
+                </div>
+                <div class="rec-metric">
+                  <div class="type-title-md stat-accent-green">1.5M+</div>
+                  <div class="rec-metric-lbl">monthly digital interactions</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rec-entry">
+            <img src="assets/Cal.png" alt="" class="rec-logo">
+            <div class="min-w-0 flex-1">
+              <div class="rec-line">
+                <h3 class="type-label-lg">Cal (Israel Credit Cards)</h3>
+                <span class="type-label-sm text-muted whitespace-nowrap">8 yrs</span>
+              </div>
+              <div class="mt-2 space-y-1">
+                <div class="rec-line">
+                  <span class="rec-role type-body-md text-secondary">UX Designer</span>
+                  <span class="type-label-sm text-muted whitespace-nowrap">2015 &ndash; 2020</span>
+                </div>
+                <div class="rec-line">
+                  <span class="rec-role type-body-md text-secondary">Technical Support, Help Desk</span>
+                  <span class="type-label-sm text-muted whitespace-nowrap">2012 &ndash; 2015</span>
+                </div>
+              </div>
+              <div class="rec-metrics mt-4">
+                <div class="rec-metric">
+                  <div class="type-title-md stat-accent-green">~2M</div>
+                  <div class="rec-metric-lbl">active customers</div>
+                </div>
+                <div class="rec-metric">
+                  <div class="type-title-md stat-accent-green">3.5M+</div>
+                  <div class="rec-metric-lbl">active credit cards</div>
+                </div>
+                <div class="rec-metric">
+                  <div class="type-title-md stat-accent-green">800K+</div>
+                  <div class="rec-metric-lbl">monthly interactions</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Both marks here are vector SVG, so no retina variant is needed. Unit 8200's file had
+               no viewBox, which lets a browser clip rather than scale it, so one was added; the
+               untouched original is kept as 8200.original.svg. -->
+          <div class="rec-entry">
+            <img width="2048" height="2048" src="assets/avivpos.webp" alt="" class="rec-mark">
+            <div class="min-w-0 flex-1">
+              <div class="rec-line">
+                <h3 class="type-label-lg">Aviv Pos</h3>
+                <span class="type-label-sm text-muted whitespace-nowrap">2 yrs</span>
+              </div>
+              <div class="mt-2 space-y-1">
+                <div class="rec-line">
+                  <span class="rec-role type-body-md text-secondary">Technical Support &amp; QA</span>
+                  <span class="type-label-sm text-muted whitespace-nowrap">2010 &ndash; 2012</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rec-entry">
+            <!-- Complete emblem from LinkedIn, 200px into a 32px slot (6x), so resolution wasn't
+                 the issue - it lacks an alpha channel, so its corners are a white square. Shown
+                 unmasked at Ofir's request to judge. Keying white to transparent was a trap: it
+                 would punch holes through the emblem's own white segments. Fix applied: a
+                 CIRCULAR MASK by distance from center, not color (centered 99.5,99.5, radius ~99,
+                 drawn at 8x and resampled for antialiasing). Saved at 96px (3x slot), lossless,
+                 14KB vs 40KB source - similar weight to Poalim.png/Cal.png. Filename marks it as
+                 derived; untouched 8200111.jpeg kept alongside. -->
+            <img width="96" height="96" src="assets/8200-masked-96.webp" alt="" class="rec-mark">
+            <div class="min-w-0 flex-1">
+              <div class="rec-line">
+                <h3 class="type-label-lg">Unit 8200</h3>
+                <span class="type-label-sm text-muted whitespace-nowrap">3 yrs</span>
+              </div>
+              <div class="mt-2 space-y-1">
+                <div class="rec-line">
+                  <span class="rec-role type-body-md text-secondary">Shift Manager, Network Ops</span>
+                  <span class="type-label-sm text-muted whitespace-nowrap">2005 &ndash; 2008</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          </div>
         </div>
       </div>
 
-      <!-- Track record: last 3 design-related roles, one card per company, real
-           company-scale numbers as small accent pills (gold-100/gold-700, same
-           gold accent already used for the 01/02/03 labels above), not full stat
-           cards, so they read as supporting scale, not a company-marketing claim.
-           Roles within a company stack vertically (most recent first) rather than
-           side by side, so the Hapoalim promotion (Senior UX -> PDM) still reads
-           as a real progression, not two unrelated facts. Added 2026-08-12. -->
-      <div class="reveal-stagger mt-14">
-        <span class="type-label-sm text-muted">Track record</span>
-        <div class="mt-6 space-y-6">
-          <div class="card-lift rounded-lg bg-card p-6 border border-border-default">
-            <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-              <div>
-                <div class="flex items-center gap-3">
-                  <img src="assets/Poalim.png" alt="" class="h-10 w-10 shrink-0 rounded-lg object-cover">
-                  <div>
-                    <h3 class="type-title-md">Bank Hapoalim</h3>
-                    <span class="type-label-sm text-muted">Full-time &middot; 6 yrs 3 mos</span>
-                  </div>
-                </div>
-                <div class="mt-6 space-y-4 pl-[3.25rem]">
-                  <div>
-                    <h4 class="type-body-lg" style="font-weight:600">Product Design Manager</h4>
-                    <p class="type-body-md text-secondary">May 2022 &ndash; Apr 2026 &middot; Strategic &amp; Hands-On</p>
-                  </div>
-                  <div>
-                    <h4 class="type-body-lg" style="font-weight:600">Senior UX Designer</h4>
-                    <p class="type-body-md text-secondary">Feb 2020 &ndash; May 2022</p>
-                  </div>
-                </div>
-              </div>
-              <div class="flex justify-center border-t border-border-default pt-6 lg:items-center lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
-                <div class="flex w-full text-center lg:w-auto lg:divide-x lg:divide-border-default">
-                  <div class="min-w-0 flex-1 px-1 lg:flex-none lg:px-5">
-                    <div class="type-headline-sm stat-accent-green">2.5M+</div>
-                    <p class="type-label-sm text-muted mt-1">private<br>customers</p>
-                  </div>
-                  <div class="min-w-0 flex-1 px-1 lg:flex-none lg:px-5">
-                    <div class="type-headline-sm stat-accent-green">200K+</div>
-                    <p class="type-label-sm text-muted mt-1">business<br>customers</p>
-                  </div>
-                  <div class="min-w-0 flex-1 px-1 lg:flex-none lg:px-5">
-                    <div class="type-headline-sm stat-accent-green">1.5M+</div>
-                    <p class="type-label-sm text-muted mt-1">monthly<br>interactions</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-lift rounded-lg bg-card p-6 border border-border-default">
-            <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-              <div>
-                <div class="flex items-center gap-3">
-                  <img src="assets/Cal.png" alt="" class="h-10 w-10 shrink-0 rounded-lg object-cover">
-                  <div>
-                    <h3 class="type-title-md">Cal (Israel Credit Cards)</h3>
-                    <span class="type-label-sm text-muted">Full-time &middot; 8 yrs</span>
-                  </div>
-                </div>
-                <div class="mt-6 pl-[3.25rem]">
-                  <h4 class="type-body-lg" style="font-weight:600">UX Designer</h4>
-                  <p class="type-body-md text-secondary">Sep 2015 &ndash; Feb 2020</p>
-                </div>
-              </div>
-              <div class="flex justify-center border-t border-border-default pt-6 lg:items-center lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8">
-                <div class="flex w-full text-center lg:w-auto lg:divide-x lg:divide-border-default">
-                  <div class="min-w-0 flex-1 px-1 lg:flex-none lg:px-5">
-                    <div class="type-headline-sm stat-accent-green">~2M</div>
-                    <p class="type-label-sm text-muted mt-1">active<br>customers</p>
-                  </div>
-                  <div class="min-w-0 flex-1 px-1 lg:flex-none lg:px-5">
-                    <div class="type-headline-sm stat-accent-green">3.5M+</div>
-                    <p class="type-label-sm text-muted mt-1">active<br>credit cards</p>
-                  </div>
-                  <div class="min-w-0 flex-1 px-1 lg:flex-none lg:px-5">
-                    <div class="type-headline-sm stat-accent-green">800K+</div>
-                    <p class="type-label-sm text-muted mt-1">monthly<br>interactions</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </div>
   </section>
 
@@ -861,41 +1074,33 @@ a:hover .arrow { transform: translateX(4px); }
       </div>
 
       <div class="reveal-stagger mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-6 lg:auto-rows-[22rem]">
-        <!-- Digital Loans -->
-                <!-- Tiles are rounded-lg, not rounded-xl, and the distinction matters more here than the
-             names suggest: this site defines --radius-xl in @theme, which overrides Tailwind's
-             own scale, so rounded-xl resolves to 28px rather than the usual 12px. At 28 the
-             tiles read noticeably rounder than the framed screenshots on the case-study pages,
-             which sit at --radius-lg / 16px. Lowered 2026-08-30 to match. -->
-        <!-- TILE ORDER EXPERIMENT, 2026-08-30, with a fast rollback: the whole pre-change
-             file is saved beside this one as index.html.rollback-2026-08-30, so reverting
-             is a file copy rather than an edit.
-             Order is now Internal Mortgage System, Digital Loans, Credit Cards, Design
-             System. It was Digital Loans, Credit Cards, Internal, Design.
-             Spans changed to make that fit six columns without touching any video:
-             Internal 4 -> 3 and Credit Cards 3 -> 4. Digital Loans and Design System are
-             untouched at 3 and 2. Widening a tile is safe with object-fit cover, it simply
-             reveals more of the source; narrowing crops. Internal is the one that narrows,
-             from a 2.40 tile ratio to 1.78 against a 2.426 image, so about 26% of its
-             width is now cropped and its still wants re-exporting nearer 16:9.
-             The Next Case Study links on all four detail pages follow this order and were
-             updated with it. -->
+        <!-- Internal Mortgage System -->
+                <!-- Tiles are rounded-lg, not rounded-xl: this site's --radius-xl override makes
+             rounded-xl resolve to 28px (not Tailwind's usual 12px), which read noticeably
+             rounder than the case-study pages' framed screenshots at --radius-lg/16px.
+             Lowered 2026-08-30 to match. -->
+        <!-- TILE ORDER EXPERIMENT, 2026-08-30: fast rollback is a full file copy at
+             index.html.rollback-2026-08-30. New order is Internal Mortgage System, Digital
+             Loans, Credit Cards, Design System (was Digital Loans, Credit Cards, Internal,
+             Design). Spans changed to fit six columns without touching video: Internal
+             4 -> 3, Credit Cards 3 -> 4. Widening is safe (object-fit cover reveals more);
+             Internal now narrows from a 2.40 tile ratio to 1.78 against its 2.426 image,
+             cropping ~26% - wants re-export nearer 16:9. The four detail pages' Next Case
+             Study links follow this order too. -->
 <div id="InternalSystems" class="case-tile relative min-h-[18rem] overflow-hidden rounded-lg lg:col-span-3">
           <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-is" aria-label="Preview Internal Mortgage System">
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
-              <!-- object-top, not object-right: the image was re-exported 2026-08-30 at 1708x960, a ratio of
-                 1.779 against this tile's 1.784, so it now fills the tile almost exactly and any crop
-                 falls off the BOTTOM rather than the side. object-right was correct for the old
-                 2.426 file, which could only ever be cropped horizontally. -->
+              <!-- object-top, not object-right: the image was re-exported 2026-08-30 at 1708x960
+                 (ratio 1.779), nearly matching this tile's 1.784, so any crop now falls off the
+                 bottom rather than the side. object-right was correct for the old 2.426 file,
+                 which could only crop horizontally. -->
             <img src="assets/internal%20systems2.png" alt="" class="h-full w-full object-cover object-top">
             </div>
           </button>
-          <!-- Subtitle carries "Mortgages" (added 2026-08-12) since "Internal System"
-               alone reads as unclear/generic; kept the H3 itself short rather than
-               lengthening it to "Internal Mortgage System" here, this tile's H3 is
-               `truncate` and narrower than the case-study page's own H1, no need to
-               risk an ellipsis-cut title when the subtitle line can carry the same
-               clarification safely. -->
+          <!-- Subtitle carries "Mortgages" (added 2026-08-12) since "Internal System" alone
+               reads generic. H3 stays short rather than "Internal Mortgage System" - it's
+               `truncate` and narrower than the case-study page's own H1, so the subtitle
+               carries the clarification instead, without risking an ellipsis cut. -->
           <div id="case-content-is" class="case-bar absolute inset-x-0 bottom-0 flex items-center gap-3 px-5 py-3">
             <img src="assets/Poalim.png" alt="" class="h-10 w-10 shrink-0 rounded-lg object-cover">
             <div class="min-w-0">
@@ -909,8 +1114,7 @@ a:hover .arrow { transform: translateX(4px); }
           </div>
         </div>
 
-        <!-- Design System: live, B2. Not a client project, so uses the OA favicon mark as its
-             own logo and reads "My personal DSM" instead of a company name. -->
+        <!-- Digital Loans -->
         <div id="DigitalLoans" class="case-tile relative min-h-[18rem] overflow-hidden rounded-lg lg:col-span-3">
           <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-dl" aria-label="Preview Digital Loans">
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
@@ -950,7 +1154,8 @@ a:hover .arrow { transform: translateX(4px); }
           </div>
         </div>
 
-        <!-- Internal Mortgage System -->
+        <!-- Design System: live, B2. Not a client project, so it uses the OA favicon mark
+             as its logo and reads "My personal DSM" instead of a company name. -->
         <div id="DesignSystem" class="case-tile relative min-h-[18rem] overflow-hidden rounded-lg lg:col-span-2">
           <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-dsys" aria-label="Preview Design System">
             <div class="absolute inset-0 overflow-hidden bg-neutral-200">
@@ -970,10 +1175,9 @@ a:hover .arrow { transform: translateX(4px); }
           </div>
         </div>
 
-        <!-- Cross-Bank Loan: new tile, tracked as B27. No real tile media yet (Ofir is
-             sourcing exports from Figma himself), flat placeholder background for now,
-             CTA already live since the case-study page itself is built. Swap the
-             placeholder for real video/screenshot once he drops assets in. -->
+        <!-- Cross-Bank Loan: new tile, tracked as B27. No real tile media yet (Ofir sourcing
+             exports from Figma), flat placeholder background for now. CTA is already live
+             since the case-study page is built - swap the placeholder once assets are in. -->
         <div id="CrossBankLoan" class="case-tile relative min-h-[18rem] overflow-hidden rounded-lg lg:col-span-6 hidden">
           <button type="button" class="case-toggle" aria-expanded="false" aria-controls="case-content-cbl" aria-label="Preview Cross-Bank Loan">
             <div class="absolute inset-0 flex items-center justify-center bg-neutral-200">
@@ -1081,21 +1285,16 @@ a:hover .arrow { transform: translateX(4px); }
     <div class="blob-parallax" style="bottom:-12rem; left:-8rem;" data-parallax="-0.1">
       <div class="hero-blob" style="width:28rem; height:28rem; bottom:0; left:0; opacity:0.25; animation-duration:33s; animation-direction:reverse;"></div>
     </div>
-    <!-- sparks are generated into these two empty containers by the script
-         below, same approach as the sky-strip stars: randomized per
-         instance, so hand-authoring each one isn't needed. -->
+    <!-- Sparks are generated into these two empty containers by the script below, same
+         approach as the sky-strip stars: randomized per instance, no hand-authoring needed. -->
     <div class="footer-glow footer-glow--left" id="footerGlowLeft" aria-hidden="true"></div>
     <div class="footer-glow footer-glow--right" id="footerGlowRight" aria-hidden="true"></div>
     <div class="relative z-[1] mx-auto max-w-7xl py-24 text-center lg:py-32">
-      <!-- B55: text colors + dot switched from inline style="color:var(...)"
-           / .brand-dot-accent (green) to real classes so the footer's text
-           treatment doesn't rely on an ad hoc inline approximation. B57
-           (2026-08-15): the soft/muted text (eyebrow, paragraph, phone,
-           copyright) moved from hero-dark-on-primary-soft (green-100) to
-           footer-text-soft (neutral-100), Ofir found the green tint
-           unreadable against this section's own green-toned dark
-           background. Heading stays hero-dark-on-primary (white), dot
-           stays hero-dark-gold, buttons untouched per Ofir's call. -->
+      <!-- B55: text colors + dot switched from inline style/.brand-dot-accent (green) to real
+           classes, so the footer doesn't rely on an ad hoc inline approximation. B57
+           (2026-08-15): soft/muted text moved from green-100 to neutral-100 - Ofir found the
+           green tint unreadable against this section's own green-toned dark background.
+           Heading stays white, dot stays gold, buttons untouched. -->
       <span class="reveal type-label-sm footer-text-soft">Get in touch</span>
       <h2 class="reveal hero-dark-on-primary type-display-sm mt-4">Let's build the future<span class="hero-dark-gold">.</span></h2>
       <p class="reveal footer-text-soft type-body-lg mx-auto mt-4 max-w-lg">Open to design leadership roles, partnerships, and ambitious product bets.</p>
