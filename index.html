@@ -267,6 +267,13 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    pair the icon showcase on the Design System page uses, for the same reason. */
 .rec-metric { padding: 0.625rem 0.75rem; min-inline-size: 0; text-align: center; overflow-wrap: anywhere; }
 .rec-metric + .rec-metric { border-inline-start: 1px solid var(--color-border-default); }
+/* The figure and its caption. Both are Inter rather than Inter Tight, so the cell is one family
+   and the two lines separate by weight, size and colour instead.
+   The figure is a composed pair, not an invented one: 1rem is a real step in the site's scale and
+   600 is a weight Inter actually loads. It exists as a class because there is no 1rem heading
+   class on this site, Inter Tight being loaded at 600 and 700 only, and a size typed inline would
+   be the same invention this file was just cleaned of. */
+.rec-metric-fig { font-family: var(--font-plain); font-weight: 600; font-size: 1rem; line-height: 1.4; }
 .rec-metric-lbl { font-family: var(--font-plain); font-weight: 400; font-size: 0.75rem; line-height: 1.35; color: var(--color-muted); margin-block-start: 0.125rem; }
 .rec-logo { inline-size: var(--node); block-size: var(--node); border-radius: var(--radius-md); object-fit: cover; flex: none; }
 /* SAME SIZE as .rec-logo above, on purpose. Earlier passes shrank these marks to signal hierarchy;
@@ -965,15 +972,15 @@ a:hover .arrow { transform: translateX(4px); }
               </div>
               <div class="rec-metrics mt-4">
                 <div class="rec-metric">
-                  <div class="type-title-md stat-accent-green">2.5M+</div>
+                  <div class="rec-metric-fig stat-accent-green">2.5M+</div>
                   <div class="rec-metric-lbl">private customers</div>
                 </div>
                 <div class="rec-metric">
-                  <div class="type-title-md stat-accent-green">200K+</div>
+                  <div class="rec-metric-fig stat-accent-green">200K+</div>
                   <div class="rec-metric-lbl">business customers</div>
                 </div>
                 <div class="rec-metric">
-                  <div class="type-title-md stat-accent-green">1.5M+</div>
+                  <div class="rec-metric-fig stat-accent-green">1.5M+</div>
                   <div class="rec-metric-lbl">monthly digital interactions</div>
                 </div>
               </div>
@@ -999,15 +1006,15 @@ a:hover .arrow { transform: translateX(4px); }
               </div>
               <div class="rec-metrics mt-4">
                 <div class="rec-metric">
-                  <div class="type-title-md stat-accent-green">~2M</div>
+                  <div class="rec-metric-fig stat-accent-green">~2M</div>
                   <div class="rec-metric-lbl">active customers</div>
                 </div>
                 <div class="rec-metric">
-                  <div class="type-title-md stat-accent-green">3.5M+</div>
+                  <div class="rec-metric-fig stat-accent-green">3.5M+</div>
                   <div class="rec-metric-lbl">active credit cards</div>
                 </div>
                 <div class="rec-metric">
-                  <div class="type-title-md stat-accent-green">800K+</div>
+                  <div class="rec-metric-fig stat-accent-green">800K+</div>
                   <div class="rec-metric-lbl">monthly interactions</div>
                 </div>
               </div>
