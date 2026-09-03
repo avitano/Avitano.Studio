@@ -1260,7 +1260,11 @@ a:hover .arrow { transform: translateX(4px); }
   <!-- SKILLS -->
   <section id="skills" class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl py-20 lg:py-28">
-      <span class="reveal type-label-sm text-muted">Capabilities</span>
+      <!-- B80 (d), 2026-09-03: eyebrow was "Capabilities" while the id and every nav link on the
+           case-study pages said Skills, so a visitor clicked Skills and landed on Capabilities.
+           Skills wins on count: it is already in nine links across five files against this one
+           visible word. Capabilities was most likely a translation of the Hebrew. -->
+      <span class="reveal type-label-sm text-muted">Skills</span>
       <h2 class="reveal type-headline-md mt-4 max-w-2xl">Fluent in more than Figma<span class="brand-dot">.</span></h2>
       <p class="reveal type-body-lg mt-4 max-w-prose text-secondary">Most design managers stop at the mockup. I don't, and in 2026, that gap is the whole point.</p>
 
@@ -1291,7 +1295,9 @@ a:hover .arrow { transform: translateX(4px); }
   </section>
 
   <!-- LEADERSHIP IMPACT -->
-  <section class="bg-surface-alt px-4 lg:px-20">
+  <!-- B80 (d), 2026-09-03: id added. This was the only section on the page nothing could link to.
+       No link points here yet, the anchor exists so B84 has one to use. -->
+  <section id="leadership" class="bg-surface-alt px-4 lg:px-20">
     <div class="mx-auto max-w-7xl py-20 lg:py-28">
       <span class="reveal type-label-sm text-muted">Leadership impact</span>
       <h2 class="reveal type-headline-md mt-4">Beyond the work<span class="brand-dot">.</span></h2>
