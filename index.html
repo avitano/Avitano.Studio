@@ -929,13 +929,15 @@ a:hover .arrow { transform: translateX(4px); }
                Share2, Search), not drawn here. A symbol, not a numeral: these three are facets
                and a numeral would assert a sequence that does not exist. Each sits in its own
                narrow column so the heading and the paragraph share one left edge. -->
-          <!-- Three separate cards on the SAME pattern as Beyond the work further down the page:
-               card-lift, hairline border, icon in a grey rounded square beside the text. Reusing
-               that block verbatim rather than inventing a second card for the same job, and it is
-               back to reveal-stagger because each card now carries its own frame, so a card and
-               its content arrive as one thing.
-               Icons stay at the Design System set's own 1.5 stroke, but drop to 20px to match the
-               badge Beyond the work uses. -->
+          <!-- Three cards: card-lift, hairline border, icon in a grey rounded square beside the
+               text. reveal-stagger, because each card carries its own frame, so a card and its
+               content arrive as one thing.
+               These were originally built from the same utilities as Beyond the work so the two
+               sections could not drift apart. B84 ended that on purpose, 2026-09-03: that section
+               is now photo-led with no icon badge, because it carries the page's human material
+               and needed to stop reading as a fourth grid of identical cards. This icon-beside-
+               text card is now this section's own, so changing it here changes nothing else.
+               Icons stay at the Design System set's own 1.5 stroke at 20px. -->
           <div class="reveal-stagger space-y-6">
             <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
               <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
@@ -1302,47 +1304,54 @@ a:hover .arrow { transform: translateX(4px); }
       <span class="reveal type-label-sm text-muted">Leadership impact</span>
       <h2 class="reveal type-headline-md mt-4">Beyond the work<span class="brand-dot">.</span></h2>
 
-      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-2">
-        <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
-          <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </span>
-          <div>
+      <!-- B84, 2026-09-03: the cards go from horizontal (icon beside text) to vertical (photo on
+           top, text below), three across. Two reasons, and the second is the real one.
+           1. Three cards in a two-column grid left the last one alone on its own row.
+           2. This section carries the page's most human material and it sat in exactly the same
+              container as every other section, so its warmth was invisible. Ofir's own photos
+              become the visual, which is why the icon badge is GONE from each card: a photo and an
+              icon are two visual anchors doing one job.
+           Consequence worth knowing: the About Me cards were deliberately built from these same
+           utilities so the two sections could not drift apart. They now diverge on purpose, and
+           the comment up there has been corrected to say so.
+           Breakpoint is one column then three at md. Deliberately no two-column step, since two
+           plus an orphan is the exact shape being fixed.
+           Photos are monochrome, baked in the export rather than filtered in CSS: three real
+           photos in different lighting do not sit together in colour, and it is a design decision
+           rather than a state. It also keeps faces less identifiable, which is a permission
+           question on photos of real students and colleagues, not a design one.
+           The media block holds a real 3/2 ratio rather than a fixed height, so the placeholder
+           occupies exactly the space the real image will. Rendered width is 398px at the 1280px
+           container, so exports are 800x533, which also covers mobile and still covers a fourth
+           card if one is ever added (the ratio would not change, only the rendered width).
+           `overflow-hidden` is REQUIRED, not tidiness: .card-lift already zooms any img inside it
+           to scale(1.06) on hover, so without it the photo escapes the rounded corners.
+           To drop a real photo in, replace the placeholder div with:
+           img class="aspect-[3/2] w-full object-cover" src="assets/NAME.webp" alt="..."
+           width="800" height="533" -->
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-10">
+        <div class="card-lift overflow-hidden rounded-lg bg-card border border-border-default">
+          <img class="aspect-[3/2] w-full border-b border-border-default object-cover" src="assets/mentoring.webp" alt="Mentoring session with a junior designer, in black and white." width="800" height="533">
+          <div class="p-6">
             <h3 class="type-headline-sm">Mentorship that ships careers</h3>
             <p class="type-body-md mt-2 text-secondary">I actively mentor junior and aspiring product designers, helping them navigate the industry, accelerate their growth, and land their first real role.</p>
           </div>
         </div>
-        <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
-          <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5Z"/><path d="M6 12v5c0 1.1 2.7 2 6 2s6-.9 6-2v-5"/></svg>
-          </span>
-          <div>
+        <div class="card-lift overflow-hidden rounded-lg bg-card border border-border-default">
+          <img class="aspect-[3/2] w-full border-b border-border-default object-cover" src="assets/google-reichman.webp" alt="The Google and Reichman University UX graduate programme, in black and white." width="800" height="533">
+          <div class="p-6">
             <h3 class="type-headline-sm">From classroom to production</h3>
             <p class="type-body-md mt-2 text-secondary">Industry mentor for the Google &amp; Reichman University UX grad project, built on a real Bank Hapoalim challenge. One graduate joined my team; their concept now lives in our credit card workflow.</p>
           </div>
         </div>
-        <!-- B80 (d), 2026-09-03: "Agile without the theater" HIDDEN, not deleted, at Ofir's call.
-             It duplicates About Me's "I scale what works", which is the stronger version because it
-             carries the Agile Guild as its proof, so Agile gets one good treatment instead of two
-             weak ones. Kept as an inert rollback only while B84 rebuilds this section; once that
-             lands it goes for real, git is the rollback.
-        <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
-          <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M21 3v6h-6"/></svg>
-          </span>
-          <div>
-            <h3 class="type-headline-sm">Agile without the theater</h3>
-            <p class="type-body-md mt-2 text-secondary">A strong advocate for Agile, embedding designers into Dailies, Planning, Demos and PIP to align stakeholders fast and remove delivery friction, not add process for its own sake.</p>
-          </div>
-        </div>
-        -->
-
-
-        <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
-          <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>
-          </span>
-          <div>
+        <!-- A fourth card, "Agile without the theater", used to sit here. It was removed in B80 (d)
+             as a duplicate of About Me's Agile card, which is the stronger version because it
+             carries the Agile Guild as its proof, so Agile gets one good treatment and not two weak
+             ones. Kept hidden as an inert rollback only while B84 rebuilt this section; that landed
+             2026-09-03, so it is gone for real and git is the rollback. -->
+        <div class="card-lift overflow-hidden rounded-lg bg-card border border-border-default">
+          <img class="aspect-[3/2] w-full border-b border-border-default object-cover" src="assets/guest-lecture.webp" alt="Guest lecture at the Academic College of Tel Aviv-Yaffo, in black and white." width="800" height="533">
+          <div class="p-6">
             <h3 class="type-headline-sm">Teaching the path I walked</h3>
             <p class="type-body-md mt-2 text-secondary">Guest lecturer, Academic College of Tel Aviv-Yaffo, "Psychology &amp; UX." I share my path from junior designer to management, the learning curves and what actually sustains leadership.</p>
           </div>
