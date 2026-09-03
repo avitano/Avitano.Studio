@@ -188,6 +188,16 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    paragraph and no more, or it stops being a signal and turns back into ordinary coloured text.
    It exists so a reader who only skims still collects the line that matters. */
 .copy-mark { background: var(--color-peach); color: var(--color-default); padding: 2px 0; }
+/* The About lede is capped to the CARD COLUMN below it, not to a reading measure. max-w-prose
+   stopped near the half-way mark while the cards run 7 of 12, so the paragraph read as a 50:50
+   composition sitting on top of an 8:4 one. The width is derived from the same 12 tracks and 3rem
+   gap the grid itself uses, so changing the column span moves both together instead of leaving a
+   number here to go stale. Below lg the grid collapses to one column and max-w-prose is still the
+   right cap, which is why this only applies from lg up. */
+.about-lede { --about-grid-gap: 3rem; }
+@media (min-width: 64rem) {
+  .about-lede { max-width: calc((100% - 11 * var(--about-grid-gap)) / 12 * 7 + 6 * var(--about-grid-gap)); }
+}
 /* TRACK RECORD, rebuilt B80, 2026-09-01. The old block put TWO different arguments inside one
    container: the ARC (where he has been, how he moved) and the ARENA (how big those places were),
    split left and right inside a single bordered card per company. That is most of why it read as
@@ -224,7 +234,7 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    start at different x positions. Tabular figures give every digit one width, which is what makes
    a stack of year ranges line up digit under digit. It costs nothing and it is why the numbers in
    any real table are set this way. */
-.rec-spine { --node: 2rem; --head-line: 1.25rem; --rail-gap: 2rem; --rail-clear: 0.5rem; display: flex; flex-direction: column; gap: var(--rail-gap); font-variant-numeric: tabular-nums; }
+.rec-spine { --node: 2rem; --head-line: 1.25rem; --rail-gap: 3rem; --rail-clear: 0.5rem; display: flex; flex-direction: column; gap: var(--rail-gap); font-variant-numeric: tabular-nums; }
 /* The company name sits on the mark's CENTRE line, not its top edge. The mark is 2rem and the name
    line is 1.25rem, so the text column drops by half the difference. Both lengths are tokens, so
    resizing the mark keeps the two centred instead of quietly drifting apart. */
@@ -854,8 +864,15 @@ a:hover .arrow { transform: translateX(4px); }
            brought ideas, and that access then reached his designers too, which is evidence about
            him. Roles stay unitemized, C-level rather than naming the CEO and the VP. Past tense
            on the facts, he left in April 2026; the philosophy line stays present, it is a
-           standing belief and not a claim of current employment. -->
-      <p class="reveal type-body-lg mt-4 max-w-prose text-secondary">My job is to make the designers on my team successful, and that is how I measure myself. I presented to the bank's C-level myself and brought ideas into the room, and the relationship reached past me: they asked my designers their questions directly.</p>
+           standing belief and not a claim of current employment.
+           B80, 2026-09-04: the quarterly range added here rather than as a fourth card. The
+           heading claims a LOCATION and nothing in the section proved it, the three cards prove
+           scope and method. The range is one claim, from the room where objectives and budgets
+           were set to explaining the product to C-level, and the two rooms stay two rooms because
+           they are different events (career-master corrects an earlier note that merged them).
+           No ceremony names, no tribe or squad, on Ofir's own register rule: a reader hiring him
+           does not buy his bank's operating model. -->
+      <p class="reveal about-lede type-body-lg mt-4 max-w-prose text-secondary">My job is to make the designers on my team successful, and that is how I measure myself. I do it from inside the business rather than beside it, close enough to the numbers and the consequences that design arrives with an argument and not a preference.</p>
 
       <!-- B80, 2026-09-01: three cards replacing the deleted ones, and a different KIND of card -
            each carries a fact only Ofir can state (from career-master.md), proving the heading
@@ -891,9 +908,19 @@ a:hover .arrow { transform: translateX(4px); }
            managed for four years and what he brings now is the point, not where it started.
            No metric is named on the button rollback; he confirmed it measured worse without
            giving a figure, and inferring "conversions" would cross career-master's guardrail.
-           Open: card 3 kept the Share2 icon it inherited from "I scale what works", which fits
-           spreading better than it fits a loop. A cycle icon would be truer but the honest source
-           is the Design System page's curated set, not the ad hoc ones further down this file. -->
+           B80, 2026-09-04: card 3 rewritten to absorb the measurement practice and the residual
+           gap, which were two of four loose pieces of source material looking for a home. They
+           merge here rather than becoming cards of their own because all three say one thing,
+           nothing is finished when it ships, and because this card already claimed measurement in
+           the button clause. It carries three ideas in one word fewer than it used to: the old
+           copy narrated the button as an EVENT ("one change measured worse and we put it back")
+           where Ofir's own rule is to state the principle and let the button show its reach.
+           Measurement is written as initiates and reads, never operates, per career-master.
+           The residual gap is written as a method rather than as dialogue: "I said so" reported a
+           conversation, which is the register Ofir rejects across this whole section.
+           Icon moved from Share2 to Refresh Cw, both from the Design System page's curated set.
+           Share2 was inherited from "I scale what works" and means spreading, where this card is a
+           loop, which was a standing open note in this file until now. -->
       <!-- B80, 2026-09-01: 50:50 composition, Ofir's idea, side by side rather than stacked.
            Echoes the case-study hero split but differs in kind - both halves are cards here, left
            tinted, right white with a hairline. items-start, not stretch: the columns differ in
@@ -945,7 +972,31 @@ a:hover .arrow { transform: translateX(4px); }
               </span>
               <div class="min-w-0">
                 <h3 class="type-headline-sm">One team across five business lines</h3>
-                <p class="type-body-md mt-2 text-secondary">I had seven designers across Loans, Credit Cards, Mortgages, Deposits and a Design Centre of Excellence, four of those lines running at once. Each had its own building, its own product managers, its own Tribe Lead, closer to five companies than to five teams. <mark class="copy-mark">They shared one design system and one manager, and nothing else.</mark></p>
+                <p class="type-body-md mt-2 text-secondary">I managed seven designers across Loans, Credit Cards, Mortgages, Deposits and a Design Centre of Excellence, four of those lines running at once. Each had its own building, its own product managers, its own Tribe Lead, closer to five companies than to five teams. <mark class="copy-mark">One design language and one team ran through all five, which is what kept the experience consistent.</mark></p>
+              </div>
+            </div>
+            <!-- B80, 2026-09-04: card 2, new. The section heading claims a LOCATION and until now
+                 nothing in the section proved it, the other cards prove scope and method. This is
+                 the proof: present at every stage of a quarter, from the room where objectives and
+                 budgets are set through the planning to C-level.
+                 Register rule, Ofir's own: no ceremony names, not QBR, PIP or HL Business Design.
+                 A reader hiring him does not buy his bank's operating model, and money stays out of
+                 the heading. Written as a practice, not as a narrative: an "I" that shows what he
+                 does is method, an "I" that reports dialogue ("I said", "they asked me") is a story
+                 and reads as boasting. That is why the close is a direct line rather than executive
+                 questions being directed at him. The source is career-master's executive-
+                 relationship story: both the CEO and the VP told him to reach out directly when he
+                 hits a blocker, so the channel is standing and two-way, not an event.
+                 Icon is Message Square from the Design System page's curated set, for the line
+                 itself. Calendar and Map Pin were the alternatives and name the quarter or the room
+                 rather than the claim. -->
+            <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
+              <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
+                <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </span>
+              <div class="min-w-0">
+                <h3 class="type-headline-sm">In the room at every stage</h3>
+                <p class="type-body-md mt-2 text-secondary">A quarter opens where the bank sets its objectives and its budgets, and closes in front of C-level. I am in both rooms, and in the planning between them, asking for what the design work will need rather than inheriting a plan. <mark class="copy-mark">What came out of it is a direct line, open in both directions.</mark></p>
               </div>
             </div>
             <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
@@ -959,11 +1010,11 @@ a:hover .arrow { transform: translateX(4px); }
             </div>
             <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
               <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
-                <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+                <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
               </span>
               <div class="min-w-0">
-                <h3 class="type-headline-sm">Agile from the vision down to the button</h3>
-                <p class="type-body-md mt-2 text-secondary">The vision is set from day one, but it arrives in pieces. The MVP proves itself before the vision grows on top of it, and everything after ships small and gets measured. <mark class="copy-mark">Even the microcopy on a button, where one change measured worse and we put it back.</mark> A big release hides which change did it.</p>
+                <h3 class="type-headline-sm">Agile does not end at release</h3>
+                <p class="type-body-md mt-2 text-secondary">The vision is set on day one and arrives in pieces. The MVP proves itself before the vision grows on top of it, and everything after ships small, because a big release hides which change did it. <mark class="copy-mark">We measure everything, even the microcopy on a button.</mark> A fix too big for the quarter gets named, not quietly dropped, and goes back on the next plan.</p>
               </div>
             </div>
           </div>
