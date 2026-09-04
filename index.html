@@ -555,6 +555,19 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
 }
 .card-lift:hover::after { opacity: 1; }
 
+/* B86, 2026-09-04. Homepage icon cards, About Me and Skills, seven in total and nowhere else on
+   the site. The icon and the heading read as one row, the paragraph as its own block below it,
+   and the paragraph keeps the heading's left edge rather than running under the icon.
+   What this rule fixes: the heading used to align to the badge's TOP edge, so a badge sat beside
+   the heading's ascenders instead of beside the heading. It now centres against the heading's
+   FIRST LINE, not the heading block, which is the version that survives a heading wrapping to
+   two or three lines. Skills has the long headings, so that case is real and not theoretical.
+   Both lengths are declared once and the offset is derived, so changing the badge size or the
+   heading class cannot leave the two out of step. Badge is size-11 and the heading line box is
+   1.25rem at 1.4. */
+.icon-card { --icon-badge: 2.75rem; --icon-head-line: 1.75rem; }
+.icon-card-body { padding-top: calc((var(--icon-badge) - var(--icon-head-line)) / 2); }
+
 /* arrow nudges right on hover, works on any element with .arrow inside a hovered ancestor */
 .arrow { display: inline-block; transition: transform 200ms var(--ease-out); }
 a:hover .arrow { transform: translateX(4px); }
@@ -966,11 +979,11 @@ a:hover .arrow { transform: translateX(4px); }
                text card is now this section's own, so changing it here changes nothing else.
                Icons stay at the Design System set's own 1.5 stroke at 20px. -->
           <div class="reveal-stagger space-y-6">
-            <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
+            <div class="icon-card card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
               <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
                 <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
               </span>
-              <div class="min-w-0">
+              <div class="min-w-0 icon-card-body">
                 <h3 class="type-headline-sm">One team across five business lines</h3>
                 <p class="type-body-md mt-2 text-secondary">I managed seven designers across Loans, Credit Cards, Mortgages, Deposits and a Design Centre of Excellence, four of those lines running at once. Each had its own building, its own product managers, its own Tribe Lead, closer to five companies than to five teams. <mark class="copy-mark">One design language and one team ran through all five, which is what kept the experience consistent.</mark></p>
               </div>
@@ -990,29 +1003,29 @@ a:hover .arrow { transform: translateX(4px); }
                  Icon is Message Square from the Design System page's curated set, for the line
                  itself. Calendar and Map Pin were the alternatives and name the quarter or the room
                  rather than the claim. -->
-            <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
+            <div class="icon-card card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
               <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
                 <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               </span>
-              <div class="min-w-0">
+              <div class="min-w-0 icon-card-body">
                 <h3 class="type-headline-sm">In the room at every stage</h3>
                 <p class="type-body-md mt-2 text-secondary">A quarter opens where the bank sets its objectives and its budgets, and closes in front of C-level. I am in both rooms, and in the planning between them, asking for what the design work will need rather than inheriting a plan. <mark class="copy-mark">What came out of it is a direct line, open in both directions.</mark></p>
               </div>
             </div>
-            <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
+            <div class="icon-card card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
               <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
                 <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
               </span>
-              <div class="min-w-0">
+              <div class="min-w-0 icon-card-body">
                 <h3 class="type-headline-sm">Business and data before the first screen</h3>
                 <p class="type-body-md mt-2 text-secondary">A requirement arrives and I go to the business logic and the data first. When that is thin I ask for a customer journey study, and for car loans I stood in dealerships myself. Then a rough concept, fast, <mark class="copy-mark">unfinished on purpose so the conversation starts early</mark>.</p>
               </div>
             </div>
-            <div class="card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
+            <div class="icon-card card-lift flex gap-4 rounded-lg bg-card p-6 border border-border-default">
               <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-surface-alt text-primary">
                 <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
               </span>
-              <div class="min-w-0">
+              <div class="min-w-0 icon-card-body">
                 <h3 class="type-headline-sm">Agile does not end at release</h3>
                 <p class="type-body-md mt-2 text-secondary">The vision is set on day one and arrives in pieces. The MVP proves itself before the vision grows on top of it, and everything after ships small, because a big release hides which change did it. <mark class="copy-mark">We measure everything, even the microcopy on a button.</mark> A fix too big for the quarter gets named, not quietly dropped, and goes back on the next plan.</p>
               </div>
@@ -1318,30 +1331,96 @@ a:hover .arrow { transform: translateX(4px); }
            Skills wins on count: it is already in nine links across five files against this one
            visible word. Capabilities was most likely a translation of the Hebrew. -->
       <span class="reveal type-label-sm text-muted">Skills</span>
-      <h2 class="reveal type-headline-md mt-4 max-w-2xl">Fluent in more than Figma<span class="brand-dot">.</span></h2>
-      <p class="reveal type-body-lg mt-4 max-w-prose text-secondary">Most design managers stop at the mockup. I don't, and in 2026, that gap is the whole point.</p>
+      <!-- B86, 2026-09-04: was "Fluent in more than Figma", which the rewritten cards turned into a
+           contradiction, since card 3 is now Figma to depth. Two words swapped rather than a new
+           heading: "Fluent" already works and the rhythm is his. It claims multiplicity instead of
+           a negation, and the three cards are literally three crafts. A range heading was rejected,
+           the lede directly below already states the range and would have restated it. -->
+      <h2 class="reveal type-headline-md mt-4 max-w-2xl">Fluent in more than one craft<span class="brand-dot">.</span></h2>
+      <!-- B86, 2026-09-04: the lede was "Most design managers stop at the mockup. I don't", a
+           comparison against the profession, and the three cards below now carry real proof so it
+           does not need one. Ofir's own read was that it reads as boastful and is not his voice.
+           Replaced by a range, business room to code, with the four things the cards deliver, and
+           a close that says why the range matters to a reader rather than that it is impressive.
+           "a component that ships in someone else's repo" was the first draft of that range and
+           was cut: it implies his code landed in the bank's engineering repo, which is not true,
+           and it needed explaining, which is its own answer. -->
+      <p class="reveal type-body-lg mt-4 max-w-prose text-secondary">From a business objective in a quarterly planning room to the code that ships it, I work the whole length of it. Design systems, AI in the process, hands in the file, hands in the code. <mark class="copy-mark">The range is the point: it is what lets me lead people who each work at a different point on that line.</mark></p>
 
-      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-10 sm:grid-cols-3">
-        <div>
-          <span class="flex size-11 items-center justify-center rounded-lg bg-surface-alt text-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
+      <!-- B86, 2026-09-04: all three cards rewritten. They used to be three assertions about tools
+           at 26 words each, landing straight after four real case studies, so the reader met a
+           claim right after evidence. Each one now carries a proof, and the three deliberately
+           come from three DIFFERENT sources so they cannot read as the same card three times:
+           card 1 from the team at the bank, card 2 from Ofir's own axis, card 3 from both.
+           The section stays about him hands-on rather than as a manager, which is its point and
+           not its problem: About Me answers who he is and how he works, this one answers what he
+           brings. Only card 1 is managerial, and that is where AI as a POSTURE lands, which was
+           unclaimed anywhere on the site.
+           Card 1 names no tool, or it becomes a tools card. It also does not list what the human
+           pass fixes: Ofir does not want a paragraph descending into detail, so the claim is that
+           precision is human and the manager protects it.
+           Card 2 holds Claude Code, git and the repo, because that is where they truthfully live.
+           None of it happened at the bank. The site itself is the proof, kept deliberately low
+           powered ("where I keep the habit sharp") so it reads as a fact and not as a flex.
+           Card 3's proof is written in the passive past, "were adopted", so the bank is never an
+           actor in the present tense (B87's rule). Same reason nothing here says "my designers"
+           in the present, About Me card 2 is the open instance of that and this section must not
+           add a second one.
+           Rejected headings: "I do not stop at the handoff" for card 2, same negation shape as
+           About Me's "Agile does not end at release" one screen up. -->
+      <!-- B86, 2026-09-04, the visual pass. These were three bare columns, which held while the
+           copy was 26 words a card and stopped holding at 55.
+           SURFACE: sage (green-50), no border, because a tint contains on its own. Bone was
+           proposed first and measured out: peach is 251,234,222 and bone is 242,236,224, a nine
+           unit difference in one channel, so every copy-mark in the section would have vanished.
+           Sage is cool against a warm highlight, so the marks read better here than on white.
+           Solving that on bone would have meant a second highlight colour existing for one
+           section, which is not worth a token.
+           ICONS UNCHANGED, Ofir's call and the right one: About Me's cards carry icons too, and a
+           second icon language on one page reads as two systems. Same curated marks, same grey
+           square shape, stroke normalised to 1.5 (they were 2, 2 and 1.6). An oval spot and
+           two-tone icons were proposed from card-explorations variant L and dropped for the same
+           reason.
+           BADGE: only the fill differs from About Me, and it went through two states. Grey was
+           muddy on sage and white did not sit on it either, both of them being pale surfaces on
+           a pale surface. It is now inverted, primary green ground with the mark in white, which
+           is the one contrast that actually holds against a tint. About Me stays grey on white,
+           since its cards are white and an inverted badge there would be the loudest thing in
+           the section.
+           WHAT SEPARATES THIS FROM ABOUT ME, three things at once: the tint, no border, and the
+           icon above the text rather than beside it. The last one is not a style choice, these
+           cards are narrow at three across and a narrow card puts its icon on top.
+           Left aligned, like everything on this page except the hero and the footer. Centring
+           would suit the badge and ruin a 55 word paragraph, which gets ragged on both edges.
+           Badge to heading is 12px, not 16: at 16 the badge reads as floating above the text
+           rather than belonging to it. -->
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div class="icon-card card-lift flex gap-4 rounded-lg bg-green-50 p-6">
+          <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary text-on-primary">
+            <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .962 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.962 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
           </span>
-          <h3 class="type-headline-sm mt-4">AI-native, not AI-curious</h3>
-          <p class="type-body-md mt-2 text-secondary">I build with Claude Code daily, prototyping flows, debugging logic, shipping real surfaces. For a design manager, that's not a hobby, it's a competitive edge.</p>
+          <div class="min-w-0 icon-card-body">
+            <h3 class="type-headline-sm">AI for the first draft, not the last</h3>
+            <p class="type-body-md mt-2 text-secondary">A blank frame is the slowest part of any project, so I use AI to get directions and rough UI on the table fast and the conversation starts on something real. Then the designers take it. <mark class="copy-mark">The precision that makes a screen feel finished is human</mark>, and it is the part I protect.</p>
+          </div>
         </div>
-        <div>
-          <span class="flex size-11 items-center justify-center rounded-lg bg-surface-alt text-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><path d="M6 9v6M18 9a9 9 0 0 1-9 9"/></svg>
+        <div class="icon-card card-lift flex gap-4 rounded-lg bg-green-50 p-6">
+          <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary text-on-primary">
+            <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><path d="M6 9v6M18 9a9 9 0 0 1-9 9"/></svg>
           </span>
-          <h3 class="type-headline-sm mt-4">Comfortable in the repo</h3>
-          <p class="type-body-md mt-2 text-secondary">Branches, diffs, pull requests, I read code the way I read Figma files. It closes the trust gap between design and engineering, for good.</p>
+          <div class="min-w-0 icon-card-body">
+            <h3 class="type-headline-sm">Past the handoff, into the repo</h3>
+            <p class="type-body-md mt-2 text-secondary">Branches, diffs, pull requests, and Claude Code open most days. I read code the way I read a Figma file, and that is what closes the distance between a design and the thing that actually ships. This site is where I keep the habit sharp. <mark class="copy-mark">I designed it, built it and deployed it.</mark></p>
+          </div>
         </div>
-        <div>
-          <span class="flex size-11 items-center justify-center rounded-lg bg-surface-alt text-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/></svg>
+        <div class="icon-card card-lift flex gap-4 rounded-lg bg-green-50 p-6">
+          <span class="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary text-on-primary">
+            <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/></svg>
           </span>
-          <h3 class="type-headline-sm mt-4">Figma, past the basics</h3>
-          <p class="type-body-md mt-2 text-secondary">Variables, component APIs, the plugin and MCP ecosystem, I don't just design screens, I build the systems that let a team move fast.</p>
+          <div class="min-w-0 icon-card-body">
+            <h3 class="type-headline-sm">Still building, not only reviewing</h3>
+            <p class="type-body-md mt-2 text-secondary">Variables, component APIs, the plugin and MCP ecosystem. I never stopped opening the file myself, to show an idea or to fix something rather than describe it, and <mark class="copy-mark">components I built were adopted into the bank's design system</mark>, which is what a living system is for. I also built my own from scratch, as a side project.</p>
+          </div>
         </div>
       </div>
     </div>
