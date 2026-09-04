@@ -11,16 +11,16 @@
   gtag('config', 'G-V1HNVYX124');
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ofir Avitan | Credit Cards Case Study</title>
-<meta name="description" content="Credit Cards case study: redesigning Bank Hapoalim's credit card experience from a commodity trap into a visual-first, lifestyle-led selection flow.">
+<title>Ofir Avitan | Credit Card Ordering Case Study</title>
+<meta name="description" content="Credit Card Ordering case study: Bank Hapoalim's card range had real differences in it, and the flow showed none of them. Putting them back on the screen.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://avitano.studio/Credit-Cards/">
-<meta property="og:title" content="Ofir Avitan | Credit Cards Case Study">
-<meta property="og:description" content="Credit Cards case study: redesigning Bank Hapoalim's credit card experience from a commodity trap into a visual-first, lifestyle-led selection flow.">
+<meta property="og:title" content="Ofir Avitan | Credit Card Ordering Case Study">
+<meta property="og:description" content="Credit Card Ordering case study: Bank Hapoalim's card range had real differences in it, and the flow showed none of them. Putting them back on the screen.">
 <meta property="og:image" content="https://avitano.studio/assets/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Ofir Avitan | Credit Cards Case Study">
-<meta name="twitter:description" content="Credit Cards case study: redesigning Bank Hapoalim's credit card experience from a commodity trap into a visual-first, lifestyle-led selection flow.">
+<meta name="twitter:title" content="Ofir Avitan | Credit Card Ordering Case Study">
+<meta name="twitter:description" content="Credit Card Ordering case study: Bank Hapoalim's card range had real differences in it, and the flow showed none of them. Putting them back on the screen.">
 <meta name="twitter:image" content="https://avitano.studio/assets/og-image.jpg">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon.ico" sizes="any">
@@ -71,6 +71,18 @@
   --color-gold-500: #e0a52e;
   --color-gold-700: #a87a1e;
   --color-gold-900: #40310f;
+
+  /* B89, 2026-09-04: ported from ../Digital-Loans/index.html, where B73 brought it over from
+     ../Internal-Systems/index.html (B60). A warm surface that actually reads as a break from white,
+     unlike --color-surface-alt, which is about a 6% step off white and disappears. Site-only, not a
+     DSM token. There is no shared stylesheet on this site, so each page that wants it needs its own
+     copy of this line. */
+  --color-bone: #f2ece0;
+  /* B89, 2026-09-04: ported alongside the learn-* block below, same chain as --color-bone above.
+     Site-only, and it has ONE legitimate use, a highlight behind running text. Peach was tried as a
+     card SURFACE in B59 and rejected by Ofir as not belonging to his palette, so do not reach for it
+     as a background. */
+  --color-peach: #fbeade;
 
   /* ---- semantics ---- */
   --color-primary: var(--color-green-950);
@@ -142,11 +154,6 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    white until this same fix landed there. Matching it here so this page can't silently break
    the same way if that nav rule ever changes. */
 .brand-dot-accent { color: var(--color-accent); }
-/* 2026-08-14, B56: same emission-bug family as above. --color-gold-700 was only ever referenced
-   via inline style="" attributes on the numbered labels below, so it never got emitted into
-   :root and these silently rendered as inherited dark text instead of gold. Ofir's call: don't
-   restore gold, recolor to the site's green instead (same --color-button used site-wide). */
-.stat-accent-green { color: var(--color-button); }
 /* B57: footer text-color classes, ported from ../index.html (B55), plus the same-day
    readability fix (footer-text-soft/neutral-100 instead of green-100, see that file's
    comment on the gotcha). hero-dark-on-primary-soft kept defined for parity across pages
@@ -356,11 +363,209 @@ a:hover .arrow { transform: translateX(4px); }
   50%      { opacity: var(--spark-max, 0.9); }
 }
 
+/* SPLIT SCOPE AND INTRO WIDTH (B89). Ported from ../Digital-Loans/, where B73 settled it. The intro
+   sits ABOVE the split, so max-w-prose (65ch) would let it run wider than the card column beneath
+   it, and the two left edges would agree while the right edges did not. It is capped to exactly one
+   column of the split instead.
+   ONE SOURCE OF TRUTH: --split-gap feeds both the grid's gap and this cap, so a six-of-twelve column
+   is literally (100% - gap) / 2 and the two cannot drift apart if the gutter is ever retuned.
+   Writing 3rem in both places would look identical today and break silently later.
+   THE MEDIA QUERY IS LOAD-BEARING, not a nicety. This site's custom CSS is unlayered, so it beats
+   any Tailwind utility regardless of specificity or source order. An unscoped max-inline-size here
+   would override max-w-prose at EVERY width, including mobile, where the grid is a single column and
+   half of it is far too narrow to read. Scoping to lg leaves max-w-prose in charge below it. */
+.case-scope { --split-gap: 3rem; }
+.case-split { gap: var(--split-gap); }
+@media (min-width: 1024px) {
+  .case-intro { max-inline-size: calc((100% - var(--split-gap)) / 2); }
+}
+
+/* STEP CARD (B89). One of TWO card types on this site, and the same class name means something
+   different on ../Internal-Systems/, which is expected rather than a bug.
+   .ghost-card, over there: a large ghosted numeral in the bottom corner with a reserved band so
+     text never reaches it.
+   .step-card, here and on ../Digital-Loans/: a small numeral on the reading line above the heading.
+   THE RULE THAT PICKS ONE IS CARD WIDTH. A narrow card's dead space is at the BOTTOM, which is
+   exactly what a corner numeral fills. A wide card has no dead bottom, only a wide empty stripe,
+   and the same numeral strands itself at one end of it. In practice media orientation decides the
+   width: landscape media pushes cards into a row and makes them narrow, while a portrait phone puts
+   them in a column beside it and makes them wide. This page is phones, so it is the step card.
+   A NUMBER IS A MARKER, NEVER A HEADING. It sits below the heading in the visual hierarchy, and its
+   type comes from a real site class rather than a size copied out of card-explorations.html. The
+   numeral is also only correct because these three are read as a set of problems in order; for
+   facets, which have no sequence, the marker would have to be a symbol instead.
+   COLOUR: the numerals stay this page's existing green rather than ../Digital-Loans/'s gold. That
+   difference between pages is not an inconsistency to reconcile later.
+   SURFACE MODIFIERS: when this sweep reaches the later sections, -bone and -white go DIRECTLY AFTER
+   this rule and nowhere else. Both are single-class selectors of identical specificity, so source
+   order alone decides which background wins, and a modifier declared above the base silently does
+   nothing. */
+.step-card {
+  border-radius: var(--radius-lg);
+  background: var(--color-green-50);
+  padding: 1.75rem;
+}
+.step-card__num { display: block; color: var(--color-button); margin-block-end: 0.5rem; }
+/* Surface modifier, named to match ../Digital-Loans/index.html's .step-card-bone and
+   ../Internal-Systems/index.html's .ghost-card-bone, so both card types share one palette across
+   three pages. MUST STAY DIRECTLY AFTER .step-card: both are single-class selectors carrying
+   identical specificity, so source order alone decides which background wins, and moving this line
+   above the base rule would silently turn every bone card sage again.
+   It sits on "the strategy", which is a bg-surface-alt section, and that pairing is already proven
+   on ../Digital-Loans/ in "the mvp": bone is warm and surface-alt is cool, so the card separates
+   from its ground by hue rather than by lightness, which is why a 6% step off white is enough. */
+.step-card-bone { background: var(--color-bone); }
+/* White plus a hairline, the third surface, on "the evidence". Ported from
+   ../Digital-Loans/index.html, which took it from ../Internal-Systems/index.html's
+   .ghost-card-white. The hairline is an INSET BOX-SHADOW and not a border on purpose: a border adds
+   a real layout box, so a bordered variant would be 2px taller and wider than its sage and bone
+   siblings and the three would not line up across the page. An inset shadow costs no geometry.
+   Same source-order rule as the bone modifier above, it must stay below .step-card. */
+.step-card-white { background: var(--color-card); box-shadow: inset 0 0 0 1px var(--color-border-default); }
+/* Marker slot for a SYMBOL instead of a numeral, used on "the evidence" only. It occupies the same
+   position and the same rhythm as .step-card__num, so the three sections still read as one family.
+   WHY IT EXISTS: a numeral is only correct when the set is a sequence. The challenge's three
+   problems are read in order and the strategy's three moves answer them one for one in that same
+   order, so both are sequences. The evidence's three findings are facets, they have no order, and
+   numbering them would assert a progression the content does not have.
+   The glyphs are pulled from the curated set on ../Design-System/index.html rather than drawn here,
+   which is that set's whole purpose, so nothing on this site invents an icon. */
+.step-card__mark { display: block; color: var(--color-button); margin-block-end: 0.5rem; }
+
+/* "what I learned" as the nested card, B89 2026-09-04, ported whole from ../Digital-Loans/, which
+   took it from ../Internal-Systems/ where it was designed. Wrapper included, per the standing rule
+   that porting only the inner classes drops a real structural relationship.
+   Radii are concentric per the DSM rule: inner --radius-md (8) plus 8px of padding gives outer
+   --radius-lg (16). The nesting barely reads, because the outer tint is about 6% off white and the
+   mat is thin, so the eye sees one white card with a soft halo. That is the point here rather than a
+   flaw: it also means the sage outer does NOT re-open the page's surface rotation after "the
+   evidence"'s white cards, since it is one nested object and not a fourth card grid.
+   The mark is drawn as GEOMETRY, three straight lines crossing at 60 degree steps, never set as a
+   type glyph. Internal recorded why and it is worth not rediscovering: Inter Tight's asterisk is a
+   soft petalled shape and at this size it reads as a leaf. Six straight arms stay unmistakable
+   however much of the bottom is cut off, which is the property the glyph lacked.
+   --mark-size and --mark-bleed drive BOTH the mark and the bottom padding that clears it, so the two
+   cannot drift apart and the text can never land on top of it.
+   NO SUB-HEADINGS inside. The two highlights do the skimming work a heading would, and having both
+   would be the same emphasis twice. The section's own h2 is untouched. */
+.learn-outer { background: var(--color-green-50); border-radius: var(--radius-lg); padding: 0.5rem; }
+.learn-inner {
+  --mark-size: 7.5rem;
+  --mark-bleed: 2rem;
+  position: relative; overflow: hidden;
+  background: var(--color-card); border-radius: var(--radius-md);
+  padding: 3rem 3.25rem calc(var(--mark-size) - var(--mark-bleed) + 1rem);
+}
+.learn-mark { position: absolute; z-index: 0; right: 0.5rem; bottom: calc(var(--mark-bleed) * -1); inline-size: var(--mark-size); block-size: var(--mark-size); color: var(--color-primary); }
+.learn-cols { display: grid; gap: 2rem; }
+.learn-cols p { position: relative; z-index: 1; font-size: 1.05rem; line-height: 1.75; color: var(--color-secondary); }
+/* Two columns at full width rather than one narrow card: a single column left roughly 900px of
+   empty page beside it, and the two lessons are parallel rather than sequential, so side by side
+   fills the width for a real reason. Each column lands near 560px, still a readable measure.
+   Both media blocks MUST stay below the rules they override, a media query adds no specificity. */
+@media (min-width: 1024px) { .learn-cols { grid-template-columns: 1fr 1fr; gap: 3.5rem; } }
+@media (max-width: 1023.98px) {
+  .learn-inner { --mark-size: 4.5rem; --mark-bleed: 1.5rem; padding: 1.75rem 1.5rem calc(var(--mark-size) - var(--mark-bleed) + 1rem); }
+  .learn-mark { right: 0.35rem; }
+}
+.copy-mark { background: var(--color-peach); color: var(--color-default); padding: 2px 0; }
+
 /* placeholder media block: flat neutral surface standing in for a real screenshot/video,
    same visual language as the "Preview coming soon" tile on ../index.html, not a new pattern */
 .media-placeholder {
   display: flex; align-items: center; justify-content: center;
   background: var(--color-neutral-100); border: 1px solid var(--color-border-default);
+}
+
+/* HERO TINT (B89). The wash and grain treatment from ../Digital-Loans/, rebuilt here against THIS
+   folder's own assets: the url() below is relative to this file, so it resolves to
+   ./assets/hero_grain.webp and never reaches across into another case study's folder. Every page on
+   this site is self-contained and its media has to be too.
+   The tile itself is byte-identical to the one over there, which is intended, it is the same grain.
+   Order is fine grain, coarse grain, wash, because the first background-image in the list paints on
+   top, and the size/repeat/position lists are positional so they must stay in that same order.
+   The second copy of the same tile at double size, offset by half a tile, is what makes the texture
+   read as COARSE rather than merely darker: the two layers repeat on different intervals, so their
+   interference pattern is far longer than either one and the tiling stops being detectable. Alpha
+   and layer count MULTIPLY rather than add, so if this ever needs retuning, change the number of
+   layers or their sizes before touching the tile's own alpha.
+   The wash peaks at 26 percent rather than at the top edge, which is roughly where the H1 sits, so
+   the strongest colour lands with the headline instead of behind the nav where there is nothing to
+   read. It sits on the header's padding box, so the texture ends exactly where the hero ends.
+   COLOUR: this page is light blue where ../Digital-Loans/ is pink, which is the whole of the
+   difference between the two washes. The peak is the 26 percent stop; the other three are derived,
+   not picked, being that one colour scaled toward white by the same proportions the pink used,
+   0.55 at the top edge, 1.0 at the peak, 0.25 at 62 percent, 0 at the bottom. Measured off
+   ../Digital-Loans/ as distance-from-white vectors, so re-tinting this page is one colour plus that
+   scale, never four independent guesses.
+   WHY THE BLUE HAD TO GO FURTHER FROM WHITE THAN THE PINK DID, and this is the reusable part. A
+   first pass used Ofir's #eff6fe as the peak and read as grey rather than blue, at a channel gap of
+   15 against the pink's 19, which by the gap rule should have been close enough. The gap rule was
+   the wrong instrument. Perceived lightness is not the average of the channels: green carries about
+   72 percent of it, red 21, and blue only 7. A pink wash dims green and blue, so it dims the two
+   channels the eye actually weighs and darkens visibly. A blue wash dims red and green only
+   slightly and leaves blue sitting at white, so at an equal gap it lands much closer to white.
+   Measured: #eff6fe has a relative luminance of 245 where the pink peak #fce9e9 has 237, eight
+   units nearer white, which is exactly the "barely there, looks grey" reading.
+   So the lever was not saturation, it was distance from white along the SAME hue. The peak is
+   #eff6fe's own vector from white multiplied by 1.75, which lands luminance at 237.5 and matches
+   the pink almost exactly. Hue is untouched at about 212 degrees. Ofir's original colour survives
+   as the top edge, #f0f6fe, which is his value to within one unit of red. */
+.hero-tint {
+  background-image: url("assets/hero_grain.webp"), url("assets/hero_grain.webp"), linear-gradient(to bottom, #f0f6fe 0%, #e3effd 26%, #f8fbff 62%, #ffffff 100%);
+  background-repeat: repeat, repeat, no-repeat;
+  background-size: 384px 384px, 768px 768px, 100% 100%;
+  background-position: 0 0, 192px 192px, center;
+}
+
+/* HERO SPLIT (B89). Ported from ../Internal-Systems/, the reference implementation, by way of
+   ../Digital-Loans/. That file carries the full reasoning on the shadow: drop-shadow and not
+   box-shadow because this is a transparent PNG and box-shadow would draw a grey rectangle behind a
+   device-shaped hole, and a large offset with a TIGHT blur because that ratio is what reads as a
+   silhouette projected by a light in front, where a large offset with a large blur reads as ambient
+   glow. Move offset and blur together if it is ever retuned.
+   THE MEDIA IS A FAN OF THREE PHONES, and that choice is the case study's argument rather than a
+   way to fill the column. The claim this project rests on is that the differentiation existed and
+   never reached the screen, so the mechanism has to be the one that says "here are several of these,
+   see them together", which is three shown side by side. A switcher would have said the opposite,
+   since it hides what it is not showing. It also sets up "the challenge" further down, where the
+   flow opened on three cards with nothing saying why those three.
+   A single portrait phone was built here first and rejected, and the reason is worth keeping. It
+   was correctly centred in its own half, but a half column is invisible, so it was the only thing
+   on the page aligned to neither the left nor the right margin and it read as floating. A landscape
+   composite pinned right removes the problem instead of tuning it: the frame's right edge lands on
+   the same line as the nav's and every section's.
+   SHADOW: one filter over the whole composite, Ofir's explicit call after trying baked ones in
+   Figma. Note what that means and do not "fix" it later with a second filter: a filter follows the
+   MERGED alpha silhouette, so this shadow wraps the outer contour of the fan and cannot appear
+   BETWEEN the phones. Only a shadow baked in Figma could do that. One or the other, never both,
+   because two shadows in two directions is what that mistake looks like.
+   The register is soft, also Ofir's call: a large offset with a tight blur reads as a light in
+   front throwing a hard silhouette, which is what ../Internal-Systems/ and ../Digital-Loans/ do,
+   while a smaller offset with a wide blur reads as ambient light with the object lifted off the
+   page. This page is deliberately in the second room. Opacity comes down with the blur, since a
+   wide blur spreads the same ink over far more area and reads heavier at equal alpha. Move offset,
+   blur and alpha together if this is ever retuned.
+   ASSET: 1835x1401 exported, cropped to its own alpha at 1796x1364, then downscaled to 1134x861,
+   which is exactly 2x the 567px this ever renders at, and encoded at q90 for 123KB. Measured 39.4dB
+   against the pristine source at render size; q85 was 106KB at 38.7dB and full size was 190KB at
+   43.8dB. It is heavier than the other two heroes at about 50KB, and that is real rather than a
+   mistake: three illustration-rich screens carry far more colour than a laptop on a flat ground.
+   If the frame is ever taken past 92 percent, re-export from the .original.png rather than scaling
+   this file up, since 1134 is exactly the current ceiling. */
+.hero-split { display: grid; gap: 2.5rem; }
+@media (min-width: 1024px) { .hero-split { grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; } }
+.hero-device-frame { aspect-ratio: 1134 / 861; max-inline-size: 92%; margin-inline-start: auto; }
+.hero-device-frame img {
+  width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(-4px 6px 14px rgb(0 0 0 / 0.08)) drop-shadow(-24px 30px 60px rgb(0 0 0 / 0.20));
+}
+/* Mobile: the same fixed-pixel problem documented on the other two pages. Pinning right is
+   meaningless once the column is the whole screen, and an offset and blur that are a small share of
+   a desktop column are a large share of a phone, so both come down with it. */
+@media (max-width: 1023.98px) {
+  .hero-device-frame { max-inline-size: 100%; margin-inline: auto; }
+  .hero-device-frame img { filter: drop-shadow(-2px 3px 8px rgb(0 0 0 / 0.08)) drop-shadow(-12px 16px 32px rgb(0 0 0 / 0.18)); }
 }
 
 /* B24: pull-past-top sky strip, rolled out from ../index.html (built there
@@ -416,27 +621,9 @@ a:hover .arrow { transform: translateX(4px); }
 
   <div class="scroll-progress" id="scrollProgress"></div>
 
-  <!-- NAV: reverted 2026-08-11 to point back at the homepage, see the CSS comment above.
-       B57 (2026-08-15) added the gold hairline/CTA + nav-wide treatment ported from
-       ../index.html (B55), wrapping the back-arrow + name into .site-nav-leading so
-       the wider 3-column grid has a single item for col 1.
-  ROLLBACK (pre-B57 compact nav):
-  <nav class="site-nav site-nav-dark">
-    <a href="../index.html#CreditCards" class="site-nav-back" aria-label="Back to Credit Cards on the homepage">
-      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
-    </a>
-    <a href="../#" class="site-nav-name">Ofir Avitan</a>
-    <div class="hidden md:flex items-center gap-6 type-label-lg" id="navTabs">
-      <a href="../index.html#about" class="nav-link">About Me</a>
-      <a href="../index.html#case-studies" class="nav-link">Case Studies</a>
-      <a href="../index.html#skills" class="nav-link">Skills</a>
-    </div>
-    <a href="../index.html#contact" class="site-nav-cta btn-glow-accent">Let's talk</a>
-  </nav>
-  -->
   <nav class="site-nav site-nav-dark nav-dark-gold nav-wide">
     <div class="site-nav-leading">
-      <a href="../index.html#CreditCards" class="site-nav-back" aria-label="Back to Credit Cards on the homepage">
+      <a href="../index.html#CreditCards" class="site-nav-back" aria-label="Back to Credit Card Ordering on the homepage">
         <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
       </a>
       <a href="../#" class="site-nav-name">Ofir Avitan</a>
@@ -450,32 +637,58 @@ a:hover .arrow { transform: translateX(4px); }
   </nav>
 
   <!-- HERO -->
-  <header id="top" class="px-4 pb-8 pt-32 sm:pb-16 lg:px-20 lg:pb-24 lg:pt-40">
+  <header id="top" class="hero-tint px-4 pb-8 pt-32 sm:pb-16 lg:px-20 lg:pb-24 lg:pt-40">
     <div class="mx-auto max-w-7xl">
-      <div style="max-width:1080px;">
-        <h1 class="enter type-display-sm sm:text-5xl" style="animation-delay:80ms">Credit Cards<span class="brand-dot">.</span></h1>
+      <div class="hero-split">
+      <div>
+        <!-- B89 dateline. Year and Duration came out of the four-field grid and sit above the H1 as
+             one muted line, the same move already made on ../Internal-Systems/ and ../Digital-Loans/:
+             the four fields were never equal, two are timestamps and two are substance, and pairing
+             a two-word field beside a two-line one made the grid look broken. Role and Scope now
+             have the body to themselves. -->
+        <p class="enter type-label-sm text-muted" style="animation-delay:60ms">2026 &middot; 3 months</p>
+        <h1 class="enter type-display-sm mt-3 sm:text-5xl" style="animation-delay:80ms">Credit Card Ordering<span class="brand-dot">.</span></h1>
         <!-- B29 fixed-width column rollout, 2026-08-12: piloted on ../Digital-Loans/,
              see that file's comment for the reasoning (content-driven auto columns
-             threw the label row out of even rhythm). -->
-        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-[4rem_13rem_6rem_1fr] sm:gap-x-10" style="animation-delay:240ms">
-          <div>
-            <p class="type-body-md text-muted">Year</p>
-            <p class="type-body-lg mt-1 font-medium text-default">2026</p>
-          </div>
+             threw the label row out of even rhythm). Two fields now, so the fixed
+             template is gone and the two share the column evenly. -->
+        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-x-8" style="animation-delay:240ms">
           <div>
             <p class="type-body-md text-muted">Role</p>
             <p class="type-body-lg mt-1 font-medium text-default">Product Design Manager</p>
           </div>
           <div>
-            <p class="type-body-md text-muted">Duration</p>
-            <p class="type-body-lg mt-1 font-medium text-default">6 months</p>
-          </div>
-          <div>
             <p class="type-body-md text-muted">Scope</p>
-            <p class="type-body-lg mt-1 font-medium text-default" style="max-width:495px;">Product Strategy, UX, UI, Microcopy, Usability Testing, Legal Collaboration, Design System</p>
+            <!-- B89, 2026-09-04. "Design System" removed, taking this list from seven entries to
+                 six, identical to ../Digital-Loans/.
+                 IT CAME OUT FOR FOCUS, NOT FOR ACCURACY, and the distinction matters enough that a
+                 future session must not "restore" it. Ofir confirmed he did build and extend real
+                 DSM components on this project and on Digital Loans both, so the entry was true. It
+                 is simply not among the six that carry this project, and a Scope field that lists
+                 everything true stops telling a reader what the work actually was.
+                 That refines B73's rule rather than contradicting it. B73 established that an entry
+                 is never cut merely because it also appears on another page, which is why Usability
+                 Testing was restored there. Focus is a separate and legitimate reason to cut one.
+                 ../Internal-Systems/ keeps Design System because its six are a different six, built
+                 around User Research rather than Product Strategy and Legal Collaboration. -->
+            <p class="type-body-lg mt-1 font-medium text-default">Product Strategy, UX, UI, Microcopy, Usability Testing, Legal Collaboration</p>
           </div>
         </div>
-        <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms; max-width:790px;">Redesigned Bank Hapoalim's credit card experience: three functionally identical card products, sold on raw numbers and dense compliance text, became a visual-first, lifestyle-led selection flow.</p>
+        <!-- B89 copy pass, written LAST at Ofir's request, once every section below it was settled.
+             THREE FAULTS IN THE OLD LINE. It rested on "three functionally identical card products",
+             the exact claim this sweep replaced. It was written in the register the sweep removed,
+             "a visual-first, lifestyle-led selection flow". And it opened on "Redesigned", a verb
+             about the ROLE, where a case-study hero summarises the PROJECT.
+             THE SHAPE COMES FROM THE OTHER TWO HEROES, and it is a shape rather than a phrase: one
+             sentence on the bank's problem carrying no "I", then authorship restored by a single
+             noun phrase. ../Digital-Loans/ uses "My strategy was to invert it" and
+             ../Internal-Systems/ uses "The product I led", so this page needed a third of the same
+             family rather than a reuse of either, hence "My answer was".
+             "My answer was not a new product but" also does real work: the page's whole story is
+             that the product could not change, so the hero says what the project was NOT before
+             saying what it was, and the reader meets that constraint before "the strategy" explains
+             it. TENSE per B87, the bank stays past throughout. -->
+        <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms; max-width:790px;">Some of Bank Hapoalim's cards stood for something real and the ordering flow gave no sign of it. My answer was not a new product but a flow built to carry what was already there, with the regulatory text moved off the moment of choosing.</p>
         <div class="enter mt-6 flex flex-wrap gap-2" style="animation-delay:420ms">
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">iOS</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Android</span>
@@ -484,11 +697,48 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
       </div>
 
-      <!-- rounded-lg, not rounded-xl, 2026-08-30: one container radius site-wide. Note rounded-xl
-           resolves to 28px here, not Tailwind's 12px, because @theme overrides the scale. -->
+      <!-- Media column. This product is MOBILE, so it takes phones and NOT the MacBook frame used on
+           ../Internal-Systems/ and ../Digital-Loans/. Ofir's own Figma export, cropped tight to the
+           fan's own silhouette with the rounded corners baked into the alpha, so no CSS radius
+           belongs on it: the corner it shows is the device's own.
+           380ms is not arbitrary: B76 found the device must land BEFORE anything sitting below the
+           split, or the entrance runs down the left column, jumps to the bottom and jumps back up.
+           Here it lands alongside the tags at 420ms and the two columns resolve as one hero.
+           Alt text describes the artefact, not the machines: the phones are presentation, the three
+           cards are the content, and naming all three is the point of the image. -->
+      <div class="enter" style="animation-delay:380ms">
+        <div class="hero-device-frame">
+          <img width="1134" height="861" decoding="async" src="assets/01_hero_device.webp" alt="The same card ordering screen on three phones, one per card: Visa Classic, a Mastercard business card, and a Visa Gold student card, each presented in its own world.">
+        </div>
+      </div>
+
+      </div>
+
+      <!-- cards.mp4 is PARKED here, not deleted. It is 3840x470, a two-second full-width banner
+           strip, so it can never sit in a half-width hero column. The precedent is ../Digital-Loans/,
+           where the Lottie conveyor strip moved OUT of the hero into "happy flow" and ABOVE the
+           purpose picker, because a strip says "there are many of these" while a picker says "look
+           at one at a time", and those two are complementary in that order only.
+           WHERE IT GOES WHEN IT COMES BACK IS DECIDED, so do not re-derive it: "the strategy", right
+           after that section's opening paragraph and before the split. Ofir's own call, 2026-09-04.
+           It stays inside the max-w-7xl wrapper rather than going full bleed like the Digital Loans
+           strip, because that one opens its section while this one lands mid-section, and breaking
+           the margin between a paragraph above and cards below breaks the section's own edge.
+           WHY IT IS STILL PARKED: B21 blocks the file itself until there is a better version of it,
+           so the placement was settled and the restore deferred in the same conversation.
+           RESTORING IT IS NOT JUST UNCOMMENTING. It has to move off the hero's entrance and onto the
+           page's scroll behaviour, exactly as the Digital Loans strip did: "enter" plus the 540ms
+           delay becomes "reveal", and the load-time setTimeout below becomes a play-once-in-view
+           IntersectionObserver like challengeMedia and strategyMedia already use in this file. The
+           id should stop saying hero at the same time.
+           The play() call further down is null-guarded, so it goes quiet on its own while this is
+           commented out.
+           rounded-lg, not rounded-xl: one container radius site-wide, and rounded-xl resolves to
+           28px here rather than Tailwind's 12px because @theme overrides the scale.
       <div class="enter mt-12 w-full overflow-hidden rounded-lg lg:mt-16" style="animation-delay:540ms">
         <video id="cardsHeroVideo" class="block h-auto w-full" src="cards.mp4" muted playsinline preload="auto"></video>
       </div>
+      -->
     </div>
   </header>
 
@@ -497,30 +747,87 @@ a:hover .arrow { transform: translateX(4px); }
        Digital Loans in the July deck (credit-cards-challenge.html: text = cols 1-6, phone
        mock = cols 7-12), reusing the site's existing 12-col grid utility (see ../index.html
        About section) rather than a new layout. Second legacy screen (old_credit_cards2.mp4,
-       the compliance/rates breakdown) deliberately held back, it maps to Strategy's
-       "Friction-Free Compliance" point once there's an "after" to pair it with. -->
+       the compliance/rates breakdown) deliberately held back, it maps to "the strategy"'s
+       "Compliance After the Choice" card once there's an "after" to pair it with. -->
   <section id="challenge" class="px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl border-t border-border-default pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
-      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
-        <div class="lg:col-span-6">
-          <h2 class="reveal type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
-          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Leadership asked for higher conversion in the credit card application flow. The honest diagnosis came first: the bank's three card products, Visa Gold and Mastercard Gold among them, were functionally identical, just different brand skins on the same underlying product, while competitors offered real differentiation through loyalty perks and cashback. No amount of interface polish fixes a non-differentiated product, and that reframe shaped everything that followed.</p>
+    <!-- border-t removed with B89's hero tint, the same move made on ../Digital-Loans/: once the
+         texture ends at the hero's own bottom edge, that edge IS the separator, and two separators
+         in the same place read as a mistake. The padding stays. -->
+    <div class="case-scope mx-auto max-w-7xl pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+      <!-- B89. The heading and the intro moved OUT of the left column and now sit full width above
+           the split, which carries only cards and media. Ported from ../Digital-Loans/, where B73
+           settled it, and the argument is alignment rather than tidiness: the heading and intro are
+           the section's FRAME, the cards and the phone are its EVIDENCE. Lifting the frame out lets
+           the two evidence columns share a real top edge, so the reader sees one horizontal line
+           where both sides begin.
+           It also survives editing. The split previously carried lg:items-center, which centred the
+           phone against heading plus intro plus three blocks, so any added line of copy moved the
+           phone silently. A shared top edge does not move, and no magic number is involved: the
+           alignment falls out of the structure rather than out of a measured margin.
+           The intro keeps max-w-prose and gains .case-intro, so going full width does not stretch it
+           to an unreadable measure. -->
+      <h2 class="reveal type-headline-md max-w-2xl">the challenge<span class="brand-dot">.</span></h2>
+      <!-- B89 copy pass. 68 words to 50, and five things came out of it.
+           Two were factually stale rather than merely long. "Functionally identical, just different
+           brand skins" is the claim this section no longer makes, since card 02 now says the
+           opposite and the sharper thing: the differentiation existed, it just never reached the
+           screen. And the two card names went, Ofir's call that the intent carries further than the
+           example.
+           One MOVED rather than died: competitors offering loyalty clubs and cashback belongs to
+           "the strategy", where the constraint conversation happens, because "cashback was out, not
+           now" hangs in the air without it. Do not restore it here.
+           Two were register. "The honest diagnosis came first" calls his own diagnosis honest, and
+           "that reframe shaped everything that followed" claims importance where the three cards
+           below already demonstrate it.
+           The closing sentence is his own and only had to be re-aimed: it argued against a
+           "non-differentiated product", which is now the wrong target, so it argues against cards a
+           customer cannot tell apart, which is what the section actually proves. It stays PRESENT
+           tense on purpose while the bank stays past: a belief he still holds did not end when the
+           job did. -->
+      <p class="case-intro reveal type-body-lg mt-6 max-w-prose text-secondary">The card ordering flow in Bank Hapoalim's app and website. Leadership asked for higher conversion in it, and the first thing on the screen was a portfolio of genuinely different cards presented as one uniform list. No amount of interface work raises conversion on cards a customer cannot tell apart.</p>
 
-          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
-            <div>
-              <span class="type-label-sm stat-accent-green">01</span>
-              <h3 class="type-headline-sm mt-2">The Commodity Trap</h3>
-              <p class="type-body-md mt-2 text-secondary">Cards were treated as generic financial utilities, forcing users to compare raw numbers and dry terms instead of emotional value.</p>
+      <div class="case-split mt-12 grid grid-cols-1 lg:mt-16 lg:grid-cols-12 lg:items-start">
+        <div class="lg:col-span-6">
+          <!-- B89 copy pass. All three blocks were rewritten from Ofir's own account of the project
+               rather than edited, because the old set was arguing the wrong thing. It said the three
+               products were interchangeable; what was actually true is sharper and is now the spine
+               of the section: THE DIFFERENTIATION EXISTED AND NEVER REACHED THE SCREEN. Some cards
+               in the portfolio genuinely stood for something, and even a plain Mastercard carried a
+               monthly discount day, but the flow presented every one of them as the same kind of
+               object. That is a better story than "everything was identical" because it blames
+               nobody and points at something already on the floor.
+               Grounded in the real legacy screen, not from memory: frames pulled from
+               old_credit_cards1.mp4 show one card at a time, four numeric rows, and the credit
+               reporting notice sitting above the confirm button. The card names FlyCard and Hitech
+               Zone are deliberately described rather than named, Ofir's call that the intent matters
+               more than the example, which also keeps a confidentiality question from arising.
+               Word counts 39 to 43, inside the 35 to 44 range the other two case studies settled on.
+               No paragraph restates its own heading: the heading makes the claim and the paragraph
+               is the evidence for it.
+               NOT HERE, on purpose: the constraint conversation, that plastics could not be reduced,
+               new cards could not be added and cashback was out, and Ofir's answer that he could not
+               commit to a ten point lift but could treat the customer's pain. That belongs to "the
+               strategy". This section is only what the customer met.
+               The blocks STAY in this column beside the phone, stacked, and are now cards rather
+               than bare numbered paragraphs. Pulling them out to a full-width row below the split
+               would be wrong here: the media is a tall portrait phone, so a row across the bottom
+               leaves a short paragraph floating beside a tall video. A row is right when the media
+               is landscape. -->
+          <div class="reveal-stagger grid grid-cols-1 gap-6">
+            <div class="step-card">
+              <span class="step-card__num type-label-sm" aria-hidden="true">01</span>
+              <h3 class="type-headline-sm">Everything Looked the Same</h3>
+              <p class="type-body-md mt-2 text-secondary">The flow opened on three cards with nothing saying why those three. Each carried the same dry rows of terms, no benefits, nothing written to persuade, so the only thing separating one from another was the plastic in the picture.</p>
             </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">02</span>
-              <h3 class="type-headline-sm mt-2">Compliance vs. Experience</h3>
-              <p class="type-body-md mt-2 text-secondary">Heavy regulatory disclosures overloaded the interface with dense, intimidating text blocks, creating heavy cognitive friction.</p>
+            <div class="step-card">
+              <span class="step-card__num type-label-sm" aria-hidden="true">02</span>
+              <h3 class="type-headline-sm">What Was Good Stayed Hidden</h3>
+              <p class="type-body-md mt-2 text-secondary">Behind those three sat many more cards, some built around a real idea, one for flying and one for working in tech. Even a plain Mastercard carried a discount day once a month. None of that reached the screen.</p>
             </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">03</span>
-              <h3 class="type-headline-sm mt-2">The Aesthetic Deficit</h3>
-              <p class="type-body-md mt-2 text-secondary">The legacy interface lacked visual storytelling, failing to leverage the premium lifestyle appeal of high-tier cards, directly hurting conversion.</p>
+            <div class="step-card">
+              <span class="step-card__num type-label-sm" aria-hidden="true">03</span>
+              <h3 class="type-headline-sm">Regulation Took the Foreground</h3>
+              <p class="type-body-md mt-2 text-secondary">Between the card and the confirm button sat the credit reporting notice and a paragraph on what happens when payments are missed. The last thing a customer read before choosing a card was a warning about not paying for it.</p>
             </div>
           </div>
         </div>
@@ -541,8 +848,28 @@ a:hover .arrow { transform: translateX(4px); }
        new_credit_cards.mp4 is the redesigned "after" screen (personalized offer, benefits,
        simplified pricing), pairs with the "before" phone in Challenge. -->
   <section id="strategy" class="bg-surface-alt px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl py-20 lg:py-28">
-      <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
+    <div class="case-scope mx-auto max-w-7xl py-20 lg:py-28">
+      <!-- B89. Same move as "the challenge" above and as ../Digital-Loans/: the heading and the
+           intro sit full width, and the split below carries only cards and media, so the two
+           evidence columns share one real top edge. lg:items-center is gone with it, since it
+           centred the phone against heading plus intro plus three blocks, which meant every added
+           line of copy moved the phone silently. A shared top edge does not move.
+           The media stays in the LEFT column here, mirroring the challenge's phone-right, so the
+           page still alternates as it scrolls. That alternation was the original 2026-08-09 reason
+           for this section's layout and it survives the rebuild. -->
+      <h2 class="reveal type-headline-md max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
+      <!-- B89 copy pass. The old intro had two real faults, not just length.
+           It referred to Ofir in the THIRD PERSON ("He wouldn't commit"), the only place on the site
+           that did, and it rested on the retired claim that the products were not different.
+           What replaces it is the constraint chain from career-master.md in its real order, which is
+           what makes the pushback read as reasonable rather than defensive: leadership asked for the
+           lift, he asked for a wider range FIRST, the three refusals came back, and only then did he
+           name what he could actually do. The competitor context (clubs, cashback, discounts) lands
+           in card 02 rather than here, since it is the reason one of those refusals stings.
+           TENSE, per B87: leadership and the bank stay past, the method stays present. -->
+      <p class="case-intro reveal type-body-lg mt-6 max-w-prose text-secondary">Leadership wanted a ten point lift in conversion. I asked for a wider range first, since the cards that stood for something were the ones eligible customers rarely saw. Plastics could not be reduced, new cards could not be added, cashback was off the table. So my strategy took the one thing still in reach: the experience.</p>
+
+      <div class="case-split mt-12 grid grid-cols-1 lg:mt-16 lg:grid-cols-12 lg:items-start">
         <div class="order-2 lg:order-1 lg:col-span-6">
           <div id="strategyMedia" class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
             <video class="h-auto w-full" src="new_credit_cards.mp4" muted loop playsinline preload="auto"></video>
@@ -551,24 +878,35 @@ a:hover .arrow { transform: translateX(4px); }
         </div>
 
         <div class="order-1 lg:order-2 lg:col-span-6">
-          <h2 class="reveal type-headline-md max-w-2xl">the strategy<span class="brand-dot">.</span></h2>
-          <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Design can't fix a business-strategy gap by itself, but it can raise the ceiling within one. He wouldn't commit to a conversion target unless the business side changed the product too, so the strategy focused on what was actually in reach: making the experience feel different even where the products weren't, and getting compliance out of the user's way.</p>
-
-          <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8">
-            <div>
-              <span class="type-label-sm stat-accent-green">01</span>
-              <h3 class="type-headline-sm mt-2">Visual-First Framework</h3>
-              <p class="type-body-md mt-2 text-secondary">When core banking terms are identical, immersive visual identity becomes the primary decision-driver.</p>
+          <!-- B89. Bare numbered paragraphs become step cards on the BONE surface, the second of
+               three, against the challenge's sage. Consecutive card sections need different surfaces
+               or five card grids in a row read as one repeated block.
+               NUMERALS STAY numerals rather than becoming symbols, and the reason is specific to
+               this page: these three moves answer the challenge's three problems one for one, in the
+               same order, so the set genuinely is a sequence and not a set of facets. 03 here is the
+               reply to 03 up there.
+               COPY. All three were rewritten rather than edited, because the old set was marketing
+               language with no project inside it ("immersive visual identity becomes the primary
+               decision-driver") and ran 17 to 20 words against the 35 to 44 the other two case
+               studies settled on. The replacements are grounded in career-master.md: the store
+               metaphor is Ofir's own words kept as VOICE, the competitor list is the real one, and
+               the notice placement is the real old screen from old_credit_cards1.mp4.
+               No paragraph opens by restating its own heading, which the old 01 and 03 both did. -->
+          <div class="reveal-stagger grid grid-cols-1 gap-6">
+            <div class="step-card step-card-bone">
+              <span class="step-card__num type-label-sm" aria-hidden="true">01</span>
+              <h3 class="type-headline-sm">Give Each Card Its Own Place</h3>
+              <p class="type-body-md mt-2 text-secondary">A store does not wrap every product the same way. The flow had been treating a whole catalog as one kind of object, so the fix was to stop looking for uniformity and give each card the framing its own idea already deserved.</p>
             </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">02</span>
-              <h3 class="type-headline-sm mt-2">Lifestyle Immersion</h3>
-              <p class="type-body-md mt-2 text-secondary">Wrapping standard cards in rich contextual worlds, aviation, luxury travel, to evoke immediate emotional alignment.</p>
+            <div class="step-card step-card-bone">
+              <span class="step-card__num type-label-sm" aria-hidden="true">02</span>
+              <h3 class="type-headline-sm">Sell the Card, Not the Terms</h3>
+              <p class="type-body-md mt-2 text-secondary">Competitors were offering clubs, cashback and discounts, and none of that was on the table here. What was on the table was writing to the person choosing: what the card is for, who it fits, what it gives back, above the row of numbers.</p>
             </div>
-            <div>
-              <span class="type-label-sm stat-accent-green">03</span>
-              <h3 class="type-headline-sm mt-2">Friction-Free Compliance</h3>
-              <p class="type-body-md mt-2 text-secondary">De-risked the regulatory overhead by moving dense legal disclaimers into progressive disclosure, keeping focus on the experience.</p>
+            <div class="step-card step-card-bone">
+              <span class="step-card__num type-label-sm" aria-hidden="true">03</span>
+              <h3 class="type-headline-sm">Compliance After the Choice</h3>
+              <p class="type-body-md mt-2 text-secondary">The credit reporting notice is a legal requirement, not a placement instruction. Moved out of the space between the card and the confirm button, into disclosure a customer opens, it keeps the obligation intact and stops being the last thing read before deciding.</p>
             </div>
           </div>
         </div>
@@ -576,32 +914,59 @@ a:hover .arrow { transform: translateX(4px); }
     </div>
   </section>
 
-  <!-- IMPACT -->
-  <section id="impact" class="px-4 lg:px-20">
+  <!-- THE EVIDENCE -->
+  <!-- B89, 2026-09-04. Renamed from "the impact" and the id renamed with it, verified free: nothing
+       anywhere on this site linked to #impact, so no anchor broke.
+       WHY THE RENAME. B41 is blocked on Ofir's numbers, so this section carries none, while the word
+       impact promises one. "the proof" was the other candidate since it already exists on
+       ../Digital-Loans/, but it earns its weight there from real production figures and borrowing it
+       for lab findings borrows that weight too. Evidence is exactly what a project has before a
+       result. It also survives B41 landing later, because those numbers are a baseline and a defined
+       TARGET rather than a delivered outcome, so this never becomes a results section.
+       Side benefit: the page now reads the challenge / the strategy / the evidence / what I learned,
+       three article-plus-noun headings and then a break. -->
+  <section id="evidence" class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl py-20 lg:py-28">
-      <h2 class="reveal type-headline-md max-w-2xl">the impact<span class="brand-dot">.</span></h2>
-      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">In active development. High-fidelity prototypes went through four rounds of usability testing to validate the visual-first approach against regulated constraints, here's what that testing showed.</p>
+      <h2 class="reveal type-headline-md max-w-2xl">the evidence<span class="brand-dot">.</span></h2>
+      <!-- B89 copy pass. The old intro claimed "four rounds of usability testing", a number that
+           appears nowhere in career-master.md for this project and existed only on this page. Ofir's
+           call was to drop the count rather than guess at it, so it now says several rounds with
+           real customers, which is what is actually known.
+           It also opens by admitting the section has no shipped result, which is the honest version
+           of what the old "In active development" fragment was gesturing at, and it does not reuse
+           the word evidence, since a paragraph must not restate its own heading. -->
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">The work is still in development, so nothing here is a shipped result. High fidelity prototypes went through several rounds of usability testing with real customers, and the questions they answered were whether a card can carry an idea inside a bank's constraints, and whether moving the warning changes what a person does.</p>
 
-      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2">
-        <div>
-          <span class="type-label-sm stat-accent-green">01</span>
-          <h3 class="type-headline-sm mt-2">Validated Concepts &amp; Organizational Shift</h3>
-          <p class="type-body-md mt-2 text-secondary">High-fidelity prototypes underwent extensive usability testing to validate the visual-first approach against regulated constraints.</p>
+      <!-- B89. Four blocks became three, one per strategy move above, in the same order.
+           The dropped one was "Validated Concepts & Organizational Shift", and it had two faults at
+           once: its paragraph repeated the intro directly above it almost word for word, and
+           "Organizational Shift" is supported by nothing in career-master.md.
+           SURFACE: white with a hairline, the third of three. Sage on the challenge, bone on the
+           strategy, white here, so three consecutive card sections never read as one repeated block.
+           MARKER: symbols, not numerals, see .step-card__mark in the stylesheet for the reasoning.
+           WIDTH: three across at lg makes these the narrowest cards on the page, which is normally
+           the ghost-card's territory. It is not one here, because the width rule exists to place a
+           NUMERAL, and a numeral is not what these carry. A symbol reads at a glance, so it does not
+           need the dead bottom corner that a numeral has to be pushed into.
+           COPY: 42 words each against 15 to 19 before, and every line was rewritten rather than
+           edited, because the old set was written in market language with no project inside it
+           ("shifted user perception to an elite experience", "flow velocity"). No finding was added
+           that the old copy did not already claim. -->
+      <div class="reveal-stagger mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="step-card step-card-white">
+          <span class="step-card__mark" aria-hidden="true"><svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg></span>
+          <h3 class="type-headline-sm">People Could Tell Them Apart</h3>
+          <p class="type-body-md mt-2 text-secondary">In testing the choice stopped being a guess. Given cards that each said what they were for, participants moved through the selection without stalling on it, which is the behavior the old flow could not produce no matter how short it got.</p>
         </div>
-        <div>
-          <span class="type-label-sm stat-accent-green">02</span>
-          <h3 class="type-headline-sm mt-2">Cognitive Load Reduction</h3>
-          <p class="type-body-md mt-2 text-secondary">Usability testing showed a dramatic drop in choice paralysis, with participants navigating the selection flow seamlessly.</p>
+        <div class="step-card step-card-white">
+          <span class="step-card__mark" aria-hidden="true"><svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></span>
+          <h3 class="type-headline-sm">It Read as a Product, Not a Form</h3>
+          <p class="type-body-md mt-2 text-secondary">Wrapping a card in the world it belongs to changed what participants thought they were looking at. The same terms, the same limits, the same fee, and the screen stopped reading as paperwork to complete and started reading as something to choose.</p>
         </div>
-        <div>
-          <span class="type-label-sm stat-accent-green">03</span>
-          <h3 class="type-headline-sm mt-2">Aspirational Alignment</h3>
-          <p class="type-body-md mt-2 text-secondary">Qualitative feedback confirmed lifestyle environments shifted user perception from a dry banking form to an elite experience.</p>
-        </div>
-        <div>
-          <span class="type-label-sm stat-accent-green">04</span>
-          <h3 class="type-headline-sm mt-2">De-Risked Compliance</h3>
-          <p class="type-body-md mt-2 text-secondary">Progressive disclosure satisfies legal requirements while maintaining high user engagement and flow velocity.</p>
+        <div class="step-card step-card-white">
+          <span class="step-card__mark" aria-hidden="true"><svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span>
+          <h3 class="type-headline-sm">Nothing Was Removed</h3>
+          <p class="type-body-md mt-2 text-secondary">Progressive disclosure is often heard as hiding something, which is the objection worth answering. The notice and the missed payment consequences stayed in full, one tap from the card, and the move cost the flow none of the compliance it started with.</p>
         </div>
       </div>
     </div>
@@ -612,7 +977,30 @@ a:hover .arrow { transform: translateX(4px); }
   <section class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl border-t border-border-default py-16 lg:py-20">
       <h2 class="reveal type-headline-md max-w-2xl">what I learned<span class="brand-dot">.</span></h2>
-      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Design can't compensate for a business problem. Saying that out loud, early, instead of just shipping another polished iteration, was harder, and more useful.</p>
+      <!-- B89, 2026-09-04. Rewritten and given the nested card, the same treatment as
+           ../Digital-Loans/ and ../Internal-Systems/, so all three closing sections match.
+           WHY THE OLD PARAGRAPH WENT. It said that saying the hard thing out loud, early, instead of
+           shipping another polished iteration, was harder and more useful. That is a shape that
+           praises itself, the same family as "The honest diagnosis came first", which came out of
+           "the challenge" in this same sweep. The belief underneath it is real and is Ofir's; what
+           changed is that these two paragraphs state the belief rather than the conduct.
+           WORDING CHECKED AGAINST THE REST OF THE PAGE, the same check B73 ran.
+           "catalog" already appears in "the strategy" card 01 and "hiding"/"hidden" in "the
+           evidence" card 03 and "the challenge" card 02, so neither is reused here.
+           "reach" IS reused on purpose: "the strategy" opens on the one thing still in reach and the
+           page now closes on what design cannot reach. That is a rhyme across the page, not a slip.
+           TENSE, per B87. Both first sentences are present, because they are what he believes and
+           the belief did not end with the job. Everything about the project itself stays past:
+           the distinctions WERE real, no screen HAD carried them, the product COULD NOT move. -->
+      <div class="reveal learn-outer mt-8">
+        <div class="learn-inner">
+          <svg class="learn-mark" aria-hidden="true" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="butt"><line x1="50" y1="8" x2="50" y2="92"/><line x1="13.6" y1="29" x2="86.4" y2="71"/><line x1="86.4" y1="29" x2="13.6" y2="71"/></svg>
+          <div class="learn-cols">
+            <p>Design cannot make a product different. It can only make a difference legible. That sounds like the smaller job, and then you meet a case where the distinctions were real all along and no screen had ever carried them. <span class="copy-mark">Most of the work here was not invention, it was retrieval</span>.</p>
+            <p>The other lesson was about refusing a number. Turning down the ten point lift was not turning down the work, it was the only useful thing left once the product itself could not move. <span class="copy-mark">Naming what design cannot reach is what made room for what it could</span>.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
