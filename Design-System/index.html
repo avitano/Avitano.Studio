@@ -72,6 +72,16 @@
   --color-gold-700: #a87a1e;
   --color-gold-900: #40310f;
 
+  /* B90: ported alongside the learn-* block below, same chain as --color-bone. Only ever used as a
+     text highlight behind a phrase inside running copy, never as a surface. */
+  --color-peach: #fbeade;
+
+  /* B90: warm off-white card surface, the second of this page's three card grounds. It is a real
+     hue step rather than a lightness step, unlike --color-surface-alt, which is about 6% off white
+     and disappears against it. Site-only, not a DSM token, and there is no shared stylesheet here,
+     so each page that wants it carries its own copy of this line. */
+  --color-bone: #f2ece0;
+
   /* ---- semantics ---- */
   --color-primary: var(--color-green-950);
   --color-primary-hover: var(--color-green-900);
@@ -147,11 +157,11 @@ body { background: var(--color-surface); color: var(--color-default); font-famil
    white until this same fix landed there. Matching it here so this page can't silently break
    the same way if that nav rule ever changes. */
 .brand-dot-accent { color: var(--color-accent); }
-/* 2026-08-14, B56: same emission-bug family as above. --color-gold-700 was only ever referenced
-   via inline style="" attributes on the numbered labels below, so it never got emitted into
-   :root and these silently rendered as inherited dark text instead of gold. Ofir's call: don't
-   restore gold, recolor to the site's green instead (same --color-button used site-wide). */
-.stat-accent-green { color: var(--color-button); }
+/* B90: .stat-accent-green deleted here. It coloured the small 01/02/03 labels above every card
+   heading on this page, and all three sections replaced those with .ghost-num or .step-card__mark,
+   so its last use went in the same sweep. The rule it recorded is still worth knowing and lives on
+   .step-card in this stylesheet: a token referenced only from an inline style="" never gets emitted
+   into :root on this build, which is how those labels once rendered as dark text instead of gold. */
 /* B57: footer text-color classes, ported from ../index.html (B55), plus the same-day
    readability fix (footer-text-soft/neutral-100 instead of green-100, see that file's
    comment on the gotcha). hero-dark-on-primary-soft kept defined for parity across pages
@@ -358,23 +368,8 @@ a:hover .arrow { transform: translateX(4px); }
   background: var(--color-neutral-100); border: 1px solid var(--color-border-default);
 }
 
-/* "the build" carousel: same mechanism as Internal Systems' B20 strategy carousel, verbatim,
-   renamed build- instead of strategy- since it lives in a different section here. Three
-   documentation screens crossfade on a timer with a dot rail below; the active dot isn't a
-   plain color swap, a second "blob" element travels between dot positions, stretching to span
-   the old + new dot on the way out, then contracting back into a dot at the new spot. */
-.build-slide { opacity: 0; transition: opacity 600ms var(--ease-soft); }
-.build-slide[data-active="true"] { opacity: 1; }
-.build-dot {
-  width: 8px; height: 8px; border-radius: 999px; background: var(--color-neutral-300);
-  border: none; padding: 0; cursor: pointer; transition: background 200ms var(--ease-soft);
-}
-.build-dot:hover { background: var(--color-neutral-400); }
-.build-blob {
-  position: absolute; top: 50%; left: 0; height: 8px; width: 8px;
-  background: var(--color-accent); border-radius: 999px; transform: translateY(-50%);
-  pointer-events: none;
-}
+/* B90: the "the build" carousel rules (.build-slide, .build-dot, .build-blob) were deleted with the
+   carousel itself. See .marquee below for what replaced it and why. */
 
 /* B24: pull-past-top sky strip, same on every page, see ../Digital-Loans/index.html for the
    full mechanics writeup */
@@ -403,8 +398,10 @@ a:hover .arrow { transform: translateX(4px); }
 
 /* NavItem molecule, ported verbatim from My DSM's kb-output/components/molecules/NavItem
    (state.md recipe): leading Icon, text label, three color states. Used here as the icon
-   showcase's category menu, not real page navigation, so it's <button data-cat="..."> rather
-   than <a href>, same visual contract either way. */
+   showcase's category menu, not real page navigation, so each row is a button element carrying a
+   data-cat attribute rather than an anchor, same visual contract either way. Tag names are spelled
+   out in words on purpose: a literal tag written inside a CSS comment survives HTML-comment
+   stripping and shows up as a phantom unclosed tag in any tag-balance check. */
 .nav-item {
   position: relative;
   display: flex;
@@ -486,12 +483,236 @@ a:hover .arrow { transform: translateX(4px); }
 }
 .card-lift:hover::after { opacity: 1; }
 
+/* HERO TINT (B90). Same two-layer structure as ../Digital-Loans/: two copies of the same grain tile
+   over a CSS gradient. The tile is assets/hero_grain.webp, black speckle at 0 to 6 alpha, so it has
+   no colour of its own and reads as whatever sits beneath it, which is why a green wash needed no
+   new export. Tiled rather than stretched so the specks stay a fixed size on a wide monitor. The
+   wash is a gradient rather than an image: exact at any width, costs nothing, and the grain above it
+   dithers away the banding that is a long subtle ramp's only real risk.
+   THE HUE IS THIS PAGE'S, and getting there took one wrong turn worth recording so nobody repeats
+   it. The first version matched the pink's LUMINANCE drop, on the reasoning that green carries 0.715
+   of perceived lightness against red's 0.213 and so needs a smaller channel gap for the same weight.
+   That arithmetic is right and the conclusion was wrong: it produced a 9 percent tint that read as
+   grey, because a red-dominant tint keeps its hue up near white while a green one goes neutral long
+   before it gets there. For a green the lever is DISTANCE FROM WHITE on the hue, not luminance
+   parity with the pink. The stops below are real percentage tints of --color-green-900 (#064e3b),
+   the site's dark green: 30 percent at the top, then 26, then 14, then white. Digital Loans' pink
+   peaks at 8.6 percent, so this is several times stronger, and that gap is the finding rather than
+   an inconsistency: a red-dominant tint holds its hue up near white and a green one does not, so
+   matching the pink by any numeric measure produces something that reads as grey. The percentages
+   between the two pages are not comparable and should not be reconciled.
+   THE RAMP IS MONOTONIC HERE, unlike Digital Loans, and that is deliberate rather than a
+   simplification. That page peaks at 26 percent so the colour lands with the headline rather than
+   behind the nav, and it notes that a ramp which darkens and then lightens can band at the turn. At
+   this page's strength the turn did band, visibly, for two compounding reasons: the tint is 20
+   percent against Digital Loans' 8.6, and this header carries no metrics card so the whole ramp is
+   compressed into a shorter height, which puts the turn high and leaves the bottom half white. One
+   direction, fading late, is what makes it read as a wash over the whole hero instead of a stripe
+   across the top. If a metrics card is ever added here, the peaked version becomes available again.
+   Order is fine grain, coarse grain, wash, because the first background-image in the list paints on
+   top, and the three positional lists must stay in that same order. The second copy at 768px and
+   half a tile offset is what makes it read as coarse: the two layers repeat on different intervals,
+   so their interference pattern is far longer than either one and the tiling stops being visible.
+   It sits on the header's padding box, so the texture ends exactly where the hero ends. */
+.hero-tint {
+  background-image: url("assets/hero_grain.webp"), url("assets/hero_grain.webp"), linear-gradient(to bottom, #b4cac4 0%, #bed1cc 40%, #dce6e4 75%, #ffffff 100%);
+  background-repeat: repeat, repeat, no-repeat;
+  background-size: 384px 384px, 768px 768px, 100% 100%;
+  background-position: 0 0, 192px 192px, center;
+}
+
+/* HERO SPLIT (B90), ported from ../Digital-Loans/, which took it from ../Internal-Systems/ where it
+   was designed. Those files carry the full reasoning on every value: why drop-shadow and not
+   box-shadow (this is a transparent PNG, box-shadow would draw a grey rectangle behind a
+   device-shaped hole), why the offset is large while the blur stays tight (a big offset with a big
+   blur reads as ambient glow, a big offset with a tight blur reads as a silhouette projected by a
+   light in front), and why the frame is pinned right at 92 percent (the freed space opens on the
+   LEFT, which is the side the shadow is thrown toward).
+   Two things measured on this page's own asset. Its aspect ratio is 3764/2176, the export's real
+   content box rather than its canvas, which carried 156px of empty space above the device. And the
+   export has only 0.38 percent partial alpha, so it has NO baked shadow and carries a single device,
+   which means Digital Loans' values port verbatim and its two-device caveat does not apply here.
+   No radius on the image: the screen's rounded corners are already baked into its alpha. */
+.hero-split { display: grid; gap: 2.5rem; }
+@media (min-width: 1024px) { .hero-split { grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; } }
+.hero-device-frame { aspect-ratio: 3764 / 2176; max-inline-size: 92%; margin-inline-start: auto; }
+.hero-device-frame img {
+  width: 100%; height: 100%; object-fit: cover; object-position: left center;
+  filter: drop-shadow(-10px 6px 9px rgb(0 0 0 / 0.10)) drop-shadow(-96px 34px 44px rgb(0 0 0 / 0.32));
+}
+/* Clearance below the device. A filter takes no space in layout, so the next opaque section would
+   cut the shadow off in a hard straight line that reads as clipping. --shadow-reach is how far the
+   cast shadow actually extends, 34px offset plus 44px blur is 78px, rounded to 5rem, and it MUST
+   move together with the filter above, which is why it is a custom property and not a loose value.
+   It lands on the header's own bottom padding here rather than on a metrics card, because this page
+   has no metrics card. */
+.hero-pad { --shadow-reach: 5rem; padding-block-end: calc(var(--shadow-reach) + 1.5rem); }
+/* Mobile: the same fixed-pixel problem documented on the other two pages. Pinning right is
+   meaningless once the column is the whole screen, and a -96px offset that is 7 percent of a desktop
+   layout is a quarter of a phone, so a projected silhouette turns into a smear. */
+@media (max-width: 1023.98px) {
+  .hero-device-frame { max-inline-size: 100%; margin-inline: auto; }
+  .hero-device-frame img { filter: drop-shadow(-5px 4px 6px rgb(0 0 0 / 0.10)) drop-shadow(-32px 14px 20px rgb(0 0 0 / 0.30)); }
+  .hero-pad { --shadow-reach: 2.25rem; }
+}
+
+/* STEP CARD (B90). Ported from ../Credit-Cards/, which took it from ../Digital-Loans/. One of two
+   card types on this site; ../Internal-Systems/ uses the same class name for a different component,
+   which is expected rather than a bug. THE RULE THAT PICKS ONE IS CARD WIDTH: a corner numeral fills
+   a narrow card's dead bottom and strands itself in a wide card's empty stripe.
+   MARKER: this page's sets carry SYMBOLS, not numerals, so only .step-card__mark exists here. A
+   numeral is correct only when a set is a sequence; the spark's three are facets, readable in any
+   order, and numbering them would assert a progression the content does not have. That is also why
+   the width rule does not force the ghost card on them: it exists to place a numeral, and a symbol
+   reads at a glance without needing a dead corner.
+   COLOUR: --color-button, this page's identity, the same green as ../Internal-Systems/. The
+   difference from ../Digital-Loans/'s gold is deliberate and not an inconsistency to reconcile.
+   GLYPHS come from the curated set further down this page, which is that set's whole purpose.
+   SURFACE MODIFIERS: -bone and -white land here as later sections reach them, and they must sit
+   DIRECTLY AFTER .step-card. Both are single-class selectors of identical specificity, so source
+   order alone decides which background wins and a modifier above the base silently does nothing. */
+.step-card {
+  border-radius: var(--radius-lg);
+  background: var(--color-green-50);
+  padding: 1.75rem;
+}
+.step-card__mark { display: block; color: var(--color-button); margin-block-end: 0.5rem; }
+/* White plus a hairline, the third and last of this page's card surfaces, on "in practice". The
+   card and its section are both white, so the hairline is the only thing separating them. It is an
+   INSET BOX-SHADOW and not a border on purpose: a border adds a real layout box, so a bordered
+   variant would be 2px taller and wider than its sage sibling in "the spark" and the two sections
+   would not line up down the page. An inset shadow costs no geometry.
+   MUST STAY AFTER .step-card, same single-class specificity, source order decides the winner. */
+.step-card-white { background: var(--color-card); box-shadow: inset 0 0 0 1px var(--color-border-default); }
+
+/* GHOST CARD (B90), ported whole from ../Internal-Systems/ where it was designed, wrapper and
+   reasoning included rather than just the inner classes. It carries "the build".
+   WHY THIS TYPE AND NOT .step-card ABOVE, since the two sections look alike: the site's rule was
+   measured across every use rather than argued. Narrow plus a NUMERAL is ghost-card territory, and
+   ../Internal-Systems/'s "the language" is the same three-across sm:grid-cols-3 geometry as "the
+   build". Narrow plus a SYMBOL is the step card, which is Credit Cards' "the evidence" and this
+   page's "the spark". Wide plus a numeral is also the step card, and every numbered .step-card on
+   ../Credit-Cards/ and ../Digital-Loans/ sits in a grid-cols-1 column beside media, none of them
+   three across. So both types on one page here is the rule working, not drift.
+   The ghost numeral is fully visible and never clipped: it fills the dead space at the bottom of a
+   short card, so a row holding unequal amounts of text still reads as a row instead of as broken,
+   which is why the card carries a large fixed bottom padding reserving that band rather than
+   letting the numeral overlap a long card's last line. The small green label above each heading is
+   deliberately absent, the ghost numeral replaces it, so the number is stated once and not twice. */
+.ghost-card { position: relative; overflow: hidden; border-radius: var(--radius-lg); background: var(--color-green-50); padding: 2rem 1.75rem 6rem; }
+.ghost-card h3, .ghost-card p { position: relative; z-index: 1; }
+/* Surface modifier, the second of this page's three card grounds. Must stay AFTER .ghost-card: both
+   are single-class selectors so they carry identical specificity and source order decides the
+   winner. It sits on "the build", a bg-surface-alt section, and that pairing is proven on
+   ../Digital-Loans/ in "the mvp": bone is warm and surface-alt is cool, so the card separates from
+   its ground by hue rather than by lightness. */
+.ghost-card-bone { background: var(--color-bone); }
+.ghost-num { position: absolute; left: 1.75rem; bottom: 1rem; z-index: 0; font-family: var(--font-brand); font-weight: 700; font-size: 5rem; line-height: 0.8; color: var(--color-green-950); opacity: 0.12; }
+
+/* MARQUEE (B90), ported whole from ../Internal-Systems/ where it was designed, comments and all.
+   WHY A BELT AND NOT THE CAROUSEL IT REPLACES. A carousel says "here are several different things,
+   look at one at a time", and it hides everything it is not showing. This section's claim is the
+   opposite, that every piece was documented to one pattern, which is a claim about SAMENESS and can
+   only be made by showing the screens together. A marquee says "there are many of these", which is
+   the argument. The six run bottom of the stack upward, primitives then semantic colour then
+   elevation then icons then alert then card grid, so the belt evidences the sentence above it about
+   each layer being finished before the one above it. Note a loop cannot really enforce an order, so
+   that sequence is a bonus rather than the point.
+   The track holds each tile twice and animates to exactly -50 percent, which is what makes the loop
+   seamless. Tiles are spaced with margin-inline-end and NOT with flex gap: with gap, half the track
+   is not a whole repeat and the loop drifts.
+   .ds-bleed cancels the section's own horizontal padding so the belt runs the full viewport while
+   the legible part stays bounded by the same column every other section obeys. --gutter is that
+   distance. It MUST be a direct child of the section element, not of the max-w-7xl wrapper, or the
+   negative margins have nothing to cancel.
+   The mask fades the belt out over the gutters; the two .marquee-fade layers are siblings of
+   .marquee rather than children, because .marquee's own mask would otherwise fade them out along
+   with the tiles. Blur is layered, one wide light pass and one narrow heavy pass, so it builds up
+   toward the edge instead of reading as a hard band of frosted glass.
+   The block padding is not decoration, it is room for the tile shadow to live inside the clip box:
+   overflow:hidden cannot be applied to one axis only, so clipping sideways also clips the shadow
+   along the bottom. Retune the padding and the shadow together. */
+.ds-bleed { --gutter: 1rem; margin-inline: -1rem; }
+@media (min-width: 1024px) { .ds-bleed { --gutter: max(5rem, (100vw - 80rem) / 2); margin-inline: -5rem; } }
+.marquee-wrap { position: relative; }
+.marquee {
+  padding-block: 1.25rem 4.5rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent 100%);
+}
+.marquee-fade { position: absolute; inset-block: 0; inline-size: var(--gutter); pointer-events: none; }
+.marquee-fade::before, .marquee-fade::after { content: ""; position: absolute; inset: 0; }
+.marquee-fade::before { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+.marquee-fade::after { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.marquee-fade-start { left: 0; }
+.marquee-fade-end { right: 0; }
+.marquee-fade-start::before { -webkit-mask-image: linear-gradient(to right, #000, transparent); mask-image: linear-gradient(to right, #000, transparent); }
+.marquee-fade-start::after { -webkit-mask-image: linear-gradient(to right, #000, transparent 55%); mask-image: linear-gradient(to right, #000, transparent 55%); }
+.marquee-fade-end::before { -webkit-mask-image: linear-gradient(to left, #000, transparent); mask-image: linear-gradient(to left, #000, transparent); }
+.marquee-fade-end::after { -webkit-mask-image: linear-gradient(to left, #000, transparent 55%); mask-image: linear-gradient(to left, #000, transparent 55%); }
+/* 60s against Internal's 40. That page runs four tiles and this one runs six, so the same duration
+   would cross each tile in 6.7 seconds instead of 10. This keeps Internal's per-tile pace, which is
+   the number Ofir actually tuned, rather than its total. */
+.marquee-track { display: flex; width: max-content; animation: marquee-scroll 60s linear infinite; }
+.marquee:hover .marquee-track, .marquee:focus-within .marquee-track { animation-play-state: paused; }
+@keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-tile { position: relative; flex: none; inline-size: min(1024px, 82vw); margin-inline-end: 2rem; }
+.marquee-tile img { display: block; width: 100%; height: auto; border-radius: var(--radius-sm); box-shadow: 0 24px 60px -20px rgb(2 44 34 / 0.28); }
+/* radius-sm (4px) and not the site's 16: a screenshot's radius follows what it DEPICTS, and these
+   are desktop captures, where any larger radius eats real interface. */
+.ds-chip { display: block; margin-block-start: 0.875rem; text-align: center; }
+.ds-chip > span { background: var(--color-primary); color: var(--color-on-primary); }
+/* Reduced motion does not mean less content: the belt stops but becomes draggable, so all six
+   screens stay reachable. The duplicate set is dropped so nothing appears twice. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee { overflow-x: auto; }
+  .marquee-track { animation: none; }
+  .marquee-dup { display: none; }
+}
+
+/* "what I learned" as the nested card, B90, ported whole from ../Credit-Cards/, which took it from
+   ../Digital-Loans/ and ../Internal-Systems/ where it was designed. Wrapper included, per the
+   standing rule that porting only the inner classes drops a real structural relationship.
+   Radii are concentric per the DSM rule: inner --radius-md (8) plus 8px of padding gives outer
+   --radius-lg (16). The nesting barely reads, because the outer tint is about 6% off white and the
+   mat is thin, so the eye sees one white card with a soft halo. That is the point rather than a
+   flaw: the sage outer does NOT re-open this page's surface rotation after "in practice"'s white
+   cards, since it is one nested object and not a fourth card grid.
+   The mark is drawn as GEOMETRY, three straight lines crossing at 60 degree steps, never set as a
+   type glyph: Inter Tight's asterisk is a soft petalled shape and at this size it reads as a leaf.
+   Six straight arms stay unmistakable however much of the bottom is cut off.
+   --mark-size and --mark-bleed drive BOTH the mark and the bottom padding that clears it, so the
+   two cannot drift apart and the text can never land on top of it.
+   NO SUB-HEADINGS inside. The two highlights do the skimming work a heading would, and having both
+   would be the same emphasis twice. The section's own heading is untouched. */
+.learn-outer { background: var(--color-green-50); border-radius: var(--radius-lg); padding: 0.5rem; }
+.learn-inner {
+  --mark-size: 7.5rem;
+  --mark-bleed: 2rem;
+  position: relative; overflow: hidden;
+  background: var(--color-card); border-radius: var(--radius-md);
+  padding: 3rem 3.25rem calc(var(--mark-size) - var(--mark-bleed) + 1rem);
+}
+.learn-mark { position: absolute; z-index: 0; right: 0.5rem; bottom: calc(var(--mark-bleed) * -1); inline-size: var(--mark-size); block-size: var(--mark-size); color: var(--color-primary); }
+.learn-cols { display: grid; gap: 2rem; }
+.learn-cols p { position: relative; z-index: 1; font-size: 1.05rem; line-height: 1.75; color: var(--color-secondary); }
+/* Two columns at full width rather than one narrow card: a single column left roughly 900px of
+   empty page beside it, and the two lessons are parallel rather than sequential, so side by side
+   fills the width for a real reason. Each column lands near 560px, still a readable measure.
+   Both media blocks MUST stay below the rules they override, a media query adds no specificity. */
+@media (min-width: 1024px) { .learn-cols { grid-template-columns: 1fr 1fr; gap: 3.5rem; } }
+@media (max-width: 1023.98px) {
+  .learn-inner { --mark-size: 4.5rem; --mark-bleed: 1.5rem; padding: 1.75rem 1.5rem calc(var(--mark-size) - var(--mark-bleed) + 1rem); }
+  .learn-mark { right: 0.35rem; }
+}
+.copy-mark { background: var(--color-peach); color: var(--color-default); padding: 2px 0; }
+
 @media (prefers-reduced-motion: reduce) {
   .enter { animation: none; opacity: 1; filter: none; }
   .reveal, .reveal-stagger > * { transition: none; opacity: 1; transform: none; }
   .blob-parallax { transform: none !important; }
   .sky-strip__star { animation: none; opacity: 0.4; }
-  .build-slide, .build-blob, .build-dot { transition: none !important; }
   .nav-item { transition: none; }
   .card-lift, .card-lift::after { transition: none; }
   .card-lift:hover { transform: none; }
@@ -547,57 +768,77 @@ a:hover .arrow { transform: translateX(4px); }
   </nav>
 
   <!-- HERO -->
-  <header id="top" class="px-4 pb-8 pt-32 sm:pb-16 lg:px-20 lg:pb-24 lg:pt-40">
+  <header id="top" class="hero-tint hero-pad px-4 pt-32 lg:px-20 lg:pt-40">
     <div class="mx-auto max-w-7xl">
-      <div style="max-width:1080px;">
-        <h1 class="enter type-display-sm sm:text-5xl" style="animation-delay:80ms">Design System<span class="brand-dot">.</span></h1>
-        <!-- B29 fixed-width column rollout, 2026-08-12: piloted on ../Digital-Loans/,
-             see that file's comment for the reasoning (content-driven auto columns
-             threw the label row out of even rhythm). Rolled out here too for full
-             consistency across all 4 case-study pages. -->
-        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-[4rem_13rem_6rem_1fr] sm:gap-x-10" style="animation-delay:240ms">
-          <div>
-            <p class="type-body-md text-muted">Year</p>
-            <p class="type-body-lg mt-1 font-medium text-default">2026</p>
-          </div>
+      <div class="hero-split">
+      <div>
+        <!-- Dateline (B90), the same move as the other three case studies: Year and Duration were
+             pulled out of the four-field grid and set above the H1 as one muted line, leaving Role
+             and Scope with the body to themselves. The four fields were never equal, two are
+             timestamps and two are substance. -->
+        <p class="enter type-label-sm text-muted" style="animation-delay:60ms">2026 &middot; 3 days</p>
+        <h1 class="enter type-display-sm mt-3 sm:text-5xl" style="animation-delay:80ms">Design System<span class="brand-dot">.</span></h1>
+        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-x-8" style="animation-delay:240ms">
           <div>
             <p class="type-body-md text-muted">Role</p>
             <p class="type-body-lg mt-1 font-medium text-default">Personal project</p>
           </div>
           <div>
-            <p class="type-body-md text-muted">Duration</p>
-            <p class="type-body-lg mt-1 font-medium text-default">3 days</p>
-          </div>
-          <div>
             <p class="type-body-md text-muted">Scope</p>
-            <p class="type-body-lg mt-1 font-medium text-default" style="max-width:495px;">Design Tokens, Component Architecture, Figma Variables, Documentation, Claude Code, Figma MCP</p>
+            <!-- B90: tool names came out. Scope on the other three case studies is disciplines only
+                 (Product Strategy, UX, UI, Microcopy, Usability Testing), and this field carried
+                 Figma Variables, Claude Code and Figma MCP, which collided with the tag row below.
+                 The split is now Scope for what the work was and tags for what it was made with.
+                 Accessibility and Iconography are both evidenced on the page, in the documentation
+                 pattern's accessibility notes and in the curated icon set; Theming is the duplicate
+                 and redefine move in "in practice". Six entries, where every page settles.
+            ROLLBACK: Design Tokens, Component Architecture, Figma Variables, Documentation, Claude Code, Figma MCP -->
+            <p class="type-body-lg mt-1 font-medium text-default">Design Tokens, Component Architecture, Documentation, Accessibility, Iconography, Theming</p>
           </div>
         </div>
-        <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms; max-width:790px;">My DSM: a personal design system built token-first with Claude Code and a live Figma connection, in three days that became the foundation for everything I've built since, including this site.</p>
+        <!-- OPENING PARAGRAPH, written LAST in B90 once the sections below it were settled, because
+             it has to compress a page that already exists. This is a personal project, so unlike the
+             other three heroes authorship is genuinely the subject and "My DSM" can lead.
+             CHECKED AGAINST THE REST OF THE PAGE, which changed three things: "three days" already
+             appears three times and sits in the dateline directly above, "end to end" is spent in
+             the closing card, and "pushed into Figma" is spent in "the build" card 03, which is why
+             this says mirrored. 46 words.
+        ROLLBACK (pre-B90): My DSM: a personal design system built token-first with Claude Code and a live Figma connection, in three days that became the foundation for everything I've built since, including this site. -->
+        <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms;">My DSM is a design system built from its tokens up, every piece documented to the same pattern and mirrored in Figma as it was made. It is the foundation this whole site sits on, and this page is the clearest place to see it working.</p>
+        <!-- The tag pills stay, and they are deliberately unlike the other three heroes': those tag a
+             platform and a sector, and this is the one case study whose subject really is the tools.
+             Ofir's call, 2026-09-07.
+             B90 rewrote all four, because every one of them duplicated something. Claude Code and
+             Design Tokens were both also in Scope, Figma restated Scope's Figma Variables and Figma
+             MCP, and Personal Project repeated the Role field two lines above it word for word. The
+             split is now Scope for what the work was and these for what it was made with, so nothing
+             appears twice. Design Cortex replaces Personal Project: it is real, it carries "the
+             spark" card 03, and it adds a fact rather than echoing one. Cursor was considered and
+             rejected, since "in practice" card 02 says plainly that it only views and never builds,
+             so a tag would overstate it.
+        ROLLBACK: Figma, Claude Code, Design Tokens, Personal Project -->
         <div class="enter mt-6 flex flex-wrap gap-2" style="animation-delay:420ms">
-          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Figma</span>
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Claude Code</span>
-          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Design Tokens</span>
-          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Personal Project</span>
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Figma MCP</span>
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Figma Variables</span>
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">Design Cortex</span>
         </div>
       </div>
 
-      <!-- hero: the DSM's own color tonal ramps, live in its documentation. Picked over a
-           generic screenshot since it reads as "real design system" at a glance, no caption
-           needed. Radius is baked into the PNG itself (transparent corners), only shadow added
-           here. Capped narrower than the hero's own 1080px width so it reads as a supporting
-           visual, not a dominant one. -->
-      <!-- rounded-lg restored here: the image's own baked-in corner transparency is invisible on
-           this white page (transparent just reveals white behind it), and box-shadow doesn't
-           follow an image's internal alpha shape anyway. border-radius is what actually clips
-           the image and rounds its shadow together. -->
-            <!-- rounded-sm (4px), not the site's 16px container radius. The rule Ofir named on
-           2026-08-30: a screenshot's radius follows WHAT IT DEPICTS. A mobile screenshot keeps
-           16 because the rounded corner is true to the device it shows (see the six phone
-           screens in ../Digital-Loans/ happy flow). A DESKTOP screenshot goes to 4, because a
-           desktop interface has square corners and any radius there is an invention that eats
-           real interface. Both images below are desktop captures of My DSM. -->
-      <img class="enter mx-auto mt-12 h-auto w-full max-w-2xl rounded-sm shadow-lg lg:mt-16" style="animation-delay:540ms" src="tonal-ramps.png" alt="My DSM's color tonal ramps, documented live: green, neutral, gold, and rust, each running light to dark.">
+      <!-- Device column (B90). Ofir's own Figma export, the live documentation on a MacBook, which
+           is the right frame here because this product genuinely is a desktop documentation site.
+           It replaces the tonal-ramps.png figure that used to sit centred under the hero: "the
+           build" already shows three real documentation screens, so the ramps made the same claim
+           twice. tonal-ramps.png is still in this folder and is now unused.
+           Delay 380ms, matching ../Digital-Loans/: it lands alongside the tags so the two columns
+           resolve together as one hero rather than the entrance running down one side and back. -->
+      <div class="enter" style="animation-delay:380ms">
+        <div class="hero-device-frame">
+          <img width="1422" height="822" decoding="async" src="assets/01_hero_device.webp" alt="My DSM's documentation open on a laptop, showing a component page with its live examples and the component sidebar beside it.">
+        </div>
+      </div>
+
+      </div>
     </div>
   </header>
 
@@ -605,25 +846,37 @@ a:hover .arrow { transform: translateX(4px); }
   <!-- Hero image and build carousel dropped from rounded-xl (28px here, the @theme scale is
        overridden) to rounded-lg (16px) on 2026-08-30, matching every other container on the site. -->
   <section id="spark" class="px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl border-t border-border-default pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+    <!-- B90: border-t removed. The hero tint now ends exactly here, so the edge of the texture is
+         the separator and a rule in the same place would be a second one. -->
+    <div class="mx-auto max-w-7xl pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
       <h2 class="reveal type-headline-md max-w-2xl">the spark<span class="brand-dot">.</span></h2>
-      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">I unified design systems across four business lines at the bank, but never had one of my own. That gap started to bother me while I was closing a personal skill gap in AI-assisted design. I found Design Cortex, a design-system documentation structure someone else had built and published, and used it as the base to build a system that was actually mine.</p>
+      <!-- INTRO rewritten B90: the old one told all three cards before the reader reached them, so
+           the cards had nothing left to say. This one is a frame and carries no fact of its own, the
+           same shape as the homepage About lede. -->
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Four business lines at the bank ran on one design system I had built for other people's products. Nothing I owned worked that way. The push to fix that came from somewhere else entirely.</p>
 
+      <!-- CARDS rewritten B90. Bare divs became .step-card on sage, the section's ground stays white.
+           MARKERS are symbols, not the old 01/02/03: these three are facets, readable in any order,
+           and the numerals asserted a sequence that is not there. Terminal, Package and Copy, all
+           lifted from the curated set further down this page.
+           COPY: 42/38/38 words against 18/17/15 before. The old set was too short to fill the grid
+           and every line was rewritten rather than trimmed. "AI-native, not AI-curious" in card 1 is
+           Ofir's own phrase from career-master.md, not invented here. -->
       <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
-        <div>
-          <span class="type-label-sm stat-accent-green">01</span>
-          <h3 class="type-headline-sm mt-2">A Gap I Wanted Closed</h3>
-          <p class="type-body-md mt-2 text-secondary">I wanted real hands-on fluency with AI tools, not just the ability to point my team toward them.</p>
+        <div class="step-card">
+          <span class="step-card__mark" aria-hidden="true"><svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19h8"/><path d="m4 17 6-6-6-6"/></svg></span>
+          <h3 class="type-headline-sm">Pointing Is Not Knowing</h3>
+          <p class="type-body-md mt-2 text-secondary">AI-native, not AI-curious, is my own phrase for it, and a manager only earns it hands-on. I could point a team at the tools and read what came back, but I had never carried a build from an empty file to something finished.</p>
         </div>
-        <div>
-          <span class="type-label-sm stat-accent-green">02</span>
-          <h3 class="type-headline-sm mt-2">Design Systems, Never My Own</h3>
-          <p class="type-body-md mt-2 text-secondary">Years spent unifying design languages for other people's products, with nothing built the same way for myself.</p>
+        <div class="step-card">
+          <span class="step-card__mark" aria-hidden="true"><svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg></span>
+          <h3 class="type-headline-sm">Design Systems, Never My Own</h3>
+          <p class="type-body-md mt-2 text-secondary">Years of unifying design languages across separate business lines, every one of them owned by the bank. A system carries the decisions of whoever built it, and none of those decisions had ever been mine to make.</p>
         </div>
-        <div>
-          <span class="type-label-sm stat-accent-green">03</span>
-          <h3 class="type-headline-sm mt-2">A Base, Not A Blank Page</h3>
-          <p class="type-body-md mt-2 text-secondary">Adopted an existing documentation structure and reshaped it around my own tokens, components, and voice.</p>
+        <div class="step-card">
+          <span class="step-card__mark" aria-hidden="true"><svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></span>
+          <h3 class="type-headline-sm">A Base, Not A Blank Page</h3>
+          <p class="type-body-md mt-2 text-secondary">Design Cortex, a documentation structure someone else had built and published, was the starting point. A blank file would have made the first day about scaffolding, when the part I wanted to learn was everything after it.</p>
         </div>
       </div>
     </div>
@@ -631,44 +884,114 @@ a:hover .arrow { transform: translateX(4px); }
 
   <!-- THE BUILD -->
   <section id="build" class="bg-surface-alt px-4 lg:px-20">
-    <div class="mx-auto max-w-7xl py-20 lg:py-28">
+    <!-- B90: pt only, not py. The marquee below sits OUTSIDE this wrapper so it can full-bleed, and
+         it carries its own mt-12 and mb-8/lg:mb-14. With py-20 lg:py-28 still here, the wrapper's
+         bottom padding stacked on top of the belt's own top margin and the gap above the tiles came
+         out at 128px on mobile and 160px at lg instead of 48px. Same arrangement as the language
+         section on ../Internal-Systems/, which uses pt-20 lg:pt-28 for exactly this reason. -->
+    <div class="mx-auto max-w-7xl pt-20 lg:pt-28">
       <h2 class="reveal type-headline-md max-w-2xl">the build<span class="brand-dot">.</span></h2>
-      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">No shortcuts, no jumping ahead. Three nights, barely a break, building and documenting every single piece the same disciplined way.</p>
+      <!-- INTRO rewritten B90: the old one was written on effort rather than on method ("Three
+           nights, barely a break"), which is conduct and not a belief, and it also pre-told all
+           three cards. This one frames the ORDER, which is what the cards then specify. -->
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Three days, and the order was the whole discipline. Every layer had to be finished and documented before the one above it existed, which is slow on the first pass and the only reason the system holds together now.</p>
 
+      <!-- CARDS rewritten B90. Bare divs became .ghost-card on bone, warm against this section's cool
+           surface-alt ground, the second of the page's three card surfaces (sage / bone / white).
+           MARKERS are numerals here, unlike the spark's symbols: these three are the order he built
+           in, so the set is a real sequence. Narrow cards carrying a numeral are ghost-card and not
+           step-card, the same geometry as ../Internal-Systems/'s "the language"; the full rule and
+           the measurement behind it are on .ghost-card in the stylesheet.
+           COPY: 39/41/41 words against 14/27/26 before. -->
       <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
-        <div>
-          <span class="type-label-sm stat-accent-green">01</span>
-          <h3 class="type-headline-sm mt-2">Tokens Before Anything Else</h3>
-          <p class="type-body-md mt-2 text-secondary">Primitives, then semantic color, type, spacing, and motion, the layer everything else binds to.</p>
+        <div class="ghost-card ghost-card-bone">
+          <span class="ghost-num">01</span>
+          <h3 class="type-headline-sm">Tokens Before Anything Else</h3>
+          <p class="type-body-md mt-2 text-secondary">Primitives first, then semantic color, type, spacing and motion. Everything above binds to that layer by name, so a component never carries a raw value and changing a decision later means changing it in one place instead of forty.</p>
         </div>
-        <div>
-          <span class="type-label-sm stat-accent-green">02</span>
-          <h3 class="type-headline-sm mt-2">One Documentation Pattern For Everything</h3>
-          <p class="type-body-md mt-2 text-secondary">Live examples, anatomy, variants, when to use it and when not to, accessibility notes, on every single piece. Reads like a living Storybook, not a static file.</p>
+        <div class="ghost-card ghost-card-bone">
+          <span class="ghost-num">02</span>
+          <!-- Shortened from "One Documentation Pattern For Everything" (40 chars), the only heading
+               on the page that wrapped at every width: its siblings measure 23 to 28. Documentation
+               is not lost, the paragraph opens on it. -->
+          <h3 class="type-headline-sm">One Pattern, No Exceptions</h3>
+          <p class="type-body-md mt-2 text-secondary">Live examples, anatomy, variants, accessibility notes, and when not to reach for it, on every single piece. It reads like a living Storybook rather than a static file, because a system people have to interpret is one they quietly stop using.</p>
         </div>
-        <div>
-          <span class="type-label-sm stat-accent-green">03</span>
-          <h3 class="type-headline-sm mt-2">Built Once, Wired To Figma</h3>
-          <p class="type-body-md mt-2 text-secondary">Pushed group by group into Figma through Claude Code and a live Figma MCP connection, so design and code stay in sync instead of drifting apart.</p>
+        <div class="ghost-card ghost-card-bone">
+          <span class="ghost-num">03</span>
+          <h3 class="type-headline-sm">Built Once, Wired To Figma</h3>
+          <p class="type-body-md mt-2 text-secondary">Pushed group by group into Figma through Claude Code over a live MCP connection. Design and code drift apart the moment they are maintained separately, so the wiring is not a convenience, it is what prevents a second source of truth.</p>
         </div>
       </div>
 
-      <!-- carousel: same mechanism as Internal-Systems/index.html's B20 strategy carousel,
-           three real documentation screens (tokens, a molecule, an elevation scale) so a
-           visitor sees more than one fragment of the system, not just this page's single
-           curated screenshots. -->
-      <div class="reveal mx-auto mt-12 flex w-full max-w-3xl flex-col items-center gap-4">
-        <div id="buildCarousel" class="relative w-full overflow-hidden rounded-sm shadow-lg" style="aspect-ratio: 1512 / 827;">
-          <img src="build-1-tokens.png" alt="My DSM's color tokens, documented live: primitives, semantic mappings, and their tonal ramps." class="build-slide absolute inset-0 h-full w-full object-cover" data-active="true">
-          <img src="build-2-card.png" alt="My DSM's Card molecule, documented live, including the full component sidebar." class="build-slide absolute inset-0 h-full w-full object-cover">
-          <img src="build-3-elevation.png" alt="My DSM's elevation scale, documented live: every shadow step from subtle to glow-accent." class="build-slide absolute inset-0 h-full w-full object-cover">
+    </div>
+
+    <!-- B90: the three-screen carousel that used to sit here was replaced by this belt. Six real
+         captures, all at the same 3022x1468 viewport, so every tile is the same screen at the same
+         size and nothing is scaled to match. Order runs bottom of the stack upward, primitives,
+         semantic colour, elevation, icons, alert, card grid, which is the same order the section
+         claims above it. The full reasoning for the mechanism change is on .marquee in the
+         stylesheet.
+         It is a direct child of the section and not of the max-w-7xl wrapper above, which is what
+         lets .ds-bleed cancel the section padding. The second set of six is decorative repetition,
+         so it is aria-hidden with empty alt text and a screen reader hears each screen once. -->
+    <div class="reveal ds-bleed mt-12 mb-8 lg:mb-14">
+      <div class="marquee-wrap">
+        <div class="marquee">
+          <div class="marquee-track">
+          <div class="marquee-tile">
+            <img width="3022" height="1468" decoding="async" src="assets/color-primitives.webp" alt="My DSM's colour primitives, documented live: every raw ramp in the palette before anything is mapped to a role.">
+            <span class="ds-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Color primitives</span></span>
+          </div>
+          <div class="marquee-tile">
+            <img width="3022" height="1468" decoding="async" src="assets/semantic-color.webp" alt="The semantic colour layer, where each primitive is bound to a named role that components refer to instead of a raw value.">
+            <span class="ds-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Semantic color</span></span>
+          </div>
+          <div class="marquee-tile">
+            <img width="3022" height="1468" decoding="async" src="assets/elevation.webp" alt="The elevation scale, every shadow step documented from the subtlest lift to the accent glow.">
+            <span class="ds-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Elevation</span></span>
+          </div>
+          <div class="marquee-tile">
+            <img width="3022" height="1468" decoding="async" src="assets/icons.webp" alt="The Icon atom, documented with its sizes and states, the same set this page shows live further down.">
+            <span class="ds-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Icons</span></span>
+          </div>
+          <div class="marquee-tile">
+            <img width="3022" height="1468" decoding="async" src="assets/alert.webp" alt="The Alert molecule, with its live examples, variants and the note on when not to reach for it.">
+            <span class="ds-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Alert</span></span>
+          </div>
+          <div class="marquee-tile">
+            <img width="3022" height="1468" decoding="async" src="assets/card-grid.webp" alt="The CardGrid organism, the largest piece in the system, built from the molecules and atoms below it.">
+            <span class="ds-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Card grid</span></span>
+          </div>
+
+          <div class="marquee-tile marquee-dup" aria-hidden="true">
+            <img width="3022" height="1468" decoding="async" src="assets/color-primitives.webp" alt="">
+            <span class="ds-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Color primitives</span></span>
+          </div>
+          <div class="marquee-tile marquee-dup" aria-hidden="true">
+            <img width="3022" height="1468" decoding="async" src="assets/semantic-color.webp" alt="">
+            <span class="ds-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Semantic color</span></span>
+          </div>
+          <div class="marquee-tile marquee-dup" aria-hidden="true">
+            <img width="3022" height="1468" decoding="async" src="assets/elevation.webp" alt="">
+            <span class="ds-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Elevation</span></span>
+          </div>
+          <div class="marquee-tile marquee-dup" aria-hidden="true">
+            <img width="3022" height="1468" decoding="async" src="assets/icons.webp" alt="">
+            <span class="ds-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Icons</span></span>
+          </div>
+          <div class="marquee-tile marquee-dup" aria-hidden="true">
+            <img width="3022" height="1468" decoding="async" src="assets/alert.webp" alt="">
+            <span class="ds-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Alert</span></span>
+          </div>
+          <div class="marquee-tile marquee-dup" aria-hidden="true">
+            <img width="3022" height="1468" decoding="async" src="assets/card-grid.webp" alt="">
+            <span class="ds-chip"><span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium">Card grid</span></span>
+          </div>
+          </div>
         </div>
-        <div id="buildDots" class="relative flex items-center gap-3">
-          <button type="button" class="build-dot" data-index="0" aria-label="Show screen 1 of 3" aria-current="true"></button>
-          <button type="button" class="build-dot" data-index="1" aria-label="Show screen 2 of 3"></button>
-          <button type="button" class="build-dot" data-index="2" aria-label="Show screen 3 of 3"></button>
-          <span id="buildBlob" class="build-blob" aria-hidden="true"></span>
-        </div>
+        <div class="marquee-fade marquee-fade-start" aria-hidden="true"></div>
+        <div class="marquee-fade marquee-fade-end" aria-hidden="true"></div>
       </div>
     </div>
   </section>
@@ -677,72 +1000,42 @@ a:hover .arrow { transform: translateX(4px); }
   <section id="practice" class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl py-20 lg:py-28">
       <h2 class="reveal type-headline-md max-w-2xl">in practice<span class="brand-dot">.</span></h2>
-      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Once I trusted the system, I built pages for my old portfolio with it. For this site, I duplicated the whole DSM rather than touch the original, and redefined color, type, and button style inside Claude Code. I view the live system through Cursor, opening it as a local server, but everything is still built in Claude Code.</p>
+      <!-- INTRO rewritten B90: the old one told cards 1 and 2 before the reader reached them. This
+           one frames the section's question, what happened when the system had to be used. -->
+      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">Building a system and living inside one are different jobs, and the second is where a system either holds or quietly falls apart. This site is where mine got its first real use.</p>
 
+      <!-- CARDS rewritten B90. Bare divs became .step-card on white with a hairline, the third and
+           last of the page's three card surfaces (sage / bone / white), so no two sections repeat.
+           MARKERS are symbols like "the spark" and unlike "the build": these three are facets with
+           no order between them. Shield, Eye and Check, all from the curated set further down this
+           same section, and none of them reuses a glyph already spent in "the spark".
+           COPY: 42/36/38 words against 16/27/14 before. "that copy" is deliberately echoed from card
+           1 in card 3, which establishes it once and then points back to it. -->
       <div class="reveal-stagger mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
-        <div>
-          <span class="type-label-sm stat-accent-green">01</span>
-          <h3 class="type-headline-sm mt-2">Duplicated, Not Edited</h3>
-          <p class="type-body-md mt-2 text-secondary">A separate copy, so the original system stays untouched no matter what a specific site needs.</p>
+        <div class="step-card step-card-white">
+          <span class="step-card__mark" aria-hidden="true"><svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span>
+          <h3 class="type-headline-sm">Duplicated, Not Edited</h3>
+          <p class="type-body-md mt-2 text-secondary">This site runs on a full copy of the DSM, not on the DSM itself. Color, type and button style were redefined inside that copy, so a decision made for one project can never quietly become a decision for every future one.</p>
         </div>
-        <div>
-          <span class="type-label-sm stat-accent-green">02</span>
-          <h3 class="type-headline-sm mt-2">Viewing, Not Building</h3>
-          <p class="type-body-md mt-2 text-secondary">Cursor only opens the local server to look at the live docs. Claude Code is what actually builds, so the two never compete for the same job.</p>
+        <div class="step-card step-card-white">
+          <span class="step-card__mark" aria-hidden="true"><svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <h3 class="type-headline-sm">Viewing, Not Building</h3>
+          <p class="type-body-md mt-2 text-secondary">Cursor opens the live documentation as a local server and does nothing else. Claude Code is what actually builds. Giving each tool one job is what stops a workflow from turning into two half-workflows that disagree.</p>
         </div>
-        <div>
-          <span class="type-label-sm stat-accent-green">03</span>
-          <h3 class="type-headline-sm mt-2">You're Looking At The Proof</h3>
-          <p class="type-body-md mt-2 text-secondary">This page's type, color, and buttons are running on that duplicated system right now.</p>
+        <div class="step-card step-card-white">
+          <span class="step-card__mark" aria-hidden="true"><svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <h3 class="type-headline-sm">You're Looking At The Proof</h3>
+          <p class="type-body-md mt-2 text-secondary">The type you are reading, the green on this page and every button on this site come from that copy. A design system that cannot survive its author's own portfolio was never going to survive a product team.</p>
         </div>
       </div>
 
-      <!-- REMOVED 2026-08-13: card-live-examples.png ("Card, documented live"), the same reason
-           as the swatch below, the Card examples in that screenshot (Interview synthesis board /
-           Design system from scratch) were invented for the DSM's own docs and never used
-           anywhere on the real site, so it didn't actually prove anything about this portfolio.
-           Asset file left in the folder untouched in case it's wanted again.
-      <div class="reveal mx-auto mt-12 flex w-full max-w-3xl flex-col items-center gap-4">
-        <img src="card-live-examples.png" alt="My DSM's Card component, live in its documentation, including a self-referential example card titled Design system from scratch." class="h-auto w-full rounded-lg shadow-lg">
-        <span class="type-label-sm text-muted" style="letter-spacing:normal; text-transform:none;">Card, documented live</span>
-      </div>
-      -->
-
-      <!-- OLD (kept as inert rollback, see B-icon-showcase): the original static two-card
-           "A real, live example" swatch, replaced 2026-08-13 because these two cards were never
-           real content used anywhere else on the site, purely invented for this demo.
-      <h3 class="reveal mx-auto mt-14 w-full max-w-3xl text-center type-headline-sm">A real, live example<span class="brand-dot">.</span></h3>
-      <div class="reveal mx-auto mt-6 flex w-full max-w-3xl flex-col items-center gap-4">
-        <div class="grid w-full gap-6 sm:grid-cols-2">
-          <article class="flex flex-col rounded-lg border border-border-default bg-card shadow-sm transition-shadow duration-200 ease-out hover:shadow-md">
-            <div class="flex flex-col gap-2 p-6">
-              <div class="flex flex-wrap gap-2">
-                <span class="inline-flex items-center rounded-full bg-neutral-bg px-2 py-1 text-xs font-medium text-secondary">Research</span>
-              </div>
-              <h3 class="type-title-md text-default">Interview synthesis board</h3>
-              <p class="type-body-md text-secondary">Turning twelve user interviews into six themes the team could act on.</p>
-              <p class="type-label-sm text-muted">April 2026 &middot; Research</p>
-            </div>
-            <div class="mt-auto px-6 pb-4">
-              <button type="button" class="inline-flex h-8 items-center justify-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-on-primary shadow-md hover:shadow-lg transition-all duration-150 ease-out hover:bg-primary-hover active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-card">View case study</button>
-            </div>
-          </article>
-          <article class="flex flex-col rounded-lg border border-accent bg-gradient-to-b from-surface-alt to-card shadow-glow-accent">
-            <div class="flex flex-col gap-2 p-6">
-              <div class="flex flex-wrap gap-2">
-                <span class="inline-flex items-center rounded-full bg-surface-alt px-2 py-1 text-xs font-medium text-primary-active">Featured</span>
-              </div>
-              <h3 class="type-title-md text-default">Design system from scratch</h3>
-              <p class="type-body-md text-secondary">Building My DSM: tokens, patterns, and components documented as a living knowledge base.</p>
-              <p class="type-label-sm text-muted">June 2026 &middot; Product</p>
-            </div>
-            <div class="mt-auto px-6 pb-4">
-              <button type="button" class="inline-flex h-8 items-center justify-center gap-2 rounded-full bg-primary px-4 text-sm font-medium text-on-primary shadow-md hover:shadow-lg transition-all duration-150 ease-out hover:bg-primary-hover active:bg-primary-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-card">View case study</button>
-            </div>
-          </article>
-        </div>
-      </div>
-      -->
+      <!-- Two inert rollbacks were deleted here in B90: a card-live-examples.png figure and the
+           original static two-card "A real, live example" swatch, both replaced by the icon
+           showcase below in 2026-08-13. That work is long finished and live, so by the standing
+           rule they were dead weight and git is the rollback. The one durable fact worth keeping:
+           card-live-examples.png is still in this folder and is deliberately unused, because the
+           two example cards in it were invented for the DSM's own documentation and never used
+           anywhere on this site, so it proved nothing about the portfolio. Do not restore it. -->
 
       <!-- NEW icon showcase, 2026-08-13: real NavItem markup (left, category filter) +
            card-lift markup matching the homepage's Leadership Impact cards (right, one card
@@ -1224,7 +1517,24 @@ a:hover .arrow { transform: translateX(4px); }
   <section class="px-4 lg:px-20">
     <div class="mx-auto max-w-7xl border-t border-border-default py-16 lg:py-20">
       <h2 class="reveal type-headline-md max-w-2xl">what I learned<span class="brand-dot">.</span></h2>
-      <p class="reveal type-body-lg mt-6 max-w-prose text-secondary">I've built and unified design systems wired to real production code for years, at the bank, just never with AI doing the work alongside me. Doing that once myself, tokens to components to Figma, is what finally made "trust the system" feel like something I understand firsthand, not just something I ask other people to do.</p>
+      <!-- B90: the single closing paragraph became the nested card, so all four case studies now
+           close the same way. WHY THE OLD PARAGRAPH WENT: it was one lesson stated twice, that doing
+           it himself made "trust the system" firsthand rather than something he asks of others, and
+           the nested card wants two PARALLEL lessons, not one restated.
+           WORDING CHECKED AGAINST THE REST OF THE PAGE, the same check B73 and B89 ran. "decision"
+           already appears five times in the card sections so it is kept out of lesson two, and
+           "holds" already opens "in practice", so lesson two says stands. "order" is kept on
+           purpose: "the build" opens on the order being the whole discipline and this names its
+           price, which is a rhyme rather than a repeat. 53 and 46 words. -->
+      <div class="reveal learn-outer mt-8">
+        <div class="learn-inner">
+          <svg class="learn-mark" aria-hidden="true" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="butt"><line x1="50" y1="8" x2="50" y2="92"/><line x1="13.6" y1="29" x2="86.4" y2="71"/><line x1="86.4" y1="29" x2="13.6" y2="71"/></svg>
+          <div class="learn-cols">
+            <p>For years I specified systems for other people to trust without ever living inside one from the first token to the last component. Doing it end to end taught me nothing new about how it should be done. <span class="copy-mark">It taught me what that order costs on the night you would rather skip it</span>.</p>
+            <p>The AI took the hours and gave back none of the judgment. What should exist, what it binds to, what it must never do, none of that got faster. <span class="copy-mark">A system built in three days only stands because its rules were settled before the speed started</span>.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1338,74 +1648,8 @@ a:hover .arrow { transform: translateX(4px); }
     // below with the "liquid blob" indicator, same mechanism as Internal-Systems/index.html's
     // B20 strategy carousel. Clicking a dot jumps straight there and resets the timer;
     // hovering the whole block pauses rotation so it doesn't race a visitor looking at it.
-    const buildCarousel = document.getElementById('buildCarousel');
-    if (buildCarousel) {
-      const buildWrap = buildCarousel.parentElement;
-      const slides = buildCarousel.querySelectorAll('.build-slide');
-      const dotsWrap = document.getElementById('buildDots');
-      const dots = dotsWrap.querySelectorAll('.build-dot');
-      const blob = document.getElementById('buildBlob');
-      const AUTO_MS = 4500;
-      let current = 0;
-      let autoTimer = null;
-
-      const dotRect = (i) => {
-        const dotBox = dots[i].getBoundingClientRect();
-        const wrapBox = dotsWrap.getBoundingClientRect();
-        return { left: dotBox.left - wrapBox.left, width: dotBox.width };
-      };
-
-      const placeBlob = (i) => {
-        const r = dotRect(i);
-        blob.style.left = r.left + 'px';
-        blob.style.width = r.width + 'px';
-      };
-
-      const setActive = (index) => {
-        slides[current].removeAttribute('data-active');
-        dots[current].removeAttribute('aria-current');
-        current = index;
-        slides[current].setAttribute('data-active', 'true');
-        dots[current].setAttribute('aria-current', 'true');
-      };
-
-      const goTo = (index) => {
-        if (index === current) return;
-        if (prefersReducedMotion) {
-          setActive(index);
-          placeBlob(current);
-          return;
-        }
-        const from = dotRect(current);
-        const to = dotRect(index);
-        const left = Math.min(from.left, to.left);
-        const right = Math.max(from.left + from.width, to.left + to.width);
-
-        blob.style.transition = 'left 250ms var(--ease-soft), width 250ms var(--ease-soft)';
-        blob.style.left = left + 'px';
-        blob.style.width = (right - left) + 'px';
-
-        setActive(index);
-
-        setTimeout(() => {
-          blob.style.transition = 'left 300ms var(--ease-spring), width 300ms var(--ease-spring)';
-          placeBlob(current);
-        }, 250);
-      };
-
-      const restartAuto = () => {
-        clearInterval(autoTimer);
-        if (!prefersReducedMotion) autoTimer = setInterval(() => goTo((current + 1) % slides.length), AUTO_MS);
-      };
-
-      dots.forEach((dot, i) => {
-        dot.addEventListener('click', () => { goTo(i); restartAuto(); });
-      });
-      buildWrap.addEventListener('mouseenter', () => clearInterval(autoTimer));
-      buildWrap.addEventListener('mouseleave', restartAuto);
-
-      requestAnimationFrame(() => { placeBlob(0); restartAuto(); });
-    }
+    // B90: the "the build" carousel script was deleted with the carousel. Its replacement, the
+    // marquee belt, is pure CSS animation and needs no JS.
 
     // thin progress bar tracking scroll position, same as ../index.html
     const progressBar = document.getElementById('scrollProgress');
