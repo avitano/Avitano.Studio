@@ -1,0 +1,2417 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V1HNVYX124"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-V1HNVYX124');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ofir Avitan | Lock Screen Widgets, Taboola News</title>
+<meta name="description" content="Home assignment for the Product Design Team Lead role at Taboola News: widgets on the lock screen.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon.ico" sizes="any">
+<link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="../assets/favicon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="manifest" href="../assets/site.webmanifest">
+<meta name="theme-color" content="#022c22">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">
+@import "tailwindcss";
+
+@theme {
+  /* ---- color primitives, copied verbatim from ../index.html so both pages stay in sync ---- */
+  --color-green-50: #ecfdf5;
+  --color-green-100: #d1fae5;
+  --color-green-200: #a7f3d0;
+  --color-green-300: #6ee7b7;
+  --color-green-400: #34d399;
+  --color-green-500: #10b981;
+  --color-green-600: #059669;
+  --color-green-700: #047857;
+  --color-green-800: #065f46;
+  --color-green-900: #064e3b;
+  --color-green-950: #022c22;
+  /* B57: ported from ../index.html (B55), see that file for the HSL-extension writeup. */
+  --color-green-975: #031e17;
+
+  --color-neutral-50: #f7f8f7;
+  --color-neutral-100: #eff1ef;
+  --color-neutral-200: #dfe3df;
+  --color-neutral-300: #c4cac4;
+  --color-neutral-400: #a6aea6;
+  --color-neutral-500: #8a938a;
+  --color-neutral-600: #6f766f;
+  --color-neutral-700: #565b56;
+  --color-neutral-800: #4a4a4a;
+  --color-neutral-900: #2d2d2d;
+  --color-neutral-950: #1a1d1a;
+
+  --color-gold-100: #f0e6d2;
+  /* B57: ported from ../index.html (B55), formalizes the footer-spark highlight hex. */
+  --color-gold-200: #f9e8b8;
+  --color-gold-300: #ecc678;
+  --color-gold-500: #e0a52e;
+  --color-gold-700: #a87a1e;
+  --color-gold-900: #40310f;
+
+  /* B73, 2026-09-01: ported from ../Internal-Systems/index.html, where it was introduced in B60.
+     A warm surface that actually reads as a break from white, unlike --color-surface-alt, which is
+     about a 6% step off white and disappears. Site-only, not a DSM token. There is no shared
+     stylesheet on this site, so each page that wants it needs its own copy of this line. */
+  --color-bone: #f2ece0;
+  /* B73, 2026-09-01: ported from ../Internal-Systems/index.html (B60). A premium dark surface,
+     deliberately NOT #000. Used on one element only, the wide stat card. Note the pairing it
+     exists for: #0f1211 against --color-primary #022c22 measures 1.24:1, so a near-black card on
+     the green ground would be invisible without a separating device. */
+  --color-near-black: #0f1211;
+  /* B73, 2026-09-01: ported from ../Internal-Systems/index.html (B60). Site-only, and it has ONE
+     legitimate use: a highlight behind running text. Peach was tried as a card SURFACE in B59 and
+     rejected by Ofir as not belonging to his palette, so do not reach for it as a background. */
+  --color-peach: #fbeade;
+
+  /* ---- semantics ---- */
+  --color-primary: var(--color-green-950);
+  --color-primary-hover: var(--color-green-900);
+  --color-primary-active: var(--color-green-800);
+  --color-button: var(--color-green-900);
+  --color-button-active: var(--color-green-800);
+  --color-accent: var(--color-green-500);
+  --color-accent-contrast: var(--color-gold-700);
+
+  --color-default: var(--color-neutral-900);
+  --color-secondary: var(--color-neutral-800);
+  --color-muted: var(--color-neutral-500);
+  --color-disabled: var(--color-neutral-400);
+  --color-surface-disabled: var(--color-neutral-200);
+  --color-on-primary: #ffffff;
+  --color-on-primary-soft: var(--color-green-100);
+  --color-link: var(--color-green-800);
+
+  --color-surface: #ffffff;
+  --color-surface-alt: var(--color-neutral-50);
+  --color-card: #ffffff;
+  --color-inverse: var(--color-green-950);
+  --color-surface-pressed: var(--color-green-100);
+
+  --color-border-default: var(--color-neutral-200);
+  --color-border-strong: var(--color-neutral-400);
+  --color-focus: var(--color-green-950);
+
+  --font-brand: "Inter Tight", sans-serif;
+  --font-plain: "Inter", system-ui, sans-serif;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.75rem;
+
+  --shadow-sm: 0 1px 2px 0 rgb(2 44 34 / 0.06);
+  --shadow-md: 0 4px 6px -1px rgb(2 44 34 / 0.08), 0 2px 4px -2px rgb(2 44 34 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(2 44 34 / 0.10), 0 4px 6px -4px rgb(2 44 34 / 0.05);
+  --shadow-xl: 0 20px 25px -5px rgb(2 44 34 / 0.12), 0 8px 10px -6px rgb(2 44 34 / 0.05);
+
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--color-surface); color: var(--color-default); font-family: var(--font-plain); }
+
+/* type roles, copied verbatim from Design-Cortex August 2026 / my-dsm.theme.css, same as ../index.html */
+.type-display-lg { font-family: var(--font-brand); font-weight: 700; font-size: 3rem; line-height: 1.1; letter-spacing: -0.025em; }
+.type-display-sm { font-family: var(--font-brand); font-weight: 700; font-size: 2.25rem; line-height: 1.15; letter-spacing: -0.025em; }
+.type-headline-lg { font-family: var(--font-brand); font-weight: 700; font-size: 1.875rem; line-height: 1.2; }
+.type-headline-md { font-family: var(--font-brand); font-weight: 600; font-size: 1.5rem; line-height: 1.33; }
+.type-headline-sm { font-family: var(--font-brand); font-weight: 600; font-size: 1.25rem; line-height: 1.4; }
+.type-title-md { font-family: var(--font-brand); font-weight: 600; font-size: 1.125rem; line-height: 1.55; }
+.type-body-lg { font-family: var(--font-plain); font-weight: 400; font-size: 1rem; line-height: 1.5; }
+.type-body-md { font-family: var(--font-plain); font-weight: 400; font-size: 0.875rem; line-height: 1.43; }
+.type-label-lg { font-family: var(--font-plain); font-weight: 500; font-size: 0.875rem; line-height: 1.43; }
+.type-label-sm { font-family: var(--font-plain); font-weight: 500; font-size: 0.75rem; line-height: 1.33; letter-spacing: 0.1em; text-transform: uppercase; }
+.brand-dot { color: var(--color-button); }
+/* 2026-08-14: real class instead of an inline style, so var(--color-accent) is referenced
+   inside this stylesheet where Tailwind's browser compiler actually looks when deciding which
+   @theme variables to emit into :root (it doesn't scan inline style="" attributes in the HTML
+   body). This page currently gets --color-accent for free via .site-nav-dark .nav-link::after
+   below, which happens to reference the same variable, but that's an accidental dependency -
+   found for real on ../index.html, which has no such rule and its Contact dot rendered pure
+   white until this same fix landed there. Matching it here so this page can't silently break
+   the same way if that nav rule ever changes. */
+.brand-dot-accent { color: var(--color-accent); }
+/* 2026-08-14, B56: same emission-bug family as above. --color-gold-700 was only ever referenced
+   via inline style="" attributes on the numbered labels and the smaller Track record stat row,
+   so it never got emitted into :root and these silently rendered as inherited dark text instead
+   of gold. Ofir's call: don't restore gold, recolor to the site's green instead (same
+   --color-button already used for the big "+18%" hero stat below). */
+.stat-accent-green { color: var(--color-button); }
+/* B57: footer text-color classes, ported from ../index.html (B55). Real classes instead of
+   inline style="color:var(...)" per the same token-emission gotcha as brand-dot-accent above. */
+.hero-dark-gold { color: var(--color-gold-500); }
+.hero-dark-on-primary { color: var(--color-on-primary); }
+.hero-dark-on-primary-soft { color: var(--color-on-primary-soft); }
+/* B57 fix: --color-on-primary-soft (green-100, rgb(209,250,229)) read as unreadable in the
+   footer per Ofir, the green tint blends into this section's own green-toned dark background.
+   Real neutral shade instead, ported from ../index.html's same fix. */
+.footer-text-soft { color: var(--color-neutral-100); }
+
+/* sticky floating pill nav, same recipe as ../index.html (no on-load entrance animation here,
+   this is a secondary page reached mid-scroll, not the very first thing a visitor sees) */
+.site-nav {
+  position: fixed; top: 1.25rem; left: 50%; transform: translateX(-50%);
+  z-index: 50; display: flex; align-items: center; gap: 1.75rem;
+  background: rgba(255,255,255,0.85); backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border-default);
+  border-radius: 999px; padding: 0.5rem 1.25rem;
+  box-shadow: var(--shadow-lg);
+  /* width: max-content (2026-08-07): with only `left: 50%` set (no `right`),
+     an auto-width fixed element's shrink-to-fit box is computed against the
+     remaining space to the right of `left`, roughly 50vw, not the full
+     viewport, so on mobile the flex items got compressed and "Let's talk"
+     wrapped to two lines. See ../index.html for the full writeup. */
+  width: max-content;
+}
+.nav-link { position: relative; }
+.nav-link::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px;
+  background: var(--color-button); transform: scaleX(0); transform-origin: left;
+  transition: transform 220ms var(--ease-out);
+}
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* 2026-08-08: recolored to match the homepage nav redesign (dark pill, name
+   as text instead of the logo image). 2026-08-11: padding/gap brought in
+   line with ../index.html's site-nav-dark override too, this page's pill
+   was rendering visibly thinner than the homepage's before this. */
+.site-nav.site-nav-dark { background: var(--color-primary); border: none; padding: 0.85rem 2rem; gap: 2rem; }
+.site-nav-name {
+  font-family: var(--font-brand); font-weight: 700; font-size: 1.05rem;
+  letter-spacing: -0.02em; word-spacing: -0.15em;
+  color: var(--color-on-primary); white-space: nowrap; text-decoration: none;
+}
+.site-nav-dark .nav-link { color: var(--color-on-primary-soft); }
+.site-nav-dark .nav-link:hover { color: var(--color-on-primary); }
+.site-nav-dark .nav-link::after { background: var(--color-accent); }
+.site-nav-cta {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff; color: var(--color-button); font-weight: 600;
+  font-size: 0.85rem; height: 2rem; padding: 0 1.1rem; border-radius: 999px;
+  white-space: nowrap; text-decoration: none;
+}
+.site-nav-cta:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(255,255,255,0.6);
+}
+
+/* B57: gold hairline + gold CTA fill, ported from ../index.html (B55/nav-dark-gold). Needs
+   all 3 classes to beat .site-nav.site-nav-dark's own 2-class `border: none` above. */
+.site-nav.site-nav-dark.nav-dark-gold { border: 1px solid rgb(224 165 46 / 0.4); }
+.nav-dark-gold .site-nav-cta { background: var(--color-gold-500); color: var(--color-green-950); }
+
+/* B57: widens the pill to match ../index.html's nav-wide footprint (min(80rem, viewport)),
+   adapted to this page's own nav content: .site-nav-leading (back-arrow + name, back-arrow
+   only actually visible on mobile) takes col 1, #navTabs (desktop-only) takes the centered
+   col 2, the CTA takes col 3, same 3-column shape ../index.html uses for name/phrase/CTA.
+   Explicit grid-column on all three, not DOM-order autoflow, so #navTabs being hidden below
+   md doesn't let the CTA slide into the middle "auto" track on mobile, same reasoning as
+   ../index.html's own comment on this. */
+.site-nav.nav-wide {
+  width: min(80rem, calc(100vw - 2rem));
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+@media (min-width: 1024px) {
+  .site-nav.nav-wide { width: min(80rem, calc(100vw - 10rem)); }
+}
+.nav-wide .site-nav-leading { grid-column: 1; justify-self: start; display: flex; align-items: center; gap: 0.75rem; }
+.nav-wide #navTabs { grid-column: 2; justify-self: center; }
+.nav-wide .site-nav-cta { grid-column: 3; justify-self: end; }
+
+/* 2026-08-11: reverted the 2026-08-08 in-page nav trial back to real
+   homepage-section links (About Me/Case Studies/Skills), same pattern
+   rolled out from ../Credit-Cards/index.html once Ofir confirmed it live
+   there. The scroll-linked "current section" highlight (is-active) only
+   made sense for in-page anchors, removed along with it, see the JS near
+   the bottom of body. The compact icon-only "back to other projects" link
+   stays but is now mobile-only (see the @media block right below): on desktop the
+   tabs plus the browser's own back button already cover it. On mobile the
+   tabs are hidden entirely, so the icon is still the only one-tap way
+   back, and now points at this project's own tile on the homepage
+   specifically (#DigitalLoans, renamed 2026-08-11 from #tile-digital-loans,
+   a cleaner id since it's visible in the address bar after the jump)
+   rather than the top of the Case Studies section. */
+.site-nav-back {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2rem; height: 2rem; border-radius: 999px; flex-shrink: 0;
+  color: var(--color-on-primary-soft);
+  transition: color 150ms var(--ease-soft), background 150ms var(--ease-soft);
+}
+/* the "md:hidden" utility class alone doesn't do this: this whole style block is
+   unlayered custom CSS (it lives in the same @import "tailwindcss" block, not inside
+   one of Tailwind's own layers), and unlayered CSS always beats layered utility
+   classes regardless of breakpoint or source order, so the unconditional
+   display:inline-flex above was silently winning at every width. Hiding it for real
+   needs its own unlayered media query, right here. */
+@media (min-width: 768px) {
+  .site-nav-back { display: none; }
+}
+.site-nav-back:hover { color: var(--color-on-primary); background: rgba(255,255,255,0.1); }
+.site-nav-back:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary), 0 0 0 4px rgba(255,255,255,0.6);
+}
+
+/* thin scroll-progress bar, same as ../index.html */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: var(--color-button); z-index: 60; transition: width 80ms linear;
+}
+
+/* scroll reveal, identical mechanics to ../index.html */
+.reveal { opacity: 0; transform: translateY(54px); transition: opacity 700ms var(--ease-soft), transform 700ms var(--ease-soft); will-change: opacity, transform; }
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+.reveal-stagger > * { opacity: 0; transform: translateY(50px); transition: opacity 650ms var(--ease-soft), transform 650ms var(--ease-soft); will-change: opacity, transform; }
+.reveal-stagger > *.in-view { opacity: 1; transform: translateY(0); }
+
+/* happy-flow filmstrip "conveyor" entrance (2026-08-14, v2 - replaces the earlier per-card
+   staggered-opacity "push" attempt below, kept only in git history): the 6 cards live in
+   #loanPurposeStripInner (width = true content width via w-max), nested inside the fixed-width,
+   overflow-hidden-by-scroll #loanPurposeStrip viewport. The whole inner row starts shifted
+   completely out of view (translateX(-100%)) and slides to translateX(0) as ONE single linear
+   motion - no per-card delays, no opacity fades, matching the hero's own .conveyor-track feel.
+   Because every card moves in perfect lockstep but rests at a different natural x position,
+   card 6 (resting at the far right of the row) crosses into the visible viewport almost
+   immediately, while card 1 (resting at x=0) only becomes visible right at the end of the
+   slide - "screen 6 enters first, then 5, 4, 3, 2, and finally 1" falls out of the geometry
+   for free, with zero artificial timing differences between cards. */
+#loanPurposeStripInner { transform: translateX(-100%); }
+#loanPurposeStrip.strip-in-view #loanPurposeStripInner { animation: strip-conveyor-in 950ms linear both; }
+/* Filmstrip scrollbar (B73, 2026-09-01). The default bar is thick, grey, and on macOS it is an
+   OVERLAY, so it floats on top of the station tags instead of sitting under them.
+   Two mechanisms on purpose, and they are not redundant. scrollbar-width/scrollbar-color are the
+   standard properties and are what modern Chrome and Firefox honour; the ::-webkit- rules cover
+   older WebKit. Note that when the standard properties are present, Chrome 121 and up IGNORES the
+   ::-webkit- pseudo-elements entirely, so the standard pair has to carry the design on its own and
+   the webkit block is a fallback, not the primary. Do not tune only one of them and expect a change.
+   The container's bottom padding is what actually keeps the bar off the tags: an overlay bar sits at
+   the very bottom edge of the scroll box, so the fix is clearance, not colour. pb-2 was 8px and the
+   tags sat inside it. */
+#loanPurposeStrip { scrollbar-width: thin; scrollbar-color: var(--color-primary) transparent; }
+#loanPurposeStrip::-webkit-scrollbar { height: 6px; }
+#loanPurposeStrip::-webkit-scrollbar-track { background: transparent; }
+#loanPurposeStrip::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 999px; }
+/* Same thin green bar on the flow strip ("from glance to habit"), so both horizontal strips match. */
+.fl-strip { scrollbar-width: thin; scrollbar-color: var(--color-primary) transparent; }
+.fl-strip::-webkit-scrollbar { height: 6px; }
+.fl-strip::-webkit-scrollbar-track { background: transparent; }
+.fl-strip::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 999px; }
+/* "Chosen" tag in the why-the-feed table: green so the decision reads at a glance. */
+.tag-chosen { background: var(--color-green-100); color: var(--color-green-700); }
+@keyframes strip-conveyor-in {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+/* mobile-only centered "peek carousel" (2026-08-15, Ofir's ask): screen 1 lands centered at rest
+   instead of flush-left, both neighbors sit smaller on either side and grow to full size as they
+   scroll toward center. Gated to the same max-width:639.98px cutoff used elsewhere on this page
+   (matches Tailwind's sm breakpoint) so desktop's original left-aligned snap-start scroll is
+   completely untouched. Centering is pure CSS, the standard "padding-inline: calc(50% - half the
+   card's width)" trick on the scrollable content plus scroll-snap-align:center on each card: the
+   percentage resolves against #loanPurposeStrip's own visible width (the containing block for an
+   overflow:auto child's padding), so it self-adjusts to any phone width with no JS measurement.
+   Because the padding is exactly engineered to put card 1's center at scrollLeft:0, the existing
+   "jump back to screen 1 on purpose switch" reset (`strip.scrollLeft = 0`, in the click handler
+   below) already lands it dead center with no change needed there. The actual scale-on-scroll
+   (below, in the loanPurposeMenu script) is JS: measures each card's distance from the strip's
+   center on every scroll frame and sets transform:scale() directly with no CSS transition, so it
+   tracks the finger 1:1 during a drag rather than animating in discrete steps. */
+@media (max-width: 639.98px) {
+  #loanPurposeStripInner { padding-inline: calc(50% - 7rem); }
+  #loanPurposeStrip [data-slot] { scroll-snap-align: center; will-change: transform; }
+}
+
+/* arrow nudges right on hover, same as ../index.html */
+.arrow { display: inline-block; transition: transform 200ms var(--ease-out); }
+a:hover .arrow { transform: translateX(4px); }
+
+/* button hover glow (2026-08-08), same as ../index.html: replaces the old flat
+   color-swap-on-hover with a soft colored halo. .btn-glow-accent is for buttons on an
+   already-dark backdrop (Contact section), where a --color-button-toned glow would
+   nearly vanish, so it borrows the brighter --color-accent green instead. .btn-glow-nav
+   is the nav's "Let's talk" pill, filled/glowing only at md and up (mobile stays the
+   plain outline style). */
+.btn-glow, .btn-glow-nav, .btn-glow-accent { transition: box-shadow 300ms var(--ease-soft); }
+.btn-glow:hover { box-shadow: var(--shadow-lg), 0 0 20px 4px rgb(6 78 59 / 0.35); }
+.btn-glow-accent:hover { box-shadow: var(--shadow-lg), 0 0 20px 4px rgb(16 185 129 / 0.45); }
+@media (min-width: 768px) {
+  .btn-glow-nav:hover { box-shadow: var(--shadow-lg), 0 0 20px 4px rgb(6 78 59 / 0.35); }
+}
+
+/* hero on-load entrance (2026-08-08): ../index.html's hero has always had this fadeUp
+   treatment, this page's hero never did, it just rendered static, so it read as "no
+   motion" until the first scroll-triggered section. Same keyframe/stagger pattern. */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.enter { opacity: 0; animation: fadeUp 900ms var(--ease-soft) both; }
+
+/* hero gradient blob + scroll parallax wrapper, same recipe as ../index.html's contact section
+   (reused verbatim here since the contact/closing section below is copied unchanged) */
+.hero-blob {
+  position: absolute; border-radius: 999px; filter: blur(60px); opacity: 0.55;
+  background: conic-gradient(from 180deg, var(--color-green-200), var(--color-green-500), var(--color-gold-300), var(--color-green-200));
+  animation: blobshift 26s ease-in-out infinite;
+}
+.blob-parallax { position: absolute; will-change: transform; }
+@keyframes blobshift {
+  0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+  15%  { transform: translate(-9%, 12%) scale(1.1) rotate(4deg); }
+  32%  { transform: translate(12%, 20%) scale(0.92) rotate(-3deg); }
+  50%  { transform: translate(-16%, 5%) scale(1.06) rotate(5deg); }
+  68%  { transform: translate(7%, -14%) scale(0.95) rotate(-4deg); }
+  85%  { transform: translate(-11%, -7%) scale(1.12) rotate(2deg); }
+  100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+}
+
+.btn-on-primary:hover { background: rgba(255, 255, 255, 0.1); }
+
+/* B57: footer gold sparkle-dust, ported verbatim from ../index.html (B55). Same
+   B24 sky-strip "small JS-generated dot + shared CSS keyframe" technique, scattered
+   inside a simple edge wrapper, revealed once you scroll down to the footer. */
+/* B57: real class instead of inline style="background:var(--color-green-975)". Per the
+   site's standing token-emission rule, an inline style="" is never scanned by Tailwind's
+   browser JIT, so --color-green-975 (only defined in @theme, never referenced in a real
+   rule on this page since the hero/header that uses it on ../index.html is out of scope
+   here) never made it into :root and the footer background silently rendered transparent. */
+.footer-dark-bg { background: var(--color-green-975); }
+
+.footer-glow {
+  position: absolute; top: 0; bottom: 0; width: min(28rem, 40vw);
+  overflow: hidden; pointer-events: none; z-index: 0;
+  opacity: 0; transition: opacity 1100ms var(--ease-soft), transform 1100ms var(--ease-soft);
+}
+.footer-glow--left { left: 0; transform: translateX(-12%); }
+.footer-glow--right { right: 0; transform: translateX(12%); }
+.footer-glow.in-view { opacity: 1; transform: translateX(0); }
+
+.footer-glow__spark {
+  position: absolute; border-radius: 999px; background: var(--color-gold-200);
+  box-shadow: 0 0 6px 1px var(--color-gold-300);
+  animation: footerSparkTwinkle var(--spark-duration, 3.4s) ease-in-out infinite;
+  animation-delay: var(--spark-delay, 0s);
+}
+@keyframes footerSparkTwinkle {
+  0%, 100% { opacity: 0.1; }
+  50%      { opacity: var(--spark-max, 0.9); }
+}
+
+/* placeholder media block: flat neutral surface standing in for a real screenshot/video,
+   same visual language as the "Preview coming soon" tile on ../index.html, not a new pattern */
+.media-placeholder {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--color-neutral-100); border: 1px solid var(--color-border-default);
+}
+
+/* B24: pull-past-top sky strip, rolled out from ../index.html (built there
+   2026-08-10, confirmed working) to every page for consistency, since
+   someone landing directly on a case study never sees a homepage-only
+   easter egg. Same CSS/JS on all 4 pages, no shared component system on
+   this site, see the skill notes on ../index.html for the full mechanics
+   writeup. */
+.sky-strip {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--sky-strip-height, 10rem);
+  background: linear-gradient(180deg, #05070d 0%, #0b1220 62%, #131d33 100%);
+  overflow: hidden; z-index: 0; pointer-events: none;
+}
+.sky-strip__star {
+  position: absolute; border-radius: 999px; background: #fff;
+  animation: skyTwinkle var(--star-duration, 3.2s) ease-in-out infinite;
+  animation-delay: var(--star-delay, 0s);
+}
+@keyframes skyTwinkle {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: var(--star-max, 0.85); }
+}
+.sky-strip__slogan {
+  position: absolute; left: 50%; top: 3.75rem; transform: translateX(-50%);
+  font-family: var(--font-plain); font-weight: 500; font-size: 0.8rem;
+  letter-spacing: 0.05em; color: rgba(255,255,255,0.6); white-space: nowrap;
+}
+.page-shift {
+  position: relative; background: var(--color-surface); z-index: 1;
+}
+
+/* 2026-08-10c: hero strip, sized and spaced from Ofir's own mockup (his composited reference
+   screenshot, measured against the nav pill's known 3rem height to convert his screenshot's
+   px to real rem: strip height ~13.5rem at desktop, icons ~82% of strip height, bottom-anchored
+   with a small margin (not flush), gap ~58% of strip height between icons). Colors sampled from
+   his app screenshot (sky #eef4fd, ground #fdf8f6, ~60/40 split). No boxes/cards: icons sit
+   directly on the strip at their natural portrait ratio (780x1630, source Lottie canvas), not
+   cropped. Clouds are hand-built CSS blobs, not the עננים.json export: that file is also
+   portrait and cropping/scaling it to a short wide strip warped badly. Icons fit comfortably
+   within the strip at these proportions (measured top margin ~12-14%), so no need for the
+   overflow-above treatment tried in the previous pass. */
+/* 2026-08-10f: reverted the overflow-above treatment, Ofir's call: nothing should exit the
+   frame on any side, top included. Plain clipped box again. Icons are still sized taller than
+   the strip (per his "increase 50%, then 10% more" instructions), so their tops now simply get
+   cropped by this box, same as any oversized image inside a fixed frame. */
+/* --strip-scale (B73, 2026-09-01). ONE number scales the whole scene: band height, icon height,
+   the icons' bottom anchoring, the gaps between them, and the cloud widths. Every length below that
+   depends on the strip's size is written as calc(original * var(--strip-scale)), so the originals
+   stay readable and a future pass changes one value instead of eleven.
+   WHY IT IS SAFE. The icons are bottom-anchored (align-items: flex-end plus a small negative
+   margin-bottom) and their width derives from aspect-ratio, so scaling the HEIGHT scales them
+   proportionally and they stay pinned to the same ground line. Nothing is stretched.
+   WHY THE GAPS SCALE TOO. Shrinking the icons while leaving the gaps at full size would read as the
+   icons scattering apart rather than as the scene getting smaller. The clouds scale for the same
+   reason; their track is already a percentage of the band height, so only their widths are here.
+   ROLLBACK: set --strip-scale to 1. */
+.hero-strip {
+  --strip-scale: 0.7;
+  position: relative;
+  height: calc(9rem * var(--strip-scale));
+  /* 28 -> 16, 2026-08-30: site-wide container radius, see the audit note on ../index.html. */
+  border-radius: var(--radius-lg);
+  /* B73, 2026-09-01: hairline added so the strip matches the framed panel holding the filmstrip
+     directly below it, which is `border border-border-default bg-card`. In the hero the strip stood
+     alone and needed no frame; here it is the first of two stacked panels and an unframed band
+     above a framed one read as two unrelated things.
+     Note this does NOT change the strip's height. Tailwind's base sets box-sizing: border-box, so
+     the 1px is drawn inside the height that --strip-scale computes rather than added to it. */
+  border: 1px solid var(--color-border-default);
+  overflow: hidden;
+  background: linear-gradient(to bottom, #eef4fd 0%, #eef4fd 60%, #fdf8f6 60%, #fdf8f6 100%);
+}
+@media (min-width: 640px) { .hero-strip { height: calc(11rem * var(--strip-scale)); } }
+@media (min-width: 1024px) { .hero-strip { height: calc(13.5rem * var(--strip-scale)); } }
+
+/* two altitudes per Ofir's reference: a bigger/lower cloud track close to the ground line,
+   a smaller/higher one nearer the top edge. Lives inside .hero-strip__bg so it gets
+   clipped/rounded with the background. */
+.hero-strip__clouds { position: absolute; inset: 0; height: 60%; overflow: hidden; }
+.hero-strip__clouds-track {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  width: max-content;
+  animation: cloudDrift 80s linear infinite;
+}
+.hero-strip__clouds-track--back { bottom: 13%; animation-duration: 110s; }
+.hero-strip__clouds-track--front { top: 26%; animation-duration: 70s; animation-direction: reverse; }
+/* cloud.png: 2026-08-10p, Ofir supplied a clean asset (848x375, real alpha transparency, no
+   screenshot-crop keying artifacts) to replace the earlier cloud-sprite.png screenshot crop.
+   Ratio (~2.26:1) is close enough to the old sprite's (~2.24:1) that no width/scale retuning
+   was needed, same .cloud-shape sizing rules below still apply. */
+.cloud-shape { flex: none; height: auto; display: block; }
+.hero-strip__clouds-track--back .cloud-shape { width: calc(2.75rem * var(--strip-scale)); opacity: 0.55; }
+.hero-strip__clouds-track--front .cloud-shape { width: calc(5rem * var(--strip-scale)); opacity: 0.9; }
+
+/* 2026-08-10o: reverted to the track-level drift as the main motion (2026-08-10n's fully
+   per-cloud independent animation read as "everyone slowed down" to Ofir, the ±2.5rem wobble
+   over similar durations was a much smaller distance per second than the old full-row -50%
+   sweep, even though the numbers "looked" comparable). Per Ofir: most clouds should look
+   exactly like the original shared speed above, only a couple should drift very slightly
+   faster/slower than the pack. Solved by layering a *small* extra animation on just a few
+   .cloud-drift wrappers, transforms compose, so the track's own translateX still carries
+   every cloud at the original pace, and the couple of wobbling ones just gain/lose a hair
+   relative to their neighbors instead of getting their own independent full-speed drift. */
+.cloud-drift { flex: none; display: block; }
+.cloud-drift:nth-child(8n+1) .cloud-shape { transform: translateY(0.3rem); }
+.cloud-drift:nth-child(8n+2) .cloud-shape { transform: scale(1.35) translateY(-0.4rem); }
+.cloud-drift:nth-child(8n+3) { margin-left: -0.75rem; }
+.cloud-drift:nth-child(8n+3) .cloud-shape { transform: translateY(0.2rem); }
+.cloud-drift:nth-child(8n+4) .cloud-shape { transform: scale(0.68) translateY(-0.3rem); }
+.cloud-drift:nth-child(8n+5) .cloud-shape { transform: translateY(-0.2rem); }
+.cloud-drift:nth-child(8n+6) { margin-left: -1.25rem; }
+.cloud-drift:nth-child(8n+6) .cloud-shape { transform: scale(1.15) translateY(0.4rem); }
+.cloud-drift:nth-child(8n+7) .cloud-shape { transform: translateY(-0.3rem); }
+.cloud-drift:nth-child(8n) .cloud-shape { transform: translateY(0.25rem); }
+
+/* only these three of the sixteen per track get the extra wobble, "some", not "most" */
+.cloud-drift:nth-child(8n+3), .cloud-drift:nth-child(8n+7) { animation: cloudWobble 58s ease-in-out infinite; }
+.cloud-drift:nth-child(8n+6) { animation: cloudWobble 74s ease-in-out infinite reverse; }
+@keyframes cloudWobble {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-0.8rem); }
+}
+
+@keyframes cloudDrift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.conveyor-track {
+  position: absolute;
+  left: 0; bottom: 0;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  gap: calc(2.5rem * var(--strip-scale));
+  width: max-content;
+  animation: conveyorScroll 34s linear infinite;
+  animation-delay: 2.1s;
+}
+@media (min-width: 640px) { .conveyor-track { gap: calc(3rem * var(--strip-scale)); } }
+@media (min-width: 1024px) { .conveyor-track { gap: calc(3.5rem * var(--strip-scale)); } }
+/* fixed rem (not percentage): a flex item's percentage height didn't reliably resolve against
+   the container here. Sized 50% bigger than the previous pass per Ofir's direct call, and
+   anchored lower (smaller margin-bottom) so they sit closer to the true bottom edge. */
+.conveyor-card {
+  flex: none;
+  height: calc(13.42rem * var(--strip-scale));
+  aspect-ratio: 780 / 1630;
+  margin-bottom: calc(-0.61rem * var(--strip-scale));
+  overflow: hidden;
+}
+@media (min-width: 640px) { .conveyor-card { height: calc(16.34rem * var(--strip-scale)); margin-bottom: calc(-0.7425rem * var(--strip-scale)); } }
+@media (min-width: 1024px) { .conveyor-card { height: calc(19.97rem * var(--strip-scale)); margin-bottom: calc(-0.9075rem * var(--strip-scale)); } }
+/* the "finish" exports have a taller native canvas (780x1724) than the "loader" ones
+   (780x1630), forcing them into the loader ratio squeezed/mis-anchored their content toward
+   the top instead of sitting bottom-anchored like every other card. Give them their own ratio
+   so each family scales correctly; height/margin-bottom (the bottom anchor line) stay shared. */
+.conveyor-card[data-lottie$="-finish.json"] { aspect-ratio: 780 / 1724; }
+/* belt-and-suspenders: force the lottie-injected svg to actually fill its container instead of
+   trusting whatever inline width/height it sets on its own */
+.conveyor-card svg { display: block; width: 100% !important; height: 100% !important; }
+/* fixing the aspect ratio alone didn't fix "stuck to top": checked the actual source files,
+   the finish characters are drawn centered in their own canvas (~50% down) while the loader
+   characters are drawn low (~72% down), a real ~22% difference in the source art itself, not
+   a scaling bug. Shifting the finish svg down by that same amount and relying on the card's
+   own overflow:hidden (added above) to crop the resulting excess compensates for it. */
+/* finish icons also read smaller than the loaders, per Ofir: kept on the svg (not the card)
+   since the card carries the .land entrance animation, whose held end-state transform silently
+   wins over any plain (non-!important) rule on that same element, animations outrank normal
+   author rules in the cascade regardless of specificity. scale(1.5) confirmed good by Ofir
+   2026-08-10, kept as the new baseline (was 1.177 before that comparison test). Tried splitting
+   this into 6 per-file rules for DevTools tuning, Ofir saw it break visually, reverted back to
+   one shared rule, don't reintroduce the split without checking why first. */
+.conveyor-card[data-lottie$="-finish.json"] svg { transform: translateY(27%) scale(1.5) !important; }
+/* car and loan-request raised 2 points (27% -> 25%), rest stay on the shared rule above. */
+.conveyor-card[data-lottie="car-finish.json"] svg { transform: translateY(25%) scale(1.5) !important; }
+.conveyor-card[data-lottie="loan-request-finish.json"] svg { transform: translateY(25%) scale(1.5) !important; }
+
+/* loader per-file nudges from Ofir's list: on the svg (not the card) for the same .land
+   animation-precedence reason as the finish overrides above. debt-coverage-loader not listed,
+   no change. */
+.conveyor-card[data-lottie="car-loader.json"] svg { transform: translateY(1%) !important; }
+.conveyor-card[data-lottie="loan-request-loader.json"] svg { transform: translateY(3%) !important; }
+.conveyor-card[data-lottie="medical-loader.json"] svg { transform: translateY(3%) !important; }
+.conveyor-card[data-lottie="studies-loader.json"] svg { transform: translateY(1%) !important; }
+.conveyor-card[data-lottie="vacation-loader.json"] svg { transform: translateY(1%) scale(1.05) !important; }
+
+.conveyor-card.land {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: fadeUp 700ms var(--ease-soft) both;
+}
+@keyframes conveyorScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Purpose-based happy-flow strip (Strategy), draft 2026-08-13: NavItem molecule ported verbatim
+   from Design-System/index.html's icon-showcase sidebar (same My DSM component, see B46), reused
+   here as a 6-loan-purpose menu next to an image filmstrip (see #loanPurposeStrip's script for the
+   swap logic). All 5 slots (each wrapped in a [data-slot-media] box) vary per purpose, corrected
+   same day from an earlier assumption that slots 3-4 (Offers/Summary) were generic, they actually
+   name the loan purpose directly in their own copy. Real Vacation screens are wired in as a first
+   pass, Ofir's own words: "temporary, now that I've seen how it came out I'll prepare higher
+   quality images." The other 5 purposes fall back to a "Coming soon." placeholder (border-dashed)
+   across all 5 slots until their own 5-screen sets exist. No click-to-expand interaction yet
+   (still an open decision). Menu icons (2026-08-14): real Lucide glyphs per Ofir's own picks, not
+   placeholders any more - martini (Vacation), car (Car), pill (Medical, no teacup exists in Lucide
+   so this was his stated fallback), book (Studies), coins (Debt Coverage, closest available to "a
+   bag of coins," Lucide has no literal money-bag icon), shopping-bag (Shopping). Path data pulled
+   programmatically from the lucide-static package, not hand-drawn or recalled. */
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  inline-size: 100%;
+  min-block-size: 2.75rem;
+  padding-block: 0.5rem;
+  padding-inline: 0.75rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-plain);
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  text-align: start;
+  white-space: nowrap;
+  background: transparent;
+  color: var(--color-secondary);
+  border: none;
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
+}
+.nav-item__icon { flex: none; width: 1.25rem; height: 1.25rem; color: var(--color-muted); }
+.nav-item__label { flex: 1 1 auto; }
+.nav-item:hover { background-color: var(--color-surface-alt); color: var(--color-default); }
+.nav-item:hover .nav-item__icon { color: var(--color-default); }
+.nav-item[aria-current="page"], .nav-item.is-active {
+  background-color: var(--color-surface-pressed);
+  color: var(--color-default);
+  font-weight: 600;
+}
+.nav-item[aria-current="page"] .nav-item__icon, .nav-item.is-active .nav-item__icon { color: var(--color-primary); }
+.nav-item[aria-current="page"]::before, .nav-item.is-active::before {
+  content: ""; position: absolute; inset-inline-start: 0; inset-block: 0.375rem;
+  inline-size: 0.1875rem; border-radius: var(--radius-sm); background-color: var(--color-primary);
+}
+.nav-item:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-focus);
+}
+
+/* HERO TINT (B73, 2026-09-01). EXPERIMENT, not settled. Same two-layer structure as Internal's
+   .hero-grain, one real adaptation: the wash is pink instead of neutral grey, taken from the
+   product's own palette rather than from the site's.
+   Two layers, and the split is not tidiness. The grain is the same 384px tile Internal uses,
+   copied here as assets/hero_grain.webp: black speckle at 0 to 6 alpha, so it has no colour of its
+   own and reads as whatever sits beneath it. That is exactly why a pink grain needed no new export,
+   only a pink base. Tiled rather than stretched so the specks stay a fixed size and do not blur on
+   a wide monitor.
+   The wash is a CSS gradient rather than an exported image: computed per pixel at render, so it is
+   exact at any width and costs nothing. Its one real risk is banding across a long, very subtle
+   ramp, and the grain above it is what dithers that away, which is a second reason the two layers
+   belong together.
+   Vertical rather than Internal's diagonal, and it lands on white: a hero with a visible horizon
+   line behind the headline reads as a horizon. #fadbdb was chosen over #ffe7e6 because the lighter
+   one is roughly 24 units off white and simply vanishes once it starts fading.
+   Order is grain first then wash, because the first background-image in the list paints on top.
+   Sits on the header's padding box, so the texture ends exactly where the hero ends, which is why
+   "the challenge" lost its border-t: the edge of the texture is now the separator and two
+   separators in the same place read as a mistake. */
+/* Peak moved off the top edge, 2026-09-01. In the first version the deepest pink sat at 0%, which
+   is behind the nav, an area with no content in it: the strongest colour on the page was landing
+   where the eye had nothing to read. Now the very top starts one step lighter and the full #fadbdb
+   lands at 26%, which is roughly where the H1 sits, so the colour peaks with the headline instead
+   of above it.
+   The trade being made: a ramp that darkens and then lightens can produce a soft horizontal band
+   at the turn. At this saturation, with the grain dithering it, it should not read as a line, but
+   that is the thing to look for if this ever feels wrong.
+   ROLLBACK (peak at the top edge): linear-gradient(to bottom, #fadbdb 0%, #fdf3f2 55%, #ffffff 100%) */
+/* Pass 3, 2026-09-01: less pink, more texture.
+   TONE. Desaturated, NOT darkened, and the distinction is the point. This wash sits around 92
+   percent lightness already, so taking lightness down again would make it vanish rather than soften
+   it. What reads as "too much pink" over an area this large is the gap between the red channel and
+   the other two: at #fadbdb that gap was 31, at #fce4e4 it was 24, and it is now 19 at the peak
+   with every other stop scaled by the same proportion. Adjust the CHANNEL GAP here, not the
+   brightness.
+   ROLLBACK (more saturated): #fdf0f0 0%, #fce4e4 26%, #fef7f6 62%, #ffffff 100%
+   GRAIN. The tile is Internal's, unmodified: alpha 0 to 6, so under 2.4 percent. It was briefly
+   re-encoded at 2.2x alpha ON TOP of the second layer below, which stacked to roughly 4.4x the
+   original and was far too heavy. Keep the tile as-is; the second layer alone is the whole effect.
+   If the grain ever needs retuning, change the number of layers or their sizes before touching the
+   tile's alpha, since alpha and layer count multiply rather than add.
+   A SECOND copy of the same tile is drawn at 768px, double size, and offset by half a tile. That
+      is what makes it read as COARSE rather than merely darker: the scaled-up copy has visibly
+      bigger specks, and because the two layers repeat on different intervals their interference
+      pattern is much longer than either one, so the tiling stops being detectable.
+   Order is fine grain, coarse grain, wash, because the first background-image in the list paints on
+   top. Sizes and positions are positional lists and must stay in that same order.
+   ROLLBACK (less grain): delete the second url(), the second `repeat`, `768px 768px,` and
+   `192px 192px,` to go back to a single fine layer.
+   ROLLBACK (pass 2): one grain layer at 384px over
+   linear-gradient(to bottom, #fcebeb 0%, #fadbdb 26%, #fdf3f2 62%, #ffffff 100%) */
+/* Taboola wash: the hue of Taboola navy #002042 (211deg), NOT a white-mix of it. Mixing that navy
+   with white gives #e8ebee-ish greys, because a near-black blue has almost no colour left to carry
+   up to 90%+ lightness. Same hue at high saturation and high lightness reads as blue.
+   ROLLBACK (Digital Loans pink): #fdf3f3 0%, #fce9e9 26%, #fefaf9 62%, #ffffff 100% */
+.hero-tint {
+  background-image: url("assets/hero_grain.webp"), url("assets/hero_grain.webp"), linear-gradient(to bottom, #eef6fe 0%, #e0eefd 26%, #f6faff 62%, #ffffff 100%);
+  background-repeat: repeat, repeat, no-repeat;
+  background-size: 384px 384px, 768px 768px, 100% 100%;
+  background-position: 0 0, 192px 192px, center;
+}
+
+/* HERO SPLIT (B73, 2026-09-01). Ported from ../Internal-Systems/index.html, which is the reference
+   implementation for this pattern. That file carries the full reasoning on every value here: why
+   drop-shadow and not box-shadow (this is a transparent PNG, box-shadow would draw a grey rectangle
+   behind a device-shaped hole), why the offset is large while the blur stays tight (a big offset
+   with a big blur reads as ambient glow, a big offset with a tight blur reads as a silhouette
+   projected by a light in front), and why the frame is pinned right at 92 percent (the freed space
+   opens on the LEFT, which is the side the shadow is thrown toward).
+   Two deliberate differences on this page:
+   1. aspect-ratio is this composite's own 1422/833, not Internal's 1422/869.
+   2. The media is TWO devices, a laptop with a phone in front of it. A filter follows the MERGED
+      alpha silhouette, so the phone cannot cast a shadow onto the laptop the way a baked Figma
+      shadow could. Ofir's explicit call is to try the CSS shadow anyway rather than bake one, so
+      the values below are Internal's verbatim and are the starting point, not a settled result. */
+.hero-split { display: grid; gap: 2.5rem; }
+@media (min-width: 1024px) { .hero-split { grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; } }
+.hero-device-frame { aspect-ratio: 1400 / 1064; max-inline-size: 92%; margin-inline-start: auto; }
+.hero-device-frame img {
+  width: 100%; height: 100%; object-fit: cover; object-position: left center;
+  filter: drop-shadow(-10px 6px 9px rgb(0 0 0 / 0.10)) drop-shadow(-96px 34px 44px rgb(0 0 0 / 0.32));
+}
+/* Clearance under the device so the metrics card cannot paint over the shadow. A filter takes no
+   space in layout, so an opaque card below would cut the shadow off in a hard straight line.
+   --shadow-reach is how far the cast shadow actually extends: 34px offset plus 44px blur is 78px,
+   rounded to 5rem. It MUST move together with the filter above, which is why it is declared as a
+   custom property here rather than as a loose margin value. */
+.hero-metrics { --shadow-reach: 5rem; margin-block-start: calc(var(--shadow-reach) + 1.5rem); }
+/* Mobile: the same fixed-pixel problem documented on Internal. Pinning right is meaningless once
+   the column is the whole screen, and a -96px offset that is 7 percent of a desktop layout is a
+   quarter of a phone, so a projected silhouette turns into a smear. --shadow-reach comes down with
+   it, since it exists only to reserve clearance for that shadow. */
+@media (max-width: 1023.98px) {
+  .hero-device-frame { max-inline-size: 100%; margin-inline: auto; }
+  .hero-device-frame img { filter: drop-shadow(-5px 4px 6px rgb(0 0 0 / 0.10)) drop-shadow(-32px 14px 20px rgb(0 0 0 / 0.30)); }
+  .hero-metrics { --shadow-reach: 2.25rem; }
+}
+
+/* STEP CARD (B73, 2026-09-01). One of TWO card types on this site. Read this before adding a card
+   to any case study, and before assuming a class name means the same thing on another page.
+
+   THE TWO TYPES, AND THE RULE THAT PICKS ONE.
+   .ghost-card, live on ../Internal-Systems/index.html: a large ghosted numeral in the bottom corner,
+     with a reserved bottom band so text never reaches it. That page is finished and is NOT changing.
+   .step-card, this file: a small numeral on the reading line above the heading. Different component,
+     different name, on purpose.
+   THE RULE IS CARD WIDTH. A narrow card has its dead space at the BOTTOM, which is exactly what a
+   corner numeral fills. A wide card has no dead bottom, it has a wide empty stripe, and the same
+   treatment leaves a small mark stranded at one end of it. Right component, wrong axis.
+   IN PRACTICE, media orientation decides the width, so Ofir's own shorthand works: landscape media
+   (Internal, and Design System when it is done) pushes cards into a row or across the full width, so
+   they are NARROW and take .ghost-card; portrait phone media (this page, and Credit Cards) puts
+   cards in a column beside the phone, so they are WIDE and take .step-card. Treat desktop-versus-
+   mobile as the trigger but WIDTH as the reason: a mobile case study whose cards ever sit in a row
+   below the media still wants the ghost, and the width rule gives that answer while the
+   desktop-mobile shorthand does not.
+   A second, harder constraint on this page: the phone beside these cards already fills the viewport
+   on a 14 inch MacBook, so it cannot grow, which means the text column has to come DOWN to meet it.
+   The ghost variant reserved about 100px of bottom band per card and this section cannot afford it.
+   NOTE for anyone worried about legibility: the ghost numeral does not sit behind readable text on
+   Internal either. It reserves its own clearance and the copy is lifted above it, so they never
+   overlap. That objection applies to a version nobody built.
+
+   HOW THE STEP CARD IS DRAWN, and every decision here was argued down from something louder.
+   A NUMBER IS A MARKER, NOT A HEADING. It sits BELOW the heading in the visual hierarchy and must
+   never be the first thing the eye lands on, because the card exists to carry a sentence of story.
+   Three treatments were built and rejected on exactly this ground: the corner ghost at 5rem, variant
+   F run in on the heading baseline at 2.75rem, and variant E at its own 2.25rem, which is nearly
+   double the 1.25rem heading. That size is right on a demo page where the numeral IS the subject.
+   TYPE COMES FROM THE SITE, NEVER FROM ../../card-explorations.html. That file carries its own scale
+   for a standalone demo. The numeral uses .type-label-sm, this site's real eyebrow and meta class,
+   0.75rem at weight 500, which is also what this page used for these numbers before B73. Find the
+   site class that already matches; do not copy a font-size or font-weight out of the explorations.
+   COLOUR is --color-gold-700 (#a87a1e), not the --color-gold-500 the explorations file specifies.
+   Measured on the sage card at #ecfdf5: gold-500 is 2.08:1, gold-700 is 3.65:1. Gold-500 held at
+   2.25rem because the letterforms were large and vanished at 0.75rem. Colour has to move with size.
+   Radius is --radius-lg (16px), the site's container standard, not the explorations file's 20px. No
+   border and no shadow: the surface is the container.
+   SURFACE MODIFIERS use the same names Internal already established, -bone and -white, so both card
+   types share one palette. On Internal the white variant draws its hairline as an inset box-shadow
+   rather than a border, so every variant keeps identical geometry; match that if it is added here.
+
+   ROLLBACK (the ghost variant, if this page ever needs it). Restore this block AND move the numeral
+   span out of its place above the heading to the end of the card:
+   .step-card { --ghost-size: 5rem; --ghost-inset: 1rem; position: relative;
+     border-radius: var(--radius-lg); background: var(--color-green-50);
+     padding: 2rem 1.75rem; padding-block-end: calc(var(--ghost-size) * 0.8 + var(--ghost-inset) * 2); }
+   .step-card is greater-than :not(.step-card__num) { position: relative; z-index: 1; }
+   .step-card__num { position: absolute; inset-inline-start: 1.75rem; inset-block-end: var(--ghost-inset);
+     z-index: 0; font-family: var(--font-brand); font-weight: 700; font-size: var(--ghost-size);
+     line-height: 0.8; color: var(--color-primary); opacity: 0.12; } */
+.step-card {
+  border-radius: var(--radius-lg);
+  background: var(--color-green-50);
+  padding: 1.75rem;
+}
+.step-card__num { display: block; color: var(--color-gold-700); margin-block-end: 0.5rem; }
+/* Symbol marker, ported from ../Design-System/index.html: used where a set is facets, not a sequence. */
+.step-card__mark { display: block; color: var(--color-button); margin-block-end: 0.5rem; }
+
+/* PARTNER DEMO ("one system, many brands"). One widget, one structure; each tab swaps ONLY the
+   tokens below. Everything is sized in cqw against the phone export (576px wide), so the overlay
+   scales with the image: a value of N px on the 576 canvas is N/5.76 cqw. Geometry is measured from
+   Ofir's own state-calm-few export so the live widget sits where his static one does.
+   Fonts are Ofir's call: DM Sans (partner A, Hebrew too) and Inter (partner B). DM Sans has no Hebrew
+   glyphs, so Hebrew falls back to the system font inside the same stack. */
+.pd-screen { position: relative; container-type: inline-size; width: 100%; max-width: 21rem; margin-inline: auto; aspect-ratio: 576 / 1206;
+  --w-font: "DM Sans", sans-serif; --w-surface: rgba(58, 42, 45, 0.62); --w-ink: #ffffff; --w-ink-soft: rgba(255,255,255,0.72);
+  --w-accent: #f28b5b; --w-chip-r: 999px; --w-card-r: 3.6cqw; --w-edge: rgba(255,255,255,0.14); }
+.pd-screen[data-theme="b"] { --w-font: "Inter", sans-serif; --w-surface: rgba(18, 24, 32, 0.72); --w-accent: #4f8bff; --w-chip-r: 1.6cqw; --w-card-r: 1.6cqw; --w-edge: rgba(255,255,255,0.08); }
+.pd-screen[data-theme="light"] { --w-surface: rgba(255, 255, 255, 0.74); --w-ink: #1d2126; --w-ink-soft: rgba(29,33,38,0.66); --w-edge: rgba(0,0,0,0.06); }
+.pd-screen > img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.pd-widgets { position: absolute; left: 6.94%; right: 6.94%; bottom: 8.96%; display: flex; flex-direction: column; gap: 3.47cqw; font-family: var(--w-font); color: var(--w-ink); }
+.pd-chips { display: flex; gap: 3.1cqw; }
+.pd-chip, .pd-card { background: var(--w-surface); box-shadow: inset 0 0 0 1px var(--w-edge); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  transition: border-radius 320ms var(--ease-soft), background-color 320ms var(--ease-soft), color 320ms var(--ease-soft); }
+.pd-chip { display: flex; align-items: center; gap: 2.4cqw; height: 10.76cqw; padding-inline: 3cqw 4.2cqw; border-radius: var(--w-chip-r); font-size: 4cqw; font-weight: 500; white-space: nowrap; }
+.pd-chip--grow { flex: 1 1 auto; min-inline-size: 0; }
+.pd-chip b { font-weight: 700; }
+.pd-chip .pd-soft { color: var(--w-ink-soft); font-weight: 400; }
+.pd-dot { flex: none; width: 5.6cqw; height: 5.6cqw; border-radius: 999px; display: grid; place-items: center; font-size: 3.4cqw; font-weight: 700; color: #fff; background: var(--w-accent); transition: background-color 320ms var(--ease-soft); }
+.pd-sun { flex: none; width: 5.6cqw; height: 5.6cqw; }
+.pd-card { padding: 4.2cqw; border-radius: var(--w-card-r); }
+.pd-card h4 { margin: 0; font-size: 3.8cqw; font-weight: 700; line-height: 1.25; }
+.pd-card p { margin: 0.8cqw 0 0; font-size: 3.7cqw; color: var(--w-ink-soft); }
+.pd-card-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 4cqw; font-size: 3.6cqw; color: var(--w-ink-soft); }
+.pd-cta { display: inline-flex; align-items: center; gap: 1.6cqw; font-size: 3.9cqw; font-weight: 600; color: var(--w-ink); }
+.pd-cta i { display: grid; place-items: center; width: 5.4cqw; height: 5.4cqw; border-radius: 1.4cqw; background: var(--w-accent); color: #fff; font-style: normal; transition: background-color 320ms var(--ease-soft); }
+.pd-cta i svg { width: 3.6cqw; height: 3.6cqw; }
+.pd-screen[dir="rtl"] .pd-cta i svg { transform: scaleX(-1); }
+.pd-note { min-height: 3.5rem; }
+
+/* FLOW WIREFRAMES (Part 2.2). Lo-fi app screens drawn in HTML inside Ofir's phone frame. The app
+   layer sits exactly on the frame's screen rect, measured from the export: x 15..560, y 15..1191 of
+   576x1206, corner radius about 58px. Everything is cqw of the phone width, like .pd-screen. */
+.fl-phone { position: relative; container-type: inline-size; aspect-ratio: 576 / 1206; width: 100%; font-family: "DM Sans", sans-serif; }
+.fl-phone > img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.fl-app { position: absolute; left: 2.6%; right: 2.78%; top: 1.24%; bottom: 1.24%; border-radius: 10cqw; overflow: hidden; background: #ffffff; color: #1d2126; display: flex; flex-direction: column; }
+.fl-status { display: flex; justify-content: space-between; padding: 3.6cqw 7cqw 1cqw; font-size: 3.2cqw; font-weight: 500; color: #1d2126; }
+/* Status bar copied from Taboola's mockup: wifi, signal, battery, then the time, all on the right. */
+.fl-si { display: inline-flex; align-items: center; gap: 1.6cqw; }
+.fl-si svg { width: 3.2cqw; height: 3.2cqw; }
+.fl-bar { display: flex; align-items: center; justify-content: space-between; gap: 2cqw; padding: 2.4cqw 5cqw; font-size: 3.4cqw; font-weight: 500; }
+.fl-bar--line { border-bottom: 1px solid #e6e8ea; }
+.fl-bar--foot { margin-top: auto; border-top: 1px solid #e6e8ea; padding-bottom: 6cqw; background: #fff; }
+.fl-x { display: grid; place-items: center; width: 7cqw; height: 7cqw; border-radius: 999px; background: #f1f2f3; font-size: 3.6cqw; }
+.fl-body { flex: 1 1 auto; overflow: hidden; padding: 3cqw 5cqw; }
+.fl-h1 { font-size: 5.4cqw; font-weight: 700; line-height: 1.2; margin: 0; }
+.fl-meta { font-size: 3cqw; color: #6b7178; margin: 1cqw 0 0; }
+.fl-row { display: flex; gap: 3cqw; align-items: flex-start; padding: 2.6cqw 0; border-top: 1px solid #eef0f1; }
+.fl-row:first-of-type { border-top: 0; }
+.fl-thumb { flex: none; width: 12cqw; height: 12cqw; border-radius: 2cqw; background: #e4e7ea; }
+.fl-row b { display: block; font-size: 3.7cqw; line-height: 1.25; font-weight: 700; }
+.fl-row span { display: block; font-size: 2.9cqw; color: #6b7178; margin-top: 0.8cqw; }
+.fl-img { height: 32cqw; border-radius: 3cqw; background: #e4e7ea; margin: 3cqw 0; }
+.fl-line { height: 2.2cqw; border-radius: 1cqw; background: #e9ebed; margin-top: 2.2cqw; }
+.fl-line.s { width: 62%; }
+.fl-btn { display: flex; align-items: center; justify-content: center; gap: 1.6cqw; height: 11cqw; border-radius: 999px; background: #f28b5b; color: #fff; font-size: 3.8cqw; font-weight: 700; }
+.fl-btn--ghost { background: #f1f2f3; color: #1d2126; }
+.fl-link { font-size: 3.4cqw; font-weight: 700; color: #1d2126; }
+.fl-progress { height: 0.9cqw; background: #eef0f1; border-radius: 1cqw; overflow: hidden; margin: 0 5cqw; }
+.fl-progress i { display: block; height: 100%; width: 30%; background: #f28b5b; }
+.fl-check { display: grid; place-items: center; width: 14cqw; height: 14cqw; border-radius: 999px; background: #fde9df; color: #f28b5b; font-size: 7cqw; font-weight: 700; margin: 6cqw auto 3cqw; }
+.fl-center { text-align: center; }
+.fl-strip { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 1rem; }
+.fl-step { flex: none; width: 17rem; scroll-snap-align: start; margin: 0; }
+.fl-step figcaption { margin-top: 0.75rem; }
+
+/* HIGH-FIDELITY SCREENS (Part 2.3), built in HTML from Ofir's wireframes 02 and 05, Partner A tokens
+   (DM Sans, accent #f28b5b). Summary stays WHITE: it is a reading surface and colour arrives only with
+   the content. Done screen is the one that changes colour, because it is a moment, not a page.
+   No licensed photos, so category tiles carry colour + a DSM icon instead of images. */
+.hf { --acc: #f28b5b; --ink: #1d2126; --soft: #6b7178; --line: #eef0f1; }
+.hf .fl-app { background: #fffdfb; color: var(--ink); }
+.hf-top { display: flex; align-items: center; justify-content: space-between; padding: 2cqw 5cqw 0; font-size: 3cqw; color: var(--soft); }
+.hf-x { display: grid; place-items: center; width: 7.5cqw; height: 7.5cqw; border-radius: 999px; background: #f3f1ef; color: var(--ink); font-size: 4cqw; }
+.hf-h1 { margin: 2.5cqw 5cqw 0; font-size: 6.4cqw; font-weight: 700; line-height: 1.12; letter-spacing: -0.01em; }
+.hf-sub { margin: 1.2cqw 5cqw 0; font-size: 3.1cqw; color: var(--soft); }
+.hf-topics { display: flex; flex-wrap: wrap; gap: 1.4cqw; margin: 3cqw 5cqw 0; font-size: 2.8cqw; }
+.hf-topics span { padding: 0.9cqw 2.4cqw; border-radius: 999px; background: #f3f1ef; }
+.hf-topics span.on { background: #fde9df; color: #b85a2f; font-weight: 500; }
+.hf-lead { margin: 3.4cqw 5cqw 0; border-radius: 4cqw; overflow: hidden; background: #fff; box-shadow: 0 0.4cqw 2cqw rgba(29,33,38,0.08); }
+.hf-lead .hf-tile { height: 26cqw; border-radius: 0; }
+.hf-lead-b { padding: 3cqw 3.6cqw 3.4cqw; }
+.hf-lead-b b { display: block; font-size: 4.4cqw; line-height: 1.2; }
+.hf-meta { display: block; font-size: 2.7cqw; color: var(--soft); margin-top: 1cqw; }
+.hf-list { margin: 1.5cqw 5cqw 0; }
+.hf-row { display: flex; align-items: center; gap: 3cqw; padding: 2.6cqw 0; border-top: 1px solid var(--line); }
+.hf-row:first-child { border-top: 0; }
+.hf-num { flex: none; width: 4.5cqw; font-size: 3cqw; font-weight: 700; color: #b9bdc1; }
+.hf-row > div { flex: 1 1 auto; min-width: 0; }
+.hf-row b { display: block; font-size: 3.6cqw; line-height: 1.25; }
+.hf-tile { flex: none; display: grid; place-items: center; width: 11cqw; height: 11cqw; border-radius: 2.4cqw; }
+.hf-ic { width: 5.2cqw; height: 5.2cqw; }
+.hf-lead .hf-ic { width: 10cqw; height: 10cqw; }
+.t-eco { background: #e6eefc; color: #3a63c8; } .t-city { background: #e5f4ea; color: #2f8a57; } .t-wx { background: #fff1d1; color: #b77d00; }
+.t-tech { background: #efe8ff; color: #6b4bc8; } .t-spon { background: #fde9df; color: #d06a3a; } .t-sport { background: #ffe7ea; color: #c8435a; }
+.hf-spon { display: inline-block; margin-top: 1cqw; padding: 0.3cqw 1.6cqw; border-radius: 999px; background: #f3f1ef; font-size: 2.4cqw; font-weight: 500; color: var(--soft); }
+.hf-foot { position: absolute; left: 0; right: 0; bottom: 0; padding: 8cqw 5cqw 6.5cqw; background: linear-gradient(to top, #fffdfb 70%, rgba(255,253,251,0)); }
+.hf-btn { display: flex; align-items: center; justify-content: center; gap: 1.6cqw; height: 12cqw; border-radius: 999px; background: var(--acc); color: #fff; font-size: 4cqw; font-weight: 700; box-shadow: 0 1cqw 3cqw rgba(242,139,91,0.35); }
+.hf-btn small { font-weight: 500; opacity: 0.85; font-size: 3.2cqw; }
+.hf-btn--ghost { background: #f3f1ef; color: var(--ink); box-shadow: none; }
+/* done screen */
+.hf-done .fl-app { background: linear-gradient(to bottom, #fde2d3 0%, #feefe6 34%, #fffdfb 56%); }
+.hf-hero { position: relative; text-align: center; padding-top: 7cqw; }
+.hf-check { position: relative; z-index: 1; display: grid; place-items: center; width: 19cqw; height: 19cqw; margin: 0 auto; border-radius: 999px; background: var(--acc); color: #fff; box-shadow: 0 1.4cqw 4cqw rgba(242,139,91,0.45); }
+.hf-check svg { width: 10cqw; height: 10cqw; }
+.hf-burst { position: absolute; left: 50%; top: calc(7cqw + 9.5cqw); width: 0; height: 0; }
+.hf-burst i { position: absolute; width: 2cqw; height: 2cqw; border-radius: 999px; background: var(--c, #f28b5b); opacity: 0; }
+.in-view .hf-check { animation: hf-pop 700ms cubic-bezier(0.2, 0.9, 0.3, 1.3) 200ms both; }
+.in-view .hf-burst i { animation: hf-fly 900ms cubic-bezier(0.15, 0.7, 0.3, 1) 350ms both; }
+@keyframes hf-pop { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes hf-fly { 0% { transform: translate(0,0) scale(0.6); opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(var(--x), var(--y)) scale(1); opacity: 0.9; } }
+@media (prefers-reduced-motion: reduce) { .in-view .hf-check, .in-view .hf-burst i { animation: none; } .hf-burst i { opacity: 0.9; transform: translate(var(--x), var(--y)); } }
+.hf-done .hf-h1 { margin-top: 4.5cqw; text-align: center; }
+.hf-done .hf-sub { text-align: center; }
+.hf-next { display: table; margin: 3cqw auto 0; padding: 1.2cqw 3cqw; border-radius: 999px; background: rgba(255,255,255,0.8); font-size: 2.9cqw; font-weight: 500; }
+.hf-sec { margin: 6cqw 5cqw 0; font-size: 3.4cqw; font-weight: 700; }
+.hf-fb { display: flex; align-items: center; justify-content: space-between; gap: 2cqw; margin: 3.6cqw 5cqw 0; padding: 2.6cqw 3.2cqw; border-radius: 3cqw; background: #f6f4f2; font-size: 3cqw; }
+.hf-fb span:last-child { display: flex; gap: 1.4cqw; }
+.hf-fb em { font-style: normal; padding: 1cqw 2.2cqw; border-radius: 999px; background: #fff; font-weight: 500; font-size: 2.7cqw; }
+.hf-pair { display: grid; grid-template-columns: 1fr; gap: 3rem; }
+@media (min-width: 768px) { .hf-pair { grid-template-columns: 1fr 1fr; } }
+.hf-fig { margin: 0; }
+.hf-fig .fl-phone { max-width: 20rem; margin-inline: auto; }
+
+
+
+/* Surface modifier, named to match ../Internal-Systems/index.html's .ghost-card-bone so both card
+   types share one palette. MUST STAY AFTER .step-card: both are single-class selectors carrying
+   identical specificity, so source order alone decides which background wins. Moving this line up
+   would silently turn every bone card sage again. */
+.step-card-bone { background: var(--color-bone); }
+/* White plus a hairline, the third surface. The hairline is an INSET BOX-SHADOW rather than a
+   border, copied from ../Internal-Systems/index.html's .ghost-card-white: a border adds a real
+   layout box, so a bordered variant would be 2px taller and wider than its sage and bone siblings
+   and the three would not line up in a stack. An inset shadow costs no geometry. Same source-order
+   rule as the bone modifier above. */
+.step-card-white { background: var(--color-card); box-shadow: inset 0 0 0 1px var(--color-border-default); }
+
+/* STAT CARDS (B73, 2026-09-01). Ported verbatim from ../Internal-Systems/index.html, where this
+   pattern was designed and confirmed. Every comment below is that file's own reasoning, kept intact
+   because each paragraph records a decision that was argued and would otherwise be re-litigated.
+   The ONE thing to know before touching it: GOLD IS THE INK, NEVER THE PAPER. A full gold panel was
+   built there and rejected, because a large saturated warm field beside two dark green ones reads as
+   a different system rather than as the third member of a set. All three grounds stay dark and gold
+   appears only as numerals. */
+.stat-card { border-radius: var(--radius-lg); background: var(--color-primary); color: var(--color-on-primary); padding: 2.25rem 1.75rem 2rem; text-align: center; }
+.stat-card .stat-fig { font-family: var(--font-brand); font-weight: 700; font-size: 3rem; line-height: 1; letter-spacing: -0.02em; color: var(--color-gold-500); }
+.stat-card .stat-lbl { font-family: var(--font-brand); font-weight: 700; font-size: 1.125rem; line-height: 1.2; margin-block-start: 0.75rem; }
+.stat-card .stat-exp { font-size: 0.85rem; line-height: 1.5; color: var(--color-neutral-100); margin-block-start: 0.75rem; max-inline-size: 24ch; margin-inline: auto; }
+/* The wide payoff card. Was a full gold ground and it shouted: a large saturated warm field beside
+   two dark green ones reads as a different system rather than as the third member of a set, and it
+   spent the page's rarest colour on an area instead of on a mark.
+   The rule that replaced it, worth holding site-wide: GOLD IS THE INK, NEVER THE PAPER. All three
+   grounds are dark, gold appears only as numerals, and it stays precious precisely because it is
+   never spread across a surface.
+   The concrete grain is the same feTurbulence technique used on the figures, at deliberately
+   different settings. Low baseFrequency and five octaves give broad mottling rather than fine
+   grain, because what reads as brushed metal at 48px reads as dirt across a whole panel, and the
+   opacity is far lower for the same reason. Slightly anisotropic (0.012 vs 0.018) so the mottling
+   has a faint grain direction instead of looking like uniform static.
+   Measured on this ground: gold 8.60:1, neutral-100 16.59:1, and the metal gradient's darkest stop
+   still 4.75:1, so no part of the sweep drops below legible. */
+.stat-card-wide {
+  background-color: var(--color-near-black);
+  background-image: url("data:image/svg+xml,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='300'%20height='300'><filter%20id='c'><feTurbulence%20type='fractalNoise'%20baseFrequency='0.012%200.018'%20numOctaves='5'%20stitchTiles='stitch'/><feColorMatrix%20type='saturate'%20values='0'/></filter><rect%20width='300'%20height='300'%20filter='url(%23c)'%20opacity='0.5'/></svg>");
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  background-blend-mode: overlay;
+}
+.stat-card-wide .stat-fig { font-size: 3.75rem; }
+/* 24ch is right for a narrow card and wrong for one spanning two columns, where it wrapped into a
+   tall thin ribbon in the middle of a wide surface. Still capped rather than full width, so the
+   line length stays readable. */
+.stat-card-wide .stat-exp { max-inline-size: 44ch; }
+
+/* Metallic gold on the two dark cards' figures, with a one-time specular sweep (2026-08-30).
+   Gold is a material, not a hue, so a single hex always reads as mustard. What the eye recognises
+   is the tonal run from bronze up through a narrow near-white highlight and back down, which is
+   what the stops below are. The gradient is SYMMETRIC around 50% so that the two resting states,
+   before and after the sweep, are mirror images of each other rather than one being duller.
+   Background width was 250% and is now 160% (2026-08-30, Ofir: the effect read as too faint). At
+   250% only 40% of the ramp was ever visible at rest, so most of the tonal range designed into it
+   never reached the screen. At 160% that rises to about 62%, which brings both the bronze and the
+   near-white into view and is what makes it read as metal rather than as a tint.
+   The tradeoff, and it is a real change rather than a bug: the #fff6db highlight is now visible at
+   rest instead of being hidden until the animation. It sits near one side, the sweep carries it
+   across, and it settles near the other. The sweep is now a highlight travelling over a metal
+   surface rather than a flash appearing out of nowhere.
+   Every stop clears 3:1 against the card, which is the bar for text this size. The darkest,
+   #a9761f, measures 3.82:1, so even the instant the sweep is at its dimmest the number is legible.
+   The sweep runs ONCE. A looping shimmer is the established visual language of a loading skeleton,
+   which is the opposite of what a finished number should say.
+   Timing is tied to the existing reveal system rather than to page load: the card entrance is
+   650ms and the script staggers children by 160ms, so 1000ms and 1160ms put each sweep about a
+   third of a second after its own card has settled. Deep in the page, a load-triggered animation
+   would fire with nobody watching.
+   The @supports guard is not optional: background-clip:text needs color:transparent, so without
+   the guard any engine lacking it would render the numbers invisible rather than merely flat. */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  /* Two background layers, both clipped to the letterforms: fine grain on top, the metal ramp
+     underneath, blended with overlay. The grain is what turns a smooth ramp into a surface. It is
+     an inline SVG feTurbulence as a data URI, so there is no image file and nothing to download,
+     and it is desaturated to pure luminance noise so it only lightens and darkens the gold rather
+     than tinting it.
+     The grain layer is deliberately NOT animated. On real metal the surface stays put and the
+     highlight travels across it, so only the gradient's position moves during the sweep. Both
+     layers must still be listed in every background-position value, including the keyframes and
+     the reduced-motion rule, or the shorthand resets the one that is omitted. */
+  .stat-card .stat-fig {
+    background-image:
+      url("data:image/svg+xml,<svg%20xmlns='http://www.w3.org/2000/svg'%20width='100'%20height='100'><filter%20id='g'><feTurbulence%20type='fractalNoise'%20baseFrequency='0.85'%20numOctaves='3'%20stitchTiles='stitch'/><feColorMatrix%20type='saturate'%20values='0'/></filter><rect%20width='100'%20height='100'%20filter='url(%23g)'%20opacity='0.55'/></svg>"),
+      linear-gradient(100deg, #a9761f 0%, #d9a942 16%, #edc76f 30%, #d9a942 42%, #fff6db 50%, #d9a942 58%, #edc76f 70%, #d9a942 84%, #a9761f 100%);
+    background-size: 100px 100px, 160% 100%;
+    background-position: 0 0, 100% 0;
+    background-repeat: repeat, no-repeat;
+    background-blend-mode: overlay, normal;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .stat-card.in-view .stat-fig {
+    animation: gold-sweep 1200ms cubic-bezier(0.45, 0, 0.15, 1) 1000ms 1 forwards;
+  }
+  .stat-card.in-view:nth-child(2) .stat-fig { animation-delay: 1160ms; }
+  .stat-card.in-view:nth-child(3) .stat-fig { animation-delay: 1320ms; }
+}
+@keyframes gold-sweep {
+  from { background-position: 0 0, 100% 0; }
+  to   { background-position: 0 0, 0% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stat-card.in-view .stat-fig { animation: none; background-position: 0 0, 0% 0; }
+}
+
+
+/* HIGHLIGHTED PHRASE IN RUNNING COPY (B73, 2026-09-01), variant J from ../../card-explorations.html,
+   ported from ../Internal-Systems/index.html. A reader who only skims still collects the phrase that
+   carries the claim. ONE PER PARAGRAPH AND NO MORE: a third instance turns the device back into
+   ordinary coloured text. Note bone was tried for this on Internal and measurably failed, since it
+   is only about 7% saturated and disappears behind a single line where there is no area to register. */
+.copy-mark { background: var(--color-peach); color: var(--color-default); padding: 2px 0; }
+
+/* "what I learned" as variant J's nested card (2026-08-30): a tinted outer holding a white inner.
+   Radii are concentric per the DSM rule: inner --radius-md (8) plus 8px padding gives outer
+   --radius-lg (16). Note that the nesting barely reads at all, because the outer tint is only
+   about 6% off white and the mat is thin, so what the eye actually sees is one card with a soft
+   halo. That is fine and even useful, a white card on a white page needs some edge, but it does
+   mean the inner radius is a calculation nobody can see. Do not spend effort tuning it.
+   The two h3 sub-headings that used to sit here are gone, deliberately. The whole point of this
+   pattern is that the highlighted phrases do the skimming work a heading would otherwise do, so
+   keeping both would be the same emphasis twice. The section's own h2 is untouched.
+   The ghost went through two rejected versions, both worth recording so neither is retried.
+   First the asterisk as a TYPE GLYPH: Inter Tight's asterisk is a soft petalled shape, and at
+   10rem, clipped, it read as a leaf. The rule that a symbol survives at a glance holds for a quote
+   mark, whose silhouette is unmistakable, and does not transfer automatically to every glyph.
+   Then the DSM's Rotate Ccw icon, meaning hindsight, which reads as a refresh control instead.
+   It is now an asterisk drawn as geometry: three straight lines crossing at 60 degree steps, round
+   caps, heavy stroke. Drawing it rather than setting it is what makes it a real asterisk and not
+   whatever a given font decided an asterisk looks like, and six straight arms stay unmistakable
+   however much of the bottom is cut off, which is the property the petalled glyph lacked.
+   Two columns at full width, not one narrow card: the single column left roughly 900px of empty
+   page beside it, and the two lessons are genuinely parallel rather than sequential, so sitting
+   them side by side fills the width for a real reason rather than as a stretch. Each column lands
+   near 560px, which is still a readable measure. */
+/* HERO SPLIT, 2026-08-30, trialled on this page only before any rollout. Everything from the H1
+   down to and including the "where it stands today" card sits in the left half, the device sits in
+   the right half, so a reader sees the finished product before scrolling rather than at the bottom.
+   The frame carries NO crop: aspect-ratio matches the file's own 1422x869. An earlier export had
+   about 630px of empty shadow down its left side, and a 25% right-side crop was what pushed the
+   machine up to a useful size against that dead space. The re-export solved it at the source, the
+   device now runs edge to edge, and cropping the same 25% would start eating the machine itself.
+   The mechanism is still in place if it is ever wanted again: give the frame a narrower ratio than
+   the file's and object-fit cover trims the excess, with object-position pinned left so anything
+   removed can only come off the right edge. One number, no re-export.
+   The meta row drops to two columns here. Its four-column track (4rem 13rem 6rem 1fr) needs about
+   490px before Scope gets any width at all, which does not fit half a hero. */
+/* Hero grain, 2026-08-30. Ofir's own texture, and it is applied at FULL opacity on purpose: the 5%
+   is already baked into the file's alpha channel, whose maximum measures 13 of 255. Adding a
+   further 5% in CSS would have taken it to a quarter of a percent and erased it.
+   The source is a 2048x1536 PNG weighing 1862KB, which is unusable for something this faint. It is
+   uniform grain, measured: every row and column averages the same alpha to within a tenth, with
+   only 14 distinct values in the whole file. So a 384px square out of it is statistically identical
+   to the whole thing and simply repeats, which is 58KB instead of 1862. Noise is the worst case for
+   both lossless and lossy compression, so tiling rather than scaling is what makes it affordable.
+   It runs the full width because it sits on the header's padding box, and it ends exactly where the
+   hero ends, which is why the challenge section's own border-t was removed: the edge of the texture
+   is now the separator, and two separators in the same place would read as a mistake. */
+/* Two layers, and the split is a real saving rather than tidiness. Ofir's Figma frame is a tint
+   plus a hugely zoomed sky photo plus a separate noise layer, and he exported it flattened as
+   hero_bg2.png, 2048x1536 and 3432KB. Measured, the WEIGHT IS THE NOISE: at 1600px the flattened
+   file costs 70KB at q86 but only 13KB at q78, and the difference between those two is that q78
+   has wiped the grain out entirely. Any compression cheap enough is also destructive.
+   So the grain was separated back out. The sky layer is the flattened export with its grain
+   smoothed off, which leaves a pure diagonal gradient that compresses to 19KB, and the grain is
+   Ofir's own hero_bg.png as a 384px tile at 58KB. 77KB against 293KB for his composite at the
+   quality that keeps the texture.
+   The second benefit matters more than the bytes: in the flattened file the grain STRETCHES with
+   the image, so on a wide monitor the specks grow and blur. Tiled, the grain is a fixed size and
+   stays as crisp as it is in Figma at any viewport.
+   Order is grain first then sky, because the first background-image in the list paints on top.
+   The sky is stretched to 100% 100% rather than covered: it carries no recognisable subject, only
+   a light-to-dark diagonal, so stretching shows all of it at any hero proportion while cover would
+   crop unpredictably. No background-color: the tint is already inside the sky layer. */
+.hero-grain {
+  background-image: url("assets/hero_bg.webp"), url("assets/hero_bg_sky.webp");
+  background-repeat: repeat, no-repeat;
+  background-size: 384px 384px, 100% 100%;
+  background-position: 0 0, center;
+}
+.hero-split { display: grid; gap: 2.5rem; }
+@media (min-width: 1024px) { .hero-split { grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; } }
+/* overflow is visible, not hidden, on purpose. It was hidden while the frame carried a crop; with
+   no crop left, hiding it would only clip the drop shadow below.
+   drop-shadow rather than box-shadow: box-shadow draws around the element's rectangle, and this
+   image is a transparent PNG, so it would have produced a floating grey rectangle behind a
+   laptop-shaped hole. drop-shadow follows the alpha silhouette, so the shadow is the machine's own
+   shape. Two passes, a tight contact one and the real cast shadow. The lighting Ofir asked for is a lamp
+   aimed at the screen from the viewer's own side, so the offset is large and the BLUR IS SMALL
+   relative to it: a big offset with a big blur reads as ambient glow, while a big offset with a
+   tight blur reads as a silhouette being projected, which is what a screen blocking a direct light
+   actually does. That ratio is the whole effect, so move offset and blur together if it is retuned. Neutral black,
+   not the site's dark green: the green tint was tried and Ofir's call is that a plain shadow reads
+   better under a silver machine, where a coloured one starts looking like a glow. Ofir also
+   approved it spilling past the column edge, which it does by roughly 100px at its faintest. */
+/* 8% smaller and pinned to the right of its column, so the space that frees up opens on the LEFT,
+   which is the side the shadow is thrown toward. Shrinking it centred would have split that space
+   in two and given the shadow nowhere to land. */
+.hero-device-frame { aspect-ratio: 1400 / 1064; max-inline-size: 92%; margin-inline-start: auto; }
+/* Clearance under the device, so the metrics card cannot paint over the shadow. A filter takes no
+   space in layout, so the shadow simply falls behind whatever comes next, and an opaque card then
+   covers it in a hard straight line that reads as the shadow being cut off.
+   --shadow-reach is how far the cast shadow actually extends below the machine: the big pass is
+   34px of offset plus 44px of blur, so 78px, rounded to 5rem. It MUST be changed together with the
+   filter below, which is why it is declared here rather than as a loose margin value. */
+.hero-metrics { --shadow-reach: 5rem; margin-block-start: calc(var(--shadow-reach) + 1.5rem); }
+.hero-device-frame img {
+  width: 100%; height: 100%; object-fit: cover; object-position: left center;
+  filter: drop-shadow(-10px 6px 9px rgb(0 0 0 / 0.10)) drop-shadow(-96px 34px 44px rgb(0 0 0 / 0.32));
+}
+
+.learn-outer { background: var(--color-green-50); border-radius: var(--radius-lg); padding: 0.5rem; }
+/* --mark-size and --mark-bleed drive BOTH the asterisk and the space kept clear for it, so the two
+   cannot drift apart later. The card's bottom padding is derived: the mark's height minus the part
+   that bleeds off the edge, plus a little clearance. Text therefore cannot reach the mark at any
+   viewport width, which is the guarantee an absolutely positioned overlay could not give on its
+   own, and it is the same trick used for the marquee's tile shadow.
+   Space is reserved BELOW rather than beside on purpose: reserving a side gutter would have made
+   the right column narrower than the left, and two columns of prose at visibly different measures
+   read as a mistake. */
+.learn-inner {
+  --mark-size: 7.5rem;
+  --mark-bleed: 2rem;
+  position: relative; overflow: hidden;
+  background: var(--color-card); border-radius: var(--radius-md);
+  padding: 3rem 3.25rem calc(var(--mark-size) - var(--mark-bleed) + 1rem);
+}
+.learn-cols { display: grid; gap: 2rem; }
+/* Single-statement variant of the nested card: same body type as .learn-cols p, one column. */
+.learn-single { position: relative; z-index: 1; max-width: 48rem; font-size: 1.05rem; line-height: 1.75; color: var(--color-secondary); }
+@media (min-width: 1024px) { .learn-cols { grid-template-columns: 1fr 1fr; gap: 3.5rem; } }
+.learn-cols p { position: relative; z-index: 1; font-size: 1.05rem; line-height: 1.75; color: var(--color-secondary); }
+/* Sharp terminals, not round. Round was a reflex copied from the DSM's Lucide icon set, but this
+   is a typographic mark rather than an icon, real asterisks have cut ends, and the rounded arms
+   were half the reason the earlier version read as petals. */
+.learn-mark { position: absolute; z-index: 0; right: 0.5rem; bottom: calc(var(--mark-bleed) * -1); inline-size: var(--mark-size); block-size: var(--mark-size); color: var(--color-primary); }
+@media (max-width: 1023.98px) {
+  .learn-inner { --mark-size: 4.5rem; --mark-bleed: 1.5rem; padding: 1.75rem 1.5rem calc(var(--mark-size) - var(--mark-bleed) + 1rem); }
+  .learn-mark { right: 0.35rem; }
+}
+@media (max-width: 1023.98px) {
+  .learn-inner { --mark-size: 4.5rem; --mark-bleed: 1.5rem; padding: 1.75rem 1.5rem calc(var(--mark-size) - var(--mark-bleed) + 1rem); }
+  .learn-mark { right: 0.35rem; }
+}
+
+/* SPLIT SCOPE AND INTRO WIDTH (B73, 2026-09-01), shared by "the challenge" and "the mvp". The intro sits ABOVE the split, so max-w-prose
+   (65ch) let it run wider than the card column beneath it and the two left edges agreed while the
+   right edges did not. It is now capped to exactly one column of the split.
+   ONE SOURCE OF TRUTH: --split-gap feeds both the grid's gap and this cap, so a six-of-twelve
+   column is literally (100% - gap) / 2 and the two cannot drift apart if the gutter is ever retuned.
+   Writing 3rem in both places would have looked identical today and silently broken later.
+   THE MEDIA QUERY IS LOAD-BEARING, not a nicety. This site's custom CSS is unlayered, so it beats
+   any Tailwind utility regardless of specificity or source order. An unscoped max-inline-size here
+   would override max-w-prose at EVERY width, including mobile, where the grid is a single column
+   and half of it is far too narrow to read. Scoping to lg leaves max-w-prose in charge below it. */
+.case-scope { --split-gap: 3rem; }
+.case-split { gap: var(--split-gap); }
+@media (min-width: 1024px) {
+  .case-intro { max-inline-size: calc((100% - var(--split-gap)) / 2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter { animation: none; opacity: 1; filter: none; }
+  .reveal, .reveal-stagger > * { transition: none; opacity: 1; transform: none; }
+  .blob-parallax { transform: none !important; }
+  .sky-strip__star { animation: none; opacity: 0.4; }
+  .conveyor-track { animation: none; }
+  .conveyor-card.land { animation: none; opacity: 1; transform: none; }
+  .hero-strip__clouds-track { animation: none; }
+  .cloud-drift { animation: none; }
+  .nav-item { transition: none; }
+  #loanPurposeStripInner { transform: none; }
+  #loanPurposeStrip.strip-in-view #loanPurposeStripInner { animation: none; }
+  .footer-glow { transition: none; opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body class="antialiased">
+  <div class="sky-strip" id="skyStrip" aria-hidden="true">
+    <div class="sky-strip__slogan">not even the sky is the limit :)</div>
+  </div>
+
+  <div class="page-shift" id="pageShift">
+
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- NAV: in-page anchors to the three parts of the assignment, not the portfolio homepage.
+       This page is deliberately unlisted: not linked from the site, noindex. -->
+  <nav class="site-nav site-nav-dark nav-dark-gold nav-wide">
+    <div class="site-nav-leading">
+      <a href="#top" class="site-nav-name">Ofir Avitan</a>
+    </div>
+    <div class="hidden md:flex items-center gap-6 type-label-lg" id="navTabs">
+      <a href="#lock-screen" class="nav-link">Part 1</a>
+      <a href="#research" class="nav-link">Part 2</a>
+      <a href="#plan" class="nav-link">Part 3</a>
+    </div>
+    <a href="https://www.figma.com/design/gTurkySwALEoaaADOsPm6s/Taboola?node-id=3-105" class="site-nav-cta btn-glow-accent" target="_blank" rel="noopener noreferrer">Figma file</a>
+  </nav>
+
+  <!-- HERO: skeleton only. Ofir is designing a Taboola-specific header and supplying its media. -->
+  <header id="top" class="hero-tint px-4 pb-8 pt-32 sm:pb-16 lg:px-20 lg:pb-24 lg:pt-40">
+    <div class="mx-auto max-w-7xl">
+      <div class="hero-split">
+      <div>
+        <p class="enter type-label-sm text-muted" style="animation-delay:60ms">Home assignment &middot; Taboola News &middot; 48 hours</p>
+        <h1 class="enter type-display-sm mt-3 sm:text-5xl" style="animation-delay:80ms">Lock Screen Widgets<span class="brand-dot">.</span></h1>
+        <div class="enter mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-x-8" style="animation-delay:240ms">
+          <div>
+            <p class="type-body-md text-muted">Role</p>
+            <p class="type-body-lg mt-1 font-medium text-default">Product Design Team Lead</p>
+          </div>
+          <div>
+            <p class="type-body-md text-muted">Scope</p>
+            <p class="type-body-lg mt-1 font-medium text-default">Research, UX Strategy, Wireframes, UI Design, Design System, Growth &amp; Measurement</p>
+          </div>
+        </div>
+        <!-- Opening paragraph is written LAST, once every section below is settled: it summarises the page. -->
+        <p class="enter type-body-lg mt-6 text-secondary" style="animation-delay:300ms;">Taboola News reaches millions of lock screens that nobody chose to fill. My answer is a rule rather than a layout: one to three widgets, set by how busy the screen is and how the person&#39;s day looks, and a news brief that ends, so coming back is a choice.</p>
+      </div>
+      <div class="enter" style="animation-delay:380ms">
+        <!-- Ofir's hero composite (lock screen + brief), cropped to its alpha box, 1400px lossy q88. No baked shadow (0.4% partial alpha), so the CSS drop-shadow applies. -->
+        <div class="hero-device-frame">
+          <img width="1400" height="1064" decoding="async" src="assets/hero-lockscreen.webp" alt="Three screens: the redesigned lock screen with its widgets, the Daily News Brief summary, and the up to date screen that ends it.">
+        </div>
+      </div>
+      </div>
+
+      <div class="enter hero-metrics rounded-lg border border-border-default bg-card p-6" style="animation-delay:560ms">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="type-label-sm text-muted">Taboola News today</span>
+        </div>
+        <div class="mt-5 flex flex-col divide-y divide-border-default text-center sm:flex-row sm:gap-6 sm:divide-y-0 sm:divide-x">
+          <div class="min-w-0 flex-1 px-1 py-6 first:pt-0 last:pb-0 sm:px-5 sm:py-0">
+            <div class="type-headline-sm stat-accent-green">80+</div>
+            <p class="type-label-sm text-muted mt-1">countries</p>
+          </div>
+          <div class="min-w-0 flex-1 px-1 py-6 first:pt-0 last:pb-0 sm:px-5 sm:py-0">
+            <div class="type-headline-sm stat-accent-green">~230M</div>
+            <p class="type-label-sm text-muted mt-1">monthly active users*</p>
+          </div>
+          <div class="min-w-0 flex-1 px-1 py-6 first:pt-0 last:pb-0 sm:px-5 sm:py-0">
+            <div class="type-headline-sm stat-accent-green">25+</div>
+            <p class="type-label-sm text-muted mt-1">languages</p>
+          </div>
+        </div>
+        <p class="type-label-sm text-muted mt-5 text-center" style="text-transform:none; letter-spacing:normal;">* As of March 2025, based on data reported by OEM partners. Source: Taboola investor presentation.</p>
+      </div>
+      <!-- The brief asks: "When you hit a gap, make an assumption, write it down and move on." -->
+      <p class="enter type-body-md mt-6 max-w-3xl text-secondary" style="animation-delay:640ms"><span class="font-medium text-default">Assumptions.</span> Taboola and its OEM partners can read notification load and when a person uses their phone. Weather and news are available on every partner. Sponsored stories can run inside the brief, as they do across Taboola&#39;s network.</p>
+    </div>
+  </header>
+
+  <section id="lock-screen" class="px-4 lg:px-20">
+    <div class="case-scope mx-auto max-w-7xl pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+      <span class="reveal type-label-sm text-muted">Part 1 &middot; One or several, behavior, partners</span>
+      <h2 class="reveal type-headline-md mt-4 max-w-2xl">the lock screen<span class="brand-dot">.</span></h2>
+      <p class="case-intro reveal type-body-lg mt-6 max-w-prose text-secondary">The placement is guaranteed. The attention is not. The partnership puts Taboola News on the lock screen, but only value earns the look. The more precisely a widget fits the person and the moment, the less it feels like something added to the phone, and the more it feels like a feature of the phone they chose.</p>
+      <!-- Exploration row goes here: 4 small sketches (single widget, grid of equals, carousel,
+           adaptive 1 to 3), one line each on why kept or rejected. -->
+      <!-- EXPLORATION ROW. Four layout options drawn under the SAME condition, two notifications on screen,
+           so the comparison is fair and each option is stress-tested where it would actually live.
+           Notification load as a variable belongs to "three states", not here. Lo-fi on purpose:
+           greys only, no brand, so the reader judges structure. Each sketch is labeled with its
+           source; Figma AI sketches and Ofir's edits join this row. -->
+      <h3 class="reveal type-title-md mt-12">Where I started</h3>
+      <p class="reveal type-body-md mt-2 max-w-prose text-secondary">I started wide, with layouts that ignored the mockup, then came back to it. Taboola&#39;s zone above the unlock hint held up. What it needed was a rule, not a new layout.</p>
+      <div class="reveal-stagger mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <figure class="m-0 flex flex-col rounded-lg border border-border-default bg-card p-5">
+            <div class="mx-auto w-full max-w-[8.5rem]">
+              <svg viewBox="0 0 180 372" class="h-auto w-full" role="img" aria-hidden="true" fill="none">
+                <rect x="2" y="2" width="176" height="368" rx="22" fill="#f7f8f8" stroke="#8a9491" stroke-width="2"/>
+                <text x="90" y="62" text-anchor="middle" font-family="Inter Tight, sans-serif" font-size="34" font-weight="600" fill="#8a9491">08:22</text>
+                <rect x="62" y="72" width="56" height="5" rx="2.5" fill="#cfd6d4"/>
+                <rect x="14" y="98" width="152" height="30" rx="9" fill="#e7ebea" stroke="#cfd6d4"/><circle cx="28" cy="113" r="6" fill="#cfd6d4"/><rect x="40" y="107" width="70" height="4" rx="2" fill="#cfd6d4"/><rect x="40" y="116" width="96" height="4" rx="2" fill="#cfd6d4"/>
+                <rect x="14" y="134" width="152" height="30" rx="9" fill="#e7ebea" stroke="#cfd6d4"/><circle cx="28" cy="149" r="6" fill="#cfd6d4"/><rect x="40" y="143" width="58" height="4" rx="2" fill="#cfd6d4"/><rect x="40" y="152" width="88" height="4" rx="2" fill="#cfd6d4"/>
+                <rect x="14" y="252" width="152" height="74" rx="12" fill="#b9c7c3"/><rect x="26" y="266" width="44" height="12" rx="3" fill="#ffffff"/><rect x="26" y="286" width="112" height="5" rx="2.5" fill="#ffffff"/><rect x="26" y="297" width="84" height="5" rx="2.5" fill="#ffffff"/>
+                <circle cx="24" cy="348" r="7" fill="#cfd6d4"/><rect x="62" y="346" width="56" height="4" rx="2" fill="#cfd6d4"/><circle cx="156" cy="348" r="7" fill="#cfd6d4"/>
+              </svg>
+            </div>
+            <figcaption class="mt-4">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="type-label-sm text-muted">A</span>
+                <span class="type-body-md font-medium text-default">Single widget</span>
+                <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-neutral-100 text-secondary">Rejected</span>
+              </div>
+              <p class="type-body-md mt-2 text-secondary">Calm, but one fixed slot cannot serve different people at different moments.</p>
+              <p class="type-label-sm mt-2 text-muted" style="text-transform:none; letter-spacing:normal;">Sketch: Claude</p>
+            </figcaption>
+          </figure>
+          <figure class="m-0 flex flex-col rounded-lg border border-border-default bg-card p-5">
+            <div class="mx-auto w-full max-w-[8.5rem]">
+              <svg viewBox="0 0 180 372" class="h-auto w-full" role="img" aria-hidden="true" fill="none">
+                <rect x="2" y="2" width="176" height="368" rx="22" fill="#f7f8f8" stroke="#8a9491" stroke-width="2"/>
+                <text x="90" y="62" text-anchor="middle" font-family="Inter Tight, sans-serif" font-size="34" font-weight="600" fill="#8a9491">08:22</text>
+                <rect x="62" y="72" width="56" height="5" rx="2.5" fill="#cfd6d4"/>
+                <rect x="14" y="98" width="152" height="30" rx="9" fill="#e7ebea" stroke="#cfd6d4"/><circle cx="28" cy="113" r="6" fill="#cfd6d4"/><rect x="40" y="107" width="70" height="4" rx="2" fill="#cfd6d4"/><rect x="40" y="116" width="96" height="4" rx="2" fill="#cfd6d4"/>
+                <rect x="14" y="134" width="152" height="30" rx="9" fill="#e7ebea" stroke="#cfd6d4"/><circle cx="28" cy="149" r="6" fill="#cfd6d4"/><rect x="40" y="143" width="58" height="4" rx="2" fill="#cfd6d4"/><rect x="40" y="152" width="88" height="4" rx="2" fill="#cfd6d4"/>
+                <rect x="14" y="214" width="73" height="54" rx="10" fill="#b9c7c3"/><rect x="93" y="214" width="73" height="54" rx="10" fill="#b9c7c3"/>
+                <rect x="14" y="274" width="73" height="54" rx="10" fill="#b9c7c3"/><rect x="93" y="274" width="73" height="54" rx="10" fill="#b9c7c3"/>
+                <rect x="24" y="226" width="26" height="9" rx="2" fill="#fff"/><rect x="103" y="226" width="26" height="9" rx="2" fill="#fff"/><rect x="24" y="286" width="26" height="9" rx="2" fill="#fff"/><rect x="103" y="286" width="26" height="9" rx="2" fill="#fff"/>
+                <circle cx="24" cy="348" r="7" fill="#cfd6d4"/><rect x="62" y="346" width="56" height="4" rx="2" fill="#cfd6d4"/><circle cx="156" cy="348" r="7" fill="#cfd6d4"/>
+              </svg>
+            </div>
+            <figcaption class="mt-4">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="type-label-sm text-muted">B</span>
+                <span class="type-body-md font-medium text-default">Grid of equals</span>
+                <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-neutral-100 text-secondary">Rejected</span>
+              </div>
+              <p class="type-body-md mt-2 text-secondary">Nothing leads, and four tiles compete with the notifications above them.</p>
+              <p class="type-label-sm mt-2 text-muted" style="text-transform:none; letter-spacing:normal;">Sketch: Claude</p>
+            </figcaption>
+          </figure>
+          <figure class="m-0 flex flex-col rounded-lg border border-border-default bg-card p-5">
+            <div class="mx-auto w-full max-w-[8.5rem]">
+              <svg viewBox="0 0 180 372" class="h-auto w-full" role="img" aria-hidden="true" fill="none">
+                <rect x="2" y="2" width="176" height="368" rx="22" fill="#f7f8f8" stroke="#8a9491" stroke-width="2"/>
+                <text x="90" y="62" text-anchor="middle" font-family="Inter Tight, sans-serif" font-size="34" font-weight="600" fill="#8a9491">08:22</text>
+                <rect x="62" y="72" width="56" height="5" rx="2.5" fill="#cfd6d4"/>
+                <rect x="14" y="98" width="152" height="30" rx="9" fill="#e7ebea" stroke="#cfd6d4"/><circle cx="28" cy="113" r="6" fill="#cfd6d4"/><rect x="40" y="107" width="70" height="4" rx="2" fill="#cfd6d4"/><rect x="40" y="116" width="96" height="4" rx="2" fill="#cfd6d4"/>
+                <rect x="14" y="134" width="152" height="30" rx="9" fill="#e7ebea" stroke="#cfd6d4"/><circle cx="28" cy="149" r="6" fill="#cfd6d4"/><rect x="40" y="143" width="58" height="4" rx="2" fill="#cfd6d4"/><rect x="40" y="152" width="88" height="4" rx="2" fill="#cfd6d4"/>
+                <rect x="14" y="252" width="130" height="74" rx="12" fill="#b9c7c3"/><rect x="152" y="252" width="40" height="74" rx="12" fill="#b9c7c3" opacity="0.55"/>
+                <rect x="26" y="266" width="44" height="12" rx="3" fill="#fff"/><rect x="26" y="286" width="94" height="5" rx="2.5" fill="#fff"/>
+                <circle cx="80" cy="336" r="2.5" fill="#8a9491"/><circle cx="90" cy="336" r="2.5" fill="#cfd6d4"/><circle cx="100" cy="336" r="2.5" fill="#cfd6d4"/>
+                <rect x="170" y="2" width="8" height="368" fill="#f7f8f8"/><rect x="2" y="2" width="176" height="368" rx="22" stroke="#8a9491" stroke-width="2"/>
+                <circle cx="24" cy="348" r="7" fill="#cfd6d4"/><rect x="62" y="346" width="56" height="4" rx="2" fill="#cfd6d4"/><circle cx="156" cy="348" r="7" fill="#cfd6d4"/>
+              </svg>
+            </div>
+            <figcaption class="mt-4">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="type-label-sm text-muted">C</span>
+                <span class="type-body-md font-medium text-default">Carousel</span>
+                <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-neutral-100 text-secondary">Rejected</span>
+              </div>
+              <p class="type-body-md mt-2 text-secondary">Lock-screen swipes already mean unlock and camera, and the second card is rarely seen.</p>
+              <p class="type-label-sm mt-2 text-muted" style="text-transform:none; letter-spacing:normal;">Sketch: Claude</p>
+            </figcaption>
+          </figure>
+          <figure class="m-0 flex flex-col rounded-lg border border-border-default bg-card p-5">
+            <div class="mx-auto w-full max-w-[8.5rem]">
+              <svg viewBox="0 0 180 372" class="h-auto w-full" role="img" aria-hidden="true" fill="none">
+                <rect x="2" y="2" width="176" height="368" rx="22" fill="#f7f8f8" stroke="#8a9491" stroke-width="2"/>
+                <text x="90" y="62" text-anchor="middle" font-family="Inter Tight, sans-serif" font-size="34" font-weight="600" fill="#8a9491">08:22</text>
+                <rect x="62" y="72" width="56" height="5" rx="2.5" fill="#cfd6d4"/>
+                <rect x="14" y="98" width="152" height="30" rx="9" fill="#e7ebea" stroke="#cfd6d4"/><circle cx="28" cy="113" r="6" fill="#cfd6d4"/><rect x="40" y="107" width="70" height="4" rx="2" fill="#cfd6d4"/><rect x="40" y="116" width="96" height="4" rx="2" fill="#cfd6d4"/>
+                <rect x="14" y="134" width="152" height="30" rx="9" fill="#e7ebea" stroke="#cfd6d4"/><circle cx="28" cy="149" r="6" fill="#cfd6d4"/><rect x="40" y="143" width="58" height="4" rx="2" fill="#cfd6d4"/><rect x="40" y="152" width="88" height="4" rx="2" fill="#cfd6d4"/>
+                <rect x="14" y="248" width="62" height="20" rx="10" fill="#e7ebea" stroke="#b9c7c3" stroke-width="1.5"/><rect x="24" y="255" width="30" height="6" rx="3" fill="#8a9491"/>
+                <rect x="82" y="248" width="70" height="20" rx="10" fill="#e7ebea" stroke="#b9c7c3" stroke-width="1.5"/><rect x="92" y="255" width="40" height="6" rx="3" fill="#8a9491"/>
+                <rect x="14" y="274" width="152" height="52" rx="12" fill="#b9c7c3"/><rect x="26" y="286" width="44" height="10" rx="3" fill="#fff"/><rect x="26" y="303" width="104" height="5" rx="2.5" fill="#fff"/>
+                <circle cx="24" cy="348" r="7" fill="#cfd6d4"/><rect x="62" y="346" width="56" height="4" rx="2" fill="#cfd6d4"/><circle cx="156" cy="348" r="7" fill="#cfd6d4"/>
+              </svg>
+            </div>
+            <figcaption class="mt-4">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="type-label-sm text-muted">D</span>
+                <span class="type-body-md font-medium text-default">One to three, by rule</span>
+                <span class="tag-chosen inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium">Chosen</span>
+              </div>
+              <p class="type-body-md mt-2 text-secondary">Taboola&#39;s zone, made adaptive: one widget leads, others shrink to a value, the count follows the screen.</p>
+              <p class="type-label-sm mt-2 text-muted" style="text-transform:none; letter-spacing:normal;">Sketch: Claude</p>
+            </figcaption>
+          </figure>
+      </div>
+      <!-- Cards are numbered 01 to 03 to map one-to-one onto the brief's Q1 to Q3, even though they
+           are facets rather than a sequence: the reviewer should find each answer without thinking. -->
+      <div class="case-split mt-12 grid grid-cols-1 lg:mt-16 lg:grid-cols-12 lg:items-start">
+        <div class="lg:col-span-6">
+          <div class="reveal-stagger grid grid-cols-1 gap-6">
+            <div class="step-card">
+              <span class="step-card__num type-label-sm" aria-hidden="true">01</span>
+              <h3 class="type-headline-sm">One to Three, Never Fixed</h3>
+              <p class="type-body-md mt-2 text-secondary">One widget takes focus, and up to two others shrink to a single value above it. How many appear, and which ones, follows each person's own day: their notifications, their routines, what they open and when.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-card__num type-label-sm" aria-hidden="true">02</span>
+              <h3 class="type-headline-sm">Every Widget Earns the Look</h3>
+              <p class="type-body-md mt-2 text-secondary">The glance must be worth something on its own: for weather the answer, for a game the invitation. It updates only when something changes. A chevron appears only where a tap opens real detail, like hourly rain or the full brief.</p>
+            </div>
+            <div class="step-card">
+              <span class="step-card__num type-label-sm" aria-hidden="true">03</span>
+              <h3 class="type-headline-sm">Same Skeleton, Their Skin</h3>
+              <p class="type-body-md mt-2 text-secondary">Taboola keeps what builds trust: structure, behavior, sponsored labels. OEM partners own what builds recognition: color, type, icons. The user's phone adapts: contrast against their wallpaper, dark or light, language and reading direction, text size, accessibility. One token set: a new partner is a theme.</p>
+            </div>
+          </div>
+        </div>
+        <div class="lg:col-span-6">
+          <div class="reveal mx-auto flex w-full max-w-[17rem] flex-col items-center gap-4">
+            <!-- Taboola's own mockup (A2 in the assignment file), the starting point. The phone frame is
+                 baked into the export, so no CSS radius; corners cut to transparent, lossy q88 with alpha. -->
+            <img class="h-auto w-full" width="576" height="1206" decoding="async" src="assets/A2.webp" alt="The current Taboola News lock screen: a Weather button with no data and a single story card above the unlock hint.">
+            <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-1 text-xs font-medium text-secondary">today</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="rule" class="px-4 lg:px-20 bg-surface-alt">
+    <div class="case-scope mx-auto max-w-7xl pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+      <span class="reveal type-label-sm text-muted">Part 1 &middot; Wireframes</span>
+      <h2 class="reveal type-headline-md mt-4 max-w-2xl">the rule<span class="brand-dot">.</span></h2>
+      <p class="case-intro reveal type-body-lg mt-6 max-w-prose text-secondary">Two things decide what the lock screen shows: how busy it already is, and what the day holds. Left to right, only the notifications change. Top to bottom, only the weather.</p>
+      <!-- THE RULE: a 2x2, one variable per axis. Left to right only the notification load changes,
+           top to bottom only the weather changes, so every difference has exactly one cause.
+           "0 to 2 notifications" is one column on purpose: the rule treats them the same.
+           Aligned to the content column, not centred. Desktop: a narrow row-label column + two phone
+           columns; mobile: the row label rises above its two phones. One label style for rows and
+           columns (type-label-sm muted); text that belongs to a phone column is centred on it.
+           Screens are Ofir's own on Taboola's frame, frame baked in, corners transparent. -->
+      <div class="reveal mt-12 grid grid-cols-2 gap-x-6 gap-y-6 sm:gap-x-10 lg:grid-cols-[10rem_1fr_1fr] lg:gap-x-12">
+        <div class="hidden lg:block"></div>
+        <p class="type-label-sm text-center text-muted">0 to 2 notifications</p>
+        <p class="type-label-sm text-center text-muted">Many notifications</p>
+        <div class="col-span-2 border-t border-border-default lg:col-span-3"></div>
+        <p class="col-span-2 type-label-sm text-muted lg:col-span-1 lg:pt-2">Pleasant day</p>
+        <figure class="m-0">
+          <img class="mx-auto h-auto w-full max-w-[15rem]" width="576" height="1206" decoding="async" loading="lazy" src="assets/state-calm-few.webp" alt="Pleasant day, few notifications: a temperature chip, a Daily Trivia chip and the Daily News Brief card.">
+          <figcaption class="type-body-md mt-3 text-center text-secondary">Three: weather, trivia, the morning brief.</figcaption>
+        </figure>
+        <figure class="m-0">
+          <img class="mx-auto h-auto w-full max-w-[15rem]" width="576" height="1206" decoding="async" loading="lazy" src="assets/state-calm-busy.webp" alt="Pleasant day, a full stack of notifications: only a small temperature chip remains.">
+          <figcaption class="type-body-md mt-3 text-center text-secondary">One: the temperature, nothing to warn about.</figcaption>
+        </figure>
+        <div class="col-span-2 border-t border-border-default lg:col-span-3"></div>
+        <p class="col-span-2 type-label-sm text-muted lg:col-span-1 lg:pt-2">Rain</p>
+        <figure class="m-0">
+          <img class="mx-auto h-auto w-full max-w-[15rem]" width="576" height="1206" decoding="async" loading="lazy" src="assets/state-rain-few.webp" alt="Rain, few notifications: the weather widget spans the full width in place of the trivia chip, with the news brief below.">
+          <figcaption class="type-body-md mt-3 text-center text-secondary">Two: rain takes the trivia&#39;s place.</figcaption>
+        </figure>
+        <figure class="m-0">
+          <img class="mx-auto h-auto w-full max-w-[15rem]" width="576" height="1206" decoding="async" loading="lazy" src="assets/state-rain-busy.webp" alt="Rain, a full stack of notifications: only the full-width rain widget remains.">
+          <figcaption class="type-body-md mt-3 text-center text-secondary">One: the rain, full width.</figcaption>
+        </figure>
+      </div>
+      <!-- Three rules under the grid: facets, not a sequence, so SYMBOL markers (curated DSM icon set:
+           Cloud, Clock, Shield), not numerals. White variant because the section sits on surface-alt. -->
+      <div class="reveal-stagger mt-16 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div class="step-card step-card-white">
+          <span class="step-card__mark" aria-hidden="true"><svg class="size-6" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></span>
+          <h3 class="type-headline-sm">Weather Leads When It Matters</h3>
+          <p class="type-body-md mt-2 text-secondary">Rain before you leave, or tomorrow's forecast late in the evening: when the weather changes someone's plans, it takes the full width. On an ordinary day it stays a single number, because there is nothing to warn about.</p>
+        </div>
+        <div class="step-card step-card-white">
+          <span class="step-card__mark" aria-hidden="true"><svg class="size-6" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+          <h3 class="type-headline-sm">Play Waits for Free Time</h3>
+          <p class="type-body-md mt-2 text-secondary">Trivia appears when this person is usually free: a quiet screen, after work, a lunch break, or only on weekends if that is when they play. At the wrong moment a game is noise. At the right one, it is a reason to come back.</p>
+        </div>
+        <div class="step-card step-card-white">
+          <span class="step-card__mark" aria-hidden="true"><svg aria-hidden="true" class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span>
+          <h3 class="type-headline-sm">Stepping Back Builds Trust</h3>
+          <p class="type-body-md mt-2 text-secondary">When notifications pile up, we shrink to one number. The user never has to fight us for their own screen, so there is no reason to switch us off, and the space stays ours for the moments when it pays for everyone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="partners" class="px-4 lg:px-20">
+    <div class="case-scope mx-auto max-w-7xl pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+      <span class="reveal type-label-sm text-muted">Part 1 &middot; Across partners</span>
+      <h2 class="reveal type-headline-md mt-4 max-w-2xl">one system, many brands<span class="brand-dot">.</span></h2>
+      <p class="case-intro reveal type-body-lg mt-6 max-w-prose text-secondary">Taboola News ships under many brands, in many languages, on wallpapers nobody picks for us. The structure has to hold through all of it, so every difference below is a token, not a new design.</p>
+      <!-- PARTNER DEMO: a live widget, not screenshots. The tabs swap only CSS custom properties on
+           .pd-screen (font, surface, accent, radii) plus dir/lang and copy for Hebrew, and the wallpaper
+           image for the light case. Structure never changes, which is the section's whole claim. -->
+      <div class="reveal mt-12 flex w-full flex-col gap-6 sm:flex-row sm:items-start">
+          <div class="sm:w-64 sm:shrink-0">
+          <nav aria-label="Partner theme" class="rounded-lg border border-border-default bg-card p-2">
+            <ul class="flex list-none flex-row gap-1 overflow-x-auto p-0 sm:flex-col sm:overflow-visible" id="partnerMenu">
+              <li><button type="button" class="nav-item is-active" aria-current="page" data-theme="a">
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M11 18h2"/></svg>
+                <span class="nav-item__label">OEM partner A</span>
+              </button></li>
+              <li><button type="button" class="nav-item" data-theme="b">
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="1"/><path d="M11 18h2"/></svg>
+                <span class="nav-item__label">OEM partner B</span>
+              </button></li>
+              <li><button type="button" class="nav-item" data-theme="rtl">
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                <span class="nav-item__label">Hebrew, right to left</span>
+              </button></li>
+              <li><button type="button" class="nav-item" data-theme="light">
+                <svg class="nav-item__icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                <span class="nav-item__label">Light wallpaper</span>
+              </button></li>
+            </ul>
+          </nav>
+          <p class="pd-note type-body-md mt-4 text-secondary" id="partnerNote">Taboola's structure in one partner's type, color and corners.</p>
+          </div>
+          <div class="min-w-0 rounded-lg border border-border-default bg-card p-6 sm:flex-1">
+            <div class="pd-screen" id="partnerScreen" data-theme="a" dir="ltr" lang="en">
+              <img id="partnerWallpaper" src="assets/phone-dark.webp" width="576" height="1206" alt="" decoding="async" loading="lazy">
+              <div class="pd-widgets">
+                <div class="pd-chips">
+                  <div class="pd-chip"><svg class="pd-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="10" r="7" fill="#f6d34a"/><path d="M6 20h11a4 4 0 0 0 0-8 5 5 0 0 0-9.6 1.5A3.3 3.3 0 0 0 6 20z" fill="#ffffff"/></svg><b>27&deg;</b></div>
+                  <div class="pd-chip pd-chip--grow"><span class="pd-dot" aria-hidden="true">?</span><span data-t="trivia"><b>Daily Trivia</b> <span class="pd-soft">&middot; 5 Questions</span></span></div>
+                </div>
+                <div class="pd-card">
+                  <h4 data-t="title">Your Daily News Brief</h4>
+                  <p data-t="sub">10 News Updates From Around The World</p>
+                  <div class="pd-card-foot"><span data-t="meta">From 5 Publishers &middot; 4 Min</span><span class="pd-cta"><span data-t="cta">Read</span><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></i></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="research" class="px-4 lg:px-20 bg-surface-alt">
+    <div class="case-scope mx-auto max-w-7xl pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+      <span class="reveal type-label-sm text-muted">Part 2 &middot; Research and choice</span>
+      <h2 class="reveal type-headline-md mt-4 max-w-2xl">why the feed<span class="brand-dot">.</span></h2>
+      <p class="case-intro reveal type-body-lg mt-6 max-w-prose text-secondary">Before choosing a widget, I wanted both sides of this screen: what Taboola is betting on, and what the people holding the phone say about it. They don&#39;t agree yet, and the choice had to work for both.</p>
+      <!-- 2.1 in the brief's own three beats: what I looked at (sources), what I learned, how it led
+           to the choice. Sources are facets, so symbol markers (curated set: Trending Up, Star, Search).
+           White cards because the section sits on surface-alt. Investor numbers are Taboola's own,
+           attributed on the card; Play Store figures checked 2026-09-27. -->
+      <h3 class="reveal type-title-md mt-12">What I looked at</h3>
+      <div class="reveal-stagger mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div class="step-card step-card-white">
+          <span class="step-card__mark" aria-hidden="true"><svg class="size-6" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg></span>
+          <p class="type-label-sm text-muted" style="text-transform:none; letter-spacing:normal;">Taboola investor presentation</p>
+          <h3 class="type-headline-sm mt-1">Taboola Is Betting on Play</h3>
+          <p class="type-body-md mt-2 text-secondary">Gaming and interactive content are on the roadmap, with Taboola&#39;s own numbers behind them: 33% more daily clicks, a 6.6x click-through rate on game wallpapers, and 48% of carousel players coming back. Sponsored content on the lock screen is next.</p>
+        </div>
+        <div class="step-card step-card-white">
+          <span class="step-card__mark" aria-hidden="true"><svg class="size-6" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg></span>
+          <p class="type-label-sm text-muted" style="text-transform:none; letter-spacing:normal;">Google Play, Live lock screen</p>
+          <h3 class="type-headline-sm mt-1">Users Never Asked for It</h3>
+          <p class="type-body-md mt-2 text-secondary">1.7 stars across more than 8,000 reviews and 10 million downloads. The recurring complaint is not the content but the lack of choice: &quot;I did not want this... yet can&#39;t get rid of it.&quot; Some report it reinstalling after updates.</p>
+        </div>
+        <div class="step-card step-card-white">
+          <span class="step-card__mark" aria-hidden="true"><svg aria-hidden="true" class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg></span>
+          <p class="type-label-sm text-muted" style="text-transform:none; letter-spacing:normal;">YouTube tutorials</p>
+          <h3 class="type-headline-sm mt-1">People Search for the Exit</h3>
+          <p class="type-body-md mt-2 text-secondary">Short videos walk through removing Taboola News from an Android lock screen, device by device. Their existence is a finding in itself: for some users, the first thing they do with the product is look for the way out.</p>
+        </div>
+      </div>
+      <h3 class="reveal type-title-md mt-16">What I learned</h3>
+      <!-- Nested closing card ported from ../Digital-Loans (learn-outer / learn-inner, geometric
+           asterisk). One statement instead of two columns, so no learn-cols. -->
+      <div class="reveal learn-outer mt-4">
+        <div class="learn-inner">
+          <svg class="learn-mark" aria-hidden="true" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="butt"><line x1="50" y1="8" x2="50" y2="92"/><line x1="13.6" y1="29" x2="86.4" y2="71"/><line x1="86.4" y1="29" x2="13.6" y2="71"/></svg>
+          <p class="learn-single">Right now the lock screen has a captive audience.<br>The work is to <span class="copy-mark">turn it into a satisfied one</span>:<br>content that shows up because it is worth something to this person, so good that where it comes from stops being the question.</p>
+        </div>
+      </div>
+      <h3 class="reveal type-title-md mt-16">How it led to the choice</h3>
+      <p class="reveal type-body-lg mt-4 max-w-prose text-secondary">Two strong candidates, a news brief and a branded game, and the question a manager has to ask: which one brings value fastest and starts teaching us something?</p>
+      <!-- The four rows ARE the four reasons for the decision (taboola-notes.md), so they are not
+           restated as prose. No time estimates: there is no real figure, "legal sign-off first" says it. -->
+      <div class="reveal mt-8 overflow-x-auto rounded-lg border border-border-default bg-card px-6">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr>
+              <th scope="col" class="py-4 pe-6"><span class="sr-only">Criterion</span></th>
+              <th scope="col" class="py-4 pe-6 text-start type-body-md font-medium text-default">News brief <span class="tag-chosen ms-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium">Chosen</span></th>
+              <th scope="col" class="py-4 text-start type-body-md font-medium text-secondary">Branded game</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-t border-border-default">
+              <th scope="row" class="py-4 pe-6 text-start align-top type-label-sm text-muted">Built on</th>
+              <td class="py-4 pe-6 align-top type-body-md text-default">Publishers, content and recommendations Taboola already runs</td>
+              <td class="py-4 align-top type-body-md text-secondary">A brand deal, new content and legal sign-off first</td>
+            </tr>
+            <tr class="border-t border-border-default">
+              <th scope="row" class="py-4 pe-6 text-start align-top type-label-sm text-muted">What it teaches us</th>
+              <td class="py-4 pe-6 align-top type-body-md text-default">When, how deep and what each person reads</td>
+              <td class="py-4 align-top type-body-md text-secondary">Whether branded play holds attention</td>
+            </tr>
+            <tr class="border-t border-border-default">
+              <th scope="row" class="py-4 pe-6 text-start align-top type-label-sm text-muted">Where it goes next</th>
+              <td class="py-4 pe-6 align-top type-body-md text-default">Adapts per reader: a few focused stories, or tabs and categories</td>
+              <td class="py-4 align-top type-body-md text-secondary">One campaign at a time</td>
+            </tr>
+            <tr class="border-t border-border-default">
+              <th scope="row" class="py-4 pe-6 text-start align-top type-label-sm text-muted">Risk to trust</th>
+              <td class="py-4 pe-6 align-top type-body-md text-default">Low: it is the product&#39;s core promise</td>
+              <td class="py-4 align-top type-body-md text-secondary">Higher: closer to advertising for a wary user</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="reveal type-headline-sm mt-12 max-w-3xl"><span class="copy-mark">I chose what we learn from fastest, not what looks most impressive.</span></p>
+      <p class="reveal type-body-lg mt-4 max-w-prose text-secondary">The game comes next, not instead. Once the feed shows when each person is free and what they care about, a brand quiz lands in exactly those moments, and Taboola&#39;s own gaming numbers make the case for it.</p>
+      <p class="reveal type-body-lg mt-4 max-w-prose text-secondary">Engaging, here, means coming back tomorrow, not clicking today. A daily brief builds that habit, and the habit is what every other widget, games included, will run on.</p>
+    </div>
+  </section>
+
+  <section id="flow" class="px-4 lg:px-20">
+    <div class="case-scope mx-auto max-w-7xl pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+      <span class="reveal type-label-sm text-muted">Part 2 &middot; The flow</span>
+      <h2 class="reveal type-headline-md mt-4 max-w-2xl">from glance to habit<span class="brand-dot">.</span></h2>
+      <p class="case-intro reveal type-body-lg mt-6 max-w-prose text-secondary">The brief is short on purpose. It opens from one tap, reads in any order or straight through, and then it ends. Coming back is built from continuity, not from notifications.</p>
+      <!-- FLOW: lo-fi wireframes built in HTML (Claude), on Ofir's phone frame, to be refined by Ofir
+           and pushed to Figma. Numbered because this IS a sequence. Publishers and headlines are
+           invented. Steps 6 and 7 answer the brief's "and how they come back". -->
+      <div class="reveal fl-strip mt-6"><figure class="fl-step">
+            <div class="pd-screen fl-lock" data-theme="a" style="max-width:none">
+              <img src="assets/phone-dark.webp" width="576" height="1206" alt="" decoding="async" loading="lazy">
+              <div class="pd-widgets">
+                <div class="pd-chips">
+                  <div class="pd-chip"><svg class="pd-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="10" r="7" fill="#f6d34a"/><path d="M6 20h11a4 4 0 0 0 0-8 5 5 0 0 0-9.6 1.5A3.3 3.3 0 0 0 6 20z" fill="#ffffff"/></svg><b>27&deg;</b></div>
+                  <div class="pd-chip pd-chip--grow"><span class="pd-dot" aria-hidden="true">?</span><span><b>Daily Trivia</b> <span class="pd-soft">&middot; 5 Questions</span></span></div>
+                </div>
+                <div class="pd-card"><h4>Your Daily News Brief</h4><p>10 News Updates From Around The World</p><div class="pd-card-foot"><span>From 5 Publishers &middot; 4 Min</span><span class="pd-cta"><span>Read</span><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></i></span></div></div>
+              </div>
+            </div>
+            <figcaption><span class="step-card__num type-label-sm" style="display:inline;margin-right:0.5rem">01</span><span class="type-body-md text-secondary">Tap &quot;Read&quot; on the lock screen.</span></figcaption>
+          </figure><figure class="fl-step">
+            <div class="fl-phone">
+              <img src="assets/phone-light.webp" width="576" height="1206" alt="" decoding="async" loading="lazy">
+              <div class="fl-app"><div class="fl-status"><span></span><span class="fl-si"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3v19H3z" fill="currentColor" opacity=".45"/><path d="M22 10v12H11z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="19" rx="2" fill="currentColor"/><rect x="10" y="1" width="4" height="3" rx="1" fill="currentColor"/></svg><span>08:24</span></span></div><div class="fl-bar"><span></span><span class="fl-x">&times;</span></div>
+                <div class="fl-body"><p class="fl-h1">Your Daily News Brief</p><p class="fl-meta">Tuesday &middot; 10 stories &middot; 4 min</p><div style="margin-top:3cqw"><div class="fl-row"><div class="fl-thumb"></div><div><b>Rates stay put for a third month</b><span>Economy &middot; The Daily Ledger</span></div></div><div class="fl-row"><div class="fl-thumb"></div><div><b>New metro line opens ahead of schedule</b><span>City &middot; Metro Times</span></div></div><div class="fl-row"><div class="fl-thumb"></div><div><b>Heatwave eases by the weekend</b><span>Weather &middot; Northwind News</span></div></div><div class="fl-row"><div class="fl-thumb"></div><div><b>Startup raises $40M to recycle batteries</b><span>Tech &middot; Signal Post</span></div></div><div class="fl-row"><div class="fl-thumb"></div><div><b>What to expect from the cup draw</b><span>Sports &middot; Field Report</span></div></div><div class="fl-row"><div class="fl-thumb"></div><div><b>Museum reopens after two years</b><span>Culture &middot; Metro Times</span></div></div><div class="fl-row"><div class="fl-thumb"></div><div><b>A quieter week for markets</b><span>Economy &middot; Signal Post</span></div></div><div class="fl-row"><div class="fl-thumb"></div><div><b>Five films worth the weekend</b><span>Culture &middot; Northwind News</span></div></div><div class="fl-row"><div class="fl-thumb"></div><div><b>Why the city is planting more trees</b><span>City &middot; Metro Times</span></div></div><div class="fl-row"><div class="fl-thumb"></div><div><b>A new phone that lasts a week</b><span>Tech &middot; Signal Post</span></div></div></div></div>
+                <div class="fl-bar fl-bar--foot" style="display:block"><div class="fl-btn">Read in sequence</div></div></div>
+            </div>
+            <figcaption><span class="step-card__num type-label-sm" style="display:inline;margin-right:0.5rem">02</span><span class="type-body-md text-secondary">The brief: headlines, open any, in any order.</span></figcaption>
+          </figure><figure class="fl-step">
+            <div class="fl-phone">
+              <img src="assets/phone-light.webp" width="576" height="1206" alt="" decoding="async" loading="lazy">
+              <div class="fl-app"><div class="fl-status"><span></span><span class="fl-si"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3v19H3z" fill="currentColor" opacity=".45"/><path d="M22 10v12H11z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="19" rx="2" fill="currentColor"/><rect x="10" y="1" width="4" height="3" rx="1" fill="currentColor"/></svg><span>08:24</span></span></div><div class="fl-bar fl-bar--line"><span class="fl-link">&lsaquo; Brief</span><span class="fl-x">&times;</span></div>
+                <div class="fl-body"><p class="fl-meta">Tech &middot; Signal Post</p><p class="fl-h1" style="margin-top:1cqw">Startup raises $40M to recycle batteries</p><div class="fl-img"></div><div class="fl-line"></div><div class="fl-line"></div><div class="fl-line s"></div><div class="fl-line"></div><div class="fl-line"></div><div class="fl-line s"></div></div>
+                <div class="fl-bar fl-bar--foot"><span class="fl-link">Read on Signal Post &rsaquo;</span></div></div>
+            </div>
+            <figcaption><span class="step-card__num type-label-sm" style="display:inline;margin-right:0.5rem">03</span><span class="type-body-md text-secondary">One story, then back. The link goes to the publisher.</span></figcaption>
+          </figure><figure class="fl-step">
+            <div class="fl-phone">
+              <img src="assets/phone-light.webp" width="576" height="1206" alt="" decoding="async" loading="lazy">
+              <div class="fl-app"><div class="fl-status"><span></span><span class="fl-si"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3v19H3z" fill="currentColor" opacity=".45"/><path d="M22 10v12H11z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="19" rx="2" fill="currentColor"/><rect x="10" y="1" width="4" height="3" rx="1" fill="currentColor"/></svg><span>08:24</span></span></div><div class="fl-bar"><span class="fl-meta" style="margin:0">3 of 10</span><span class="fl-x">&times;</span></div><div class="fl-progress"><i></i></div>
+                <div class="fl-body"><p class="fl-meta">Weather &middot; Northwind News</p><p class="fl-h1" style="margin-top:1cqw">Heatwave eases by the weekend</p><div class="fl-img"></div><div class="fl-line"></div><div class="fl-line"></div><div class="fl-line s"></div><div class="fl-line"></div><div class="fl-line"></div><div class="fl-line s"></div></div>
+                <div class="fl-bar fl-bar--foot"><span class="fl-link">&lsaquo; Previous</span><span class="fl-link">Next: Startup raises&hellip; &rsaquo;</span></div></div>
+            </div>
+            <figcaption><span class="step-card__num type-label-sm" style="display:inline;margin-right:0.5rem">04</span><span class="type-body-md text-secondary">Or straight through: next and previous always in reach.</span></figcaption>
+          </figure><figure class="fl-step">
+            <div class="fl-phone">
+              <img src="assets/phone-light.webp" width="576" height="1206" alt="" decoding="async" loading="lazy">
+              <div class="fl-app"><div class="fl-status"><span></span><span class="fl-si"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3v19H3z" fill="currentColor" opacity=".45"/><path d="M22 10v12H11z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="19" rx="2" fill="currentColor"/><rect x="10" y="1" width="4" height="3" rx="1" fill="currentColor"/></svg><span>08:24</span></span></div><div class="fl-bar"><span></span><span class="fl-x">&times;</span></div>
+                <div class="fl-body fl-center"><div class="fl-check">&#10003;</div><p class="fl-h1">You&#39;re up to date</p><p class="fl-meta">10 of 10 stories &middot; next brief tomorrow, 07:30</p>
+                <p class="fl-meta" style="text-align:left;margin-top:6cqw;font-weight:700;color:#1d2126">More on Tech</p><div style="text-align:left"><div class="fl-row"><div class="fl-thumb"></div><div><b>Why battery prices keep falling</b><span>Tech &middot; Signal Post</span></div></div><div class="fl-row"><div class="fl-thumb"></div><div><b>Inside a recycling plant</b><span>Tech &middot; Metro Times</span></div></div><div class="fl-row"><div class="fl-thumb"></div><div><b>Three startups to watch this year</b><span>Tech &middot; The Daily Ledger</span></div></div></div></div>
+                <div class="fl-bar fl-bar--foot" style="display:block"><div class="fl-btn fl-btn--ghost">Close</div></div></div>
+            </div>
+            <figcaption><span class="step-card__num type-label-sm" style="display:inline;margin-right:0.5rem">05</span><span class="type-body-md text-secondary">Up to date, plus three more on what held them longest.</span></figcaption>
+          </figure>
+          <figure class="fl-step">
+            <div class="pd-screen fl-lock" data-theme="a" style="max-width:none">
+              <img src="assets/phone-dark.webp" width="576" height="1206" alt="" decoding="async" loading="lazy">
+              <div class="pd-widgets">
+                <div class="pd-chips">
+                  <div class="pd-chip"><svg class="pd-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="10" r="7" fill="#f6d34a"/><path d="M6 20h11a4 4 0 0 0 0-8 5 5 0 0 0-9.6 1.5A3.3 3.3 0 0 0 6 20z" fill="#ffffff"/></svg><b>27&deg;</b></div>
+                  <div class="pd-chip pd-chip--grow"><span class="pd-dot" aria-hidden="true">?</span><span><b>Daily Trivia</b> <span class="pd-soft">&middot; 5 Questions</span></span></div>
+                </div>
+              </div>
+            </div>
+            <figcaption><span class="step-card__num type-label-sm" style="display:inline;margin-right:0.5rem">06</span><span class="type-body-md text-secondary">Finished and closed: the card steps back. Nothing refills the space.</span></figcaption>
+          </figure>
+          <figure class="fl-step">
+            <div class="pd-screen fl-lock" data-theme="a" style="max-width:none">
+              <img src="assets/phone-dark.webp" width="576" height="1206" alt="" decoding="async" loading="lazy">
+              <div class="pd-widgets">
+                <div class="pd-chips">
+                  <div class="pd-chip"><svg class="pd-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="10" r="7" fill="#f6d34a"/><path d="M6 20h11a4 4 0 0 0 0-8 5 5 0 0 0-9.6 1.5A3.3 3.3 0 0 0 6 20z" fill="#ffffff"/></svg><b>27&deg;</b></div>
+                  <div class="pd-chip pd-chip--grow"><span class="pd-dot" aria-hidden="true">?</span><span><b>Daily Trivia</b> <span class="pd-soft">&middot; 5 Questions</span></span></div>
+                </div>
+                <div class="pd-card"><h4>Continue Your Brief</h4><p>7 stories left from this morning</p><div class="pd-card-foot"><span>3 of 10 read</span><span class="pd-cta"><span>Continue</span><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></i></span></div></div>
+              </div>
+            </div>
+            <figcaption><span class="step-card__num type-label-sm" style="display:inline;margin-right:0.5rem">07</span><span class="type-body-md text-secondary">Or, left midway: the card picks up where they stopped, for as long as the brief is fresh.</span></figcaption>
+          </figure>
+      </div>
+      <!-- Brief lifetime rule (agreed): answers "how long does the card stay". -->
+      <p class="reveal type-body-md mt-6 max-w-prose text-secondary">A brief lives for a few hours around this person&#39;s routine. Opened and closed without reading counts as &quot;not now&quot;: the card steps back at once, and if it keeps happening, the brief moves to another time of day.</p>
+    </div>
+  </section>
+
+  <section id="screens" class="px-4 lg:px-20 bg-surface-alt">
+    <div class="case-scope mx-auto max-w-7xl pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+      <span class="reveal type-label-sm text-muted">Part 2 &middot; High fidelity</span>
+      <h2 class="reveal type-headline-md mt-4 max-w-2xl">a brief that ends well<span class="brand-dot">.</span></h2>
+      <!-- Two high-fidelity screens, built with Claude in HTML from Ofir's wireframes 02 and 05 and art-directed
+           by Ofir. Publishers, brands and headlines are invented. -->
+      <div class="hf-pair mt-12">
+        <figure class="hf-fig reveal">
+          <div class="fl-phone hf">
+              <img src="assets/phone-light.webp" width="576" height="1206" alt="" decoding="async">
+              <div class="fl-app"><div class="fl-status"><span></span><span class="fl-si"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3v19H3z" fill="currentColor" opacity=".45"/><path d="M22 10v12H11z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="19" rx="2" fill="currentColor"/><rect x="10" y="1" width="4" height="3" rx="1" fill="currentColor"/></svg><span>08:24</span></span></div>
+                <div class="hf-top"><span>Tuesday, Oct 20</span><span class="hf-x">&times;</span></div>
+                <p class="hf-h1">Your Daily News Brief</p>
+                <p class="hf-sub">10 stories &middot; 4 min &middot; 5 publishers</p>
+                <div class="hf-topics"><span>Picked for you:</span><span class="on">Tech</span><span class="on">City</span><span class="on">Economy</span></div>
+                <div class="hf-lead"><div class="hf-tile t-eco" style="width:auto"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg></div><div class="hf-lead-b"><b>Rates stay put for a third month</b><span class="hf-meta">The Daily Ledger &middot; 2 min</span></div></div>
+                <div class="hf-list">
+                  <div class="hf-row"><span class="hf-num">02</span><div><b>New metro line opens ahead of schedule</b><span class="hf-meta">Metro Times &middot; 1 min</span></div><span class="hf-tile t-city"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg></span></div>
+                  <div class="hf-row"><span class="hf-num">03</span><div><b>Heatwave eases by the weekend</b><span class="hf-meta">Northwind News &middot; 1 min</span></div><span class="hf-tile t-wx"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span></div>
+                  <div class="hf-row"><span class="hf-num">04</span><div><b>Smarter savings for weekend trips</b><span class="hf-meta">Wayfare</span><span class="hf-spon">Sponsored</span></div><span class="hf-tile t-spon"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></span></div>
+                  <div class="hf-row"><span class="hf-num">05</span><div><b>Startup raises $40M to recycle batteries</b><span class="hf-meta">Signal Post &middot; 2 min</span></div><span class="hf-tile t-tech"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"/><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"/></svg></span></div>
+                  <div class="hf-row"><span class="hf-num">06</span><div><b>What to expect from the cup draw</b><span class="hf-meta">Field Report &middot; 1 min</span></div><span class="hf-tile t-sport"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg></span></div>
+                  <div class="hf-row"><span class="hf-num">07</span><div><b>Museum reopens after two years</b><span class="hf-meta">Metro Times &middot; 1 min</span></div><span class="hf-tile t-city"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></span></div>
+                </div>
+                <div class="hf-foot"><div class="hf-btn">Read in sequence <small>&middot; 4 min</small></div></div>
+              </div>
+            </div>
+          <figcaption class="type-body-md mt-5 max-w-[20rem] mx-auto text-secondary"><span class="font-medium text-default">The brief.</span> White, because this is a reading surface: color only arrives with the content. Topics say why these stories, and the one sponsored story sits fourth, labeled.</figcaption>
+        </figure>
+        <figure class="hf-fig reveal">
+          <div class="fl-phone hf hf-done">
+              <img src="assets/phone-light.webp" width="576" height="1206" alt="" decoding="async">
+              <div class="fl-app"><div class="fl-status"><span></span><span class="fl-si"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3v19H3z" fill="currentColor" opacity=".45"/><path d="M22 10v12H11z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="19" rx="2" fill="currentColor"/><rect x="10" y="1" width="4" height="3" rx="1" fill="currentColor"/></svg><span>08:24</span></span></div>
+                <div class="hf-top"><span></span><span class="hf-x">&times;</span></div>
+                <div class="hf-hero"><span class="hf-burst" aria-hidden="true"><i style="--x:-24cqw;--y:-10cqw;--c:#f28b5b"></i><i style="--x:22cqw;--y:-12cqw;--c:#f6c64a"></i><i style="--x:-22cqw;--y:6cqw;--c:#8fc7a7"></i><i style="--x:23cqw;--y:5cqw;--c:#f28b5b"></i><i style="--x:-6cqw;--y:-18cqw;--c:#9db7f2"></i><i style="--x:8cqw;--y:-19cqw;--c:#f28b5b"></i><i style="--x:-28cqw;--y:0cqw;--c:#f6c64a"></i><i style="--x:28cqw;--y:-2cqw;--c:#9db7f2"></i><i style="--x:-15cqw;--y:10cqw;--c:#f28b5b"></i><i style="--x:15cqw;--y:10cqw;--c:#f6c64a"></i></span><div class="hf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div></div>
+                <p class="hf-h1">You&#39;re up to date</p>
+                <p class="hf-sub">10 of 10 stories &middot; 4 min</p>
+                <span class="hf-next">Next brief: tomorrow, 07:30</span>
+                <p class="hf-sec">More on Tech</p>
+                <div class="hf-list">
+                  <div class="hf-row"><div><b>Why battery prices keep falling</b><span class="hf-meta">Signal Post &middot; 2 min</span></div><span class="hf-tile t-tech"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"/><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"/></svg></span></div>
+                  <div class="hf-row"><div><b>The laptop built for long days</b><span class="hf-meta">Brightline</span><span class="hf-spon">Sponsored</span></div><span class="hf-tile t-spon"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></span></div>
+                  <div class="hf-row"><div><b>Three startups to watch this year</b><span class="hf-meta">The Daily Ledger &middot; 3 min</span></div><span class="hf-tile t-tech"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span></div>
+                </div>
+                <div class="hf-fb"><span>How was today&#39;s brief?</span><span><em>More like this</em><em>Less</em></span></div>
+                <div class="hf-foot"><div class="hf-btn hf-btn--ghost">Close</div></div>
+              </div>
+            </div>
+          <figcaption class="type-body-md mt-5 max-w-[20rem] mx-auto text-secondary"><span class="font-medium text-default">Up to date.</span> The one screen that changes color, because it is a moment, not a page. The next brief&#39;s time is the reason to return, and the two buttons are how the next one gets better.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="plan" class="px-4 lg:px-20">
+    <div class="case-scope mx-auto max-w-7xl pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+      <span class="reveal type-label-sm text-muted">Part 3 &middot; Growth, monetization and measurement</span>
+      <h2 class="reveal type-headline-md mt-4 max-w-2xl">the plan<span class="brand-dot">.</span></h2>
+      <p class="case-intro reveal type-body-lg mt-6 max-w-prose text-secondary">Everything here serves one idea: revenue is the result of the habit, not a goal that competes with it.</p>
+      <!-- Part 3: "one slide each" in the brief, so one full-width row per question: numeral, the
+           brief's question as a label, a claim as the heading, then the points. Numbered to map
+           onto 3.1 to 3.3. The hypothetical is labeled as one on purpose: no invented data. -->
+      <div class="reveal-stagger mt-12">
+        <div class="grid grid-cols-1 gap-6 border-t border-border-default py-10 lg:grid-cols-12 lg:gap-12">
+          <div class="lg:col-span-4">
+            <span class="step-card__num type-label-sm" aria-hidden="true">01</span>
+            <p class="type-label-sm text-muted" style="text-transform:none; letter-spacing:normal;">Returning users, engagement, personalization</p>
+            <h3 class="type-headline-sm mt-2">Coming Back by Choice</h3>
+          </div>
+          <ul class="flex list-none flex-col gap-4 p-0 lg:col-span-8">
+              <li class="type-body-md text-secondary"><span class="font-medium text-default">On their clock.</span> The brief arrives when this person reads: every morning, every evening, or only on Saturday.</li>
+              <li class="type-body-md text-secondary"><span class="font-medium text-default">At their depth.</span> Skimmers get three to five focused stories. Deep readers get tabs and topics.</li>
+              <li class="type-body-md text-secondary"><span class="font-medium text-default">From where they stopped.</span> &quot;Continue&quot; holds their place, and &quot;You&#39;re up to date&quot; gives the day an end worth returning to.</li>
+              <li class="type-body-md text-secondary"><span class="font-medium text-default">In their words.</span> &quot;More like this&quot; and &quot;Less like this&quot; on any story, the same kind of signal Taboola already reads from likes.</li>
+          </ul>
+        </div>
+        <div class="grid grid-cols-1 gap-6 border-t border-border-default py-10 lg:grid-cols-12 lg:gap-12">
+          <div class="lg:col-span-4">
+            <span class="step-card__num type-label-sm" aria-hidden="true">02</span>
+            <p class="type-label-sm text-muted" style="text-transform:none; letter-spacing:normal;">Monetization</p>
+            <h3 class="type-headline-sm mt-2">Paid For, Never Pushed</h3>
+          </div>
+          <ul class="flex list-none flex-col gap-4 p-0 lg:col-span-8">
+              <li class="type-body-md text-secondary"><span class="font-medium text-default">Inside the brief, not on top of it.</span> One sponsored story in the brief and one in &quot;More on&quot;, same format, clearly labeled.</li>
+              <li class="type-body-md text-secondary"><span class="font-medium text-default">Every read is traffic to a publisher,</span> the open-web model Taboola is built on.</li>
+              <li class="type-body-md text-secondary"><span class="font-medium text-default">Guardrails.</span> Never on a busy lock screen, never first in the brief, never more than one per place, always relevant to the reader&#39;s topics.</li>
+              <li class="type-body-md text-secondary"><span class="font-medium text-default">Next.</span> A brand quiz partnership, labeled as one.</li>
+          </ul>
+        </div>
+        <div class="grid grid-cols-1 gap-6 border-t border-border-default py-10 lg:grid-cols-12 lg:gap-12">
+          <div class="lg:col-span-4">
+            <span class="step-card__num type-label-sm" aria-hidden="true">03</span>
+            <p class="type-label-sm text-muted" style="text-transform:none; letter-spacing:normal;">Metrics and validation</p>
+            <h3 class="type-headline-sm mt-2">Habit First, Revenue Follows</h3>
+          </div>
+          <ul class="flex list-none flex-col gap-4 p-0 lg:col-span-8">
+              <li class="type-body-md text-secondary"><span class="font-medium text-default">North star: weekly returning readers,</span> people who open the brief on 3 of 7 days. It measures &quot;choose to come back&quot; directly.</li>
+              <li class="type-body-md text-secondary"><span class="font-medium text-default">Guardrail: lock-screen opt-out rate.</span> If it rises, something is broken, even if clicks rise with it.</li>
+              <li class="type-body-md text-secondary"><span class="font-medium text-default">Before launch.</span> A two-second glance test with 5 to 8 people (&quot;what did you see?&quot;), a usability test on the prototype, then 1% to 5% of one OEM partner&#39;s users in one market, against a holdout group.</li>
+              <li class="type-body-md text-secondary"><span class="font-medium text-default">Hypothetical, for illustration.</span> After two weeks, opens are high but only 30% finish. Next step: cut the brief to five stories and test again.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-i-worked" class="px-4 lg:px-20 bg-surface-alt">
+    <div class="case-scope mx-auto max-w-7xl pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+      <span class="reveal type-label-sm text-muted">How I worked</span>
+      <h2 class="reveal type-headline-md mt-4 max-w-2xl">AI for speed, judgment by hand<span class="brand-dot">.</span></h2>
+      <p class="case-intro reveal type-body-lg mt-6 max-w-prose text-secondary">The brief asked which AI tools I used, for what, and what I kept for myself. The short version: AI made this faster, and the calls on this page are mine.</p>
+      <!-- Nested closing card, same as "What I learned": two columns, With AI / By me. Content from the
+           running log in Taboola/taboola-notes.md. -->
+      <div class="reveal learn-outer mt-8">
+        <div class="learn-inner">
+          <svg class="learn-mark" aria-hidden="true" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="butt"><line x1="50" y1="8" x2="50" y2="92"/><line x1="13.6" y1="29" x2="86.4" y2="71"/><line x1="86.4" y1="29" x2="13.6" y2="71"/></svg>
+          <div class="learn-cols">
+            <div><h3 class="type-title-md" style="margin-bottom:0.75rem">With AI</h3><div class="flex flex-col gap-4"><p><span class="font-medium text-default">Claude (Cowork).</span> A thinking partner through the brief, desk research on Taboola News, a running notes file, and the build of this page: the live partner widget, the flow wireframes, compressed media. It drafted copy; I rewrote or approved every line.</p><p><span class="font-medium text-default">Figma Make.</span> One lock-screen attempt. It knew when to add context, but not what should take priority. The rain widget on this page is my correction.</p></div></div>
+            <div><h3 class="type-title-md" style="margin-bottom:0.75rem">By me</h3><div class="flex flex-col gap-4"><p><span class="font-medium text-default">Research on the ground:</span> I found and watched Taboola&#39;s investor presentation and the &quot;how to remove Taboola News&quot; videos.</p><p><span class="font-medium text-default">The product calls:</span> the stance, the one-to-three rule and its priorities, and choosing the feed over the game.</p><p><span class="font-medium text-default">The design:</span> the lock-screen states in Figma, and the art direction of the two high-fidelity screens, which Claude built from my wireframes.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="footer-dark-bg relative overflow-hidden px-4 lg:px-20">
+    <div class="blob-parallax" style="bottom:-12rem; left:-8rem;" data-parallax="-0.1">
+      <div class="hero-blob" style="width:28rem; height:28rem; bottom:0; left:0; opacity:0.25; animation-duration:33s; animation-direction:reverse;"></div>
+    </div>
+    <div class="footer-glow footer-glow--left" id="footerGlowLeft" aria-hidden="true"></div>
+    <div class="footer-glow footer-glow--right" id="footerGlowRight" aria-hidden="true"></div>
+    <div class="relative z-[1] mx-auto max-w-7xl py-24 text-center lg:py-32">
+      <h2 class="reveal hero-dark-on-primary type-display-sm">Thank you<span class="hero-dark-gold">.</span></h2>
+      <p class="reveal footer-text-soft type-body-lg mx-auto mt-4 max-w-lg">Thanks for reading.<br>My lock-screen wireframes and the high-fidelity designs are in the Figma file.</p>
+      <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="https://www.figma.com/design/gTurkySwALEoaaADOsPm6s/Taboola?node-id=3-105" target="_blank" rel="noopener noreferrer" class="btn-glow-accent inline-flex h-10 items-center justify-center rounded-full bg-white px-6 text-sm font-medium text-default transition-all">Open the Figma file</a>
+      </div>
+      <div class="footer-text-soft type-label-sm mt-16 border-t pt-6" style="border-color:rgba(255,255,255,0.15); text-transform:none; letter-spacing:normal;">
+        Ofir Avitan &middot; 2026
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // scroll-triggered reveals, same mechanics as ../index.html (2026-08-07 mobile fix,
+    // ported here 2026-08-08: this page still had the pre-fix version, threshold 0.3 with
+    // no rootMargin and a flat 160ms delay meant tall mobile sections needed to be 30%
+    // into view before animating, so by the time they did they were already scrolled past,
+    // reading as no animation at all)
+    const isMobile = window.matchMedia('(max-width: 639px)').matches;
+    document.querySelectorAll('.reveal-stagger').forEach((group) => {
+      Array.from(group.children).forEach((child, i) => {
+        child.style.transitionDelay = `${i * (isMobile ? 70 : 160)}ms`;
+      });
+    });
+    // 2026-08-08: `.reveal` used to sit on a whole section's outer wrapper
+    // (heading + paragraph + cards + placeholder as one element), so the 15%
+    // threshold meant 15% of that WHOLE block's height, which on mobile
+    // single-column layouts could be 1000px+ tall, needing a lot of scroll
+    // before it counted as "visible" even though the heading itself was
+    // already on screen. Fixed by moving `.reveal` onto the individual
+    // heading/paragraph/etc instead of their shared wrapper, so each observed
+    // element is small and triggers as soon as it's actually on screen, same
+    // as `.reveal-stagger > *` already did for card grids.
+    let ioStarted = false;
+    const io = new IntersectionObserver((entries) => {
+      const isInitialCheck = !ioStarted;
+      ioStarted = true;
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          io.unobserve(entry.target);
+          if (isInitialCheck) {
+            // already inside the viewport at page load (a short hero on a
+            // tall phone screen can do this), wait until the hero's own
+            // on-load .enter sequence (staggered up to ~1.4s) has had time to
+            // finish so this doesn't visually race it. Anything reached by
+            // genuine scrolling reveals immediately, no matter how soon after
+            // load that happens, since reaching it always took longer than
+            // this delay anyway.
+            setTimeout(() => entry.target.classList.add('in-view'), 1500);
+          } else {
+            entry.target.classList.add('in-view');
+          }
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+    document.querySelectorAll('.reveal-stagger > *').forEach((el) => io.observe(el));
+
+    // B57: footer gold-spark reveal, ported from ../index.html (B55). One-shot entrance,
+    // same "trigger once, unobserve, done" shape as the .reveal observer above, kept
+    // separate because it targets #contact itself, not the individual .footer-glow elements.
+    (function () {
+      const footerGlowLeftEl = document.getElementById('footerGlowLeft');
+      const footerGlowRightEl = document.getElementById('footerGlowRight');
+      const contactSection = document.getElementById('contact');
+      if (footerGlowLeftEl && footerGlowRightEl && contactSection) {
+        const footerGlowIo = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              footerGlowIo.unobserve(entry.target);
+              footerGlowLeftEl.classList.add('in-view');
+              footerGlowRightEl.classList.add('in-view');
+            }
+          });
+        }, { threshold: 0.15 });
+        footerGlowIo.observe(contactSection);
+      }
+    })();
+
+    // hero Lottie conveyor: loads each card's JSON (co-located in this folder, filenames
+    // set via data-lottie) and autoplays it looping. The sideways drift and per-card
+    // "landing" fade are pure CSS (see .conveyor-track / .conveyor-card.land), this just
+    // renders the animations themselves.
+    if (window.lottie) {
+      document.querySelectorAll('.conveyor-card').forEach((card) => {
+        window.lottie.loadAnimation({
+          container: card,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: card.dataset.lottie,
+          // default 'xMidYMid meet': shows the whole portrait canvas uncropped, scaled to
+          // the card's own height (see .conveyor-card's aspect-ratio in CSS)
+        });
+      });
+    }
+
+    // challenge section: single "before" phone recording (old_loans.mp4), sits well below the
+    // fold, so unlike a hero video a fixed page-load delay doesn't make sense, start it (and
+    // let it loop) once it actually scrolls into view instead. Same pattern as
+    // ../Credit-Cards/index.html's challengeMedia.
+    const challengeMedia = document.getElementById('challengeMedia');
+    if (challengeMedia && !prefersReducedMotion) {
+      const challengeVideos = challengeMedia.querySelectorAll('video');
+      const challengeIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            challengeIo.unobserve(entry.target);
+            challengeVideos.forEach((v) => v.play());
+          }
+        });
+      }, { threshold: 0.3 });
+      challengeIo.observe(challengeMedia);
+    }
+
+    // mvp section (2026-08-14): same play-once-in-view treatment as challengeMedia above, real
+    // mockup (loan_mvp.mp4) replacing the old "Coming soon." placeholder.
+    const mvpMedia = document.getElementById('mvpMedia');
+    if (mvpMedia && !prefersReducedMotion) {
+      const mvpVideos = mvpMedia.querySelectorAll('video');
+      const mvpIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            mvpIo.unobserve(entry.target);
+            mvpVideos.forEach((v) => v.play());
+          }
+        });
+      }, { threshold: 0.3 });
+      mvpIo.observe(mvpMedia);
+    }
+
+    // strategy section: same play-once-in-view treatment as challengeMedia above, "after"
+    // phone recording (new_loans.mp4) pairing with challenge's "before" one.
+    const strategyMedia = document.getElementById('strategyMedia');
+    if (strategyMedia && !prefersReducedMotion) {
+      const strategyVideos = strategyMedia.querySelectorAll('video');
+      const strategyIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            strategyIo.unobserve(entry.target);
+            strategyVideos.forEach((v) => v.play());
+          }
+        });
+      }, { threshold: 0.3 });
+      strategyIo.observe(strategyMedia);
+    }
+
+    // thin progress bar tracking scroll position, same as ../index.html
+    const progressBar = document.getElementById('scrollProgress');
+    const updateProgress = () => {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight;
+      const pct = max > 0 ? (doc.scrollTop / max) * 100 : 0;
+      progressBar.style.width = pct + '%';
+    };
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // scroll parallax on the contact section's decorative blob, same as ../index.html
+    if (!prefersReducedMotion) {
+      const parallaxEls = Array.from(document.querySelectorAll('.blob-parallax[data-parallax]'));
+      let ticking = false;
+      const applyParallax = () => {
+        const y = window.scrollY;
+        parallaxEls.forEach((el) => {
+          const factor = parseFloat(el.dataset.parallax) || 0;
+          el.style.transform = `translateY(${y * factor}px)`;
+        });
+        ticking = false;
+      };
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(applyParallax);
+          ticking = true;
+        }
+      }, { passive: true });
+      applyParallax();
+    }
+
+    // B24: pull-past-top sky strip, same mechanics as ../index.html
+    if (!prefersReducedMotion) {
+      const pageShift = document.getElementById('pageShift');
+      const skyStrip = document.getElementById('skyStrip');
+
+      const STAR_COUNT = 46;
+      for (let i = 0; i < STAR_COUNT; i++) {
+        const star = document.createElement('div');
+        star.className = 'sky-strip__star';
+        const size = Math.random() < 0.82 ? 1 : 2;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.left = (Math.random() * 100) + '%';
+        star.style.top = (8 + Math.random() * 68) + '%';
+        star.style.setProperty('--star-duration', (2.2 + Math.random() * 2.6) + 's');
+        star.style.setProperty('--star-delay', (Math.random() * 4) + 's');
+        star.style.setProperty('--star-max', (0.55 + Math.random() * 0.4).toFixed(2));
+        skyStrip.appendChild(star);
+      }
+
+      // B57: footer gold sparkle dust, ported verbatim from ../index.html (B55). Same
+      // generation approach as the stars just above, scattered inside each .footer-glow
+      // wrapper so they stay clipped to the edge band and never drift into the centered
+      // text column. Skipped entirely under reduced motion (whole block is guarded above).
+      const SPARK_COUNT = 14;
+      const footerGlowLeft = document.getElementById('footerGlowLeft');
+      const footerGlowRight = document.getElementById('footerGlowRight');
+      [footerGlowLeft, footerGlowRight].forEach((wrap) => {
+        if (!wrap) return;
+        for (let i = 0; i < SPARK_COUNT; i++) {
+          const spark = document.createElement('div');
+          spark.className = 'footer-glow__spark';
+          const size = 1 + Math.random() * 2;
+          spark.style.width = size + 'px';
+          spark.style.height = size + 'px';
+          spark.style.left = (Math.random() * 100) + '%';
+          spark.style.top = (10 + Math.random() * 80) + '%';
+          spark.style.setProperty('--spark-duration', (2.4 + Math.random() * 2.8) + 's');
+          spark.style.setProperty('--spark-delay', (Math.random() * 4) + 's');
+          spark.style.setProperty('--spark-max', (0.5 + Math.random() * 0.4).toFixed(2));
+          wrap.appendChild(spark);
+        }
+      });
+
+      const MAX_PULL = 150;
+      const OPEN_THRESHOLD = 0.8 * MAX_PULL;
+      const HOLD_MS = 1700;
+
+      let state = 'idle';
+      let startY = 0;
+      let holdTimer = null;
+      // Bugfix: pulled only flips true once a real pull offset has been
+      // applied, so touchend's close() can't fire (forcing a transform onto
+      // #pageShift and making the nav jump) for a plain scroll-down gesture
+      // that merely started at scrollY 0. See index.html for the full note.
+      let pulled = false;
+
+      function resistance(raw) {
+        if (raw <= 0) return 0;
+        return MAX_PULL * (1 - Math.exp(-raw / MAX_PULL));
+      }
+
+      function setPull(px, animate) {
+        pageShift.style.transition = animate ? 'transform 480ms var(--ease-soft)' : 'none';
+        pageShift.style.transform = `translateY(${px}px)`;
+      }
+
+      function close() {
+        clearTimeout(holdTimer);
+        holdTimer = null;
+        state = 'idle';
+        setPull(0, true);
+        setTimeout(() => {
+          if (state === 'idle') {
+            pageShift.style.transition = 'none';
+            pageShift.style.transform = 'none';
+          }
+        }, 500);
+      }
+
+      function lockOpen(px) {
+        state = 'locked';
+        setPull(px, true);
+        holdTimer = setTimeout(close, HOLD_MS);
+      }
+
+      document.addEventListener('touchstart', (e) => {
+        if (window.scrollY > 0 || state === 'locked') return;
+        startY = e.touches[0].clientY;
+        state = 'pulling';
+        pulled = false;
+      }, { passive: true });
+
+      document.addEventListener('touchmove', (e) => {
+        if (state !== 'pulling' || window.scrollY > 0) return;
+        const raw = e.touches[0].clientY - startY;
+        if (raw <= 0) return;
+        e.preventDefault();
+        pulled = true;
+        const pull = resistance(raw);
+        if (pull >= OPEN_THRESHOLD) { lockOpen(pull); return; }
+        setPull(pull, false);
+      }, { passive: false });
+
+      document.addEventListener('touchend', () => {
+        if (state === 'pulling' && pulled) close();
+        else state = 'idle';
+      }, { passive: true });
+
+      let wheelPull = 0;
+      let wheelReleaseTimer = null;
+      document.addEventListener('wheel', (e) => {
+        if (state === 'locked') return;
+        if (window.scrollY > 0 || e.deltaY >= 0) {
+          if (state === 'pulling') { wheelPull = 0; close(); }
+          return;
+        }
+        e.preventDefault();
+        state = 'pulling';
+        wheelPull += -e.deltaY * 0.6;
+        const pull = resistance(wheelPull);
+        if (pull >= OPEN_THRESHOLD) { lockOpen(pull); return; }
+        setPull(pull, false);
+        clearTimeout(wheelReleaseTimer);
+        wheelReleaseTimer = setTimeout(() => {
+          if (state === 'pulling') { wheelPull = 0; close(); }
+        }, 160);
+      }, { passive: false });
+    }
+
+    // Happy-flow strip (2026-08-13): purpose menu selection swaps the real image (or a "Coming
+    // soon." fallback) in all 6 slots. As of today all 6 purposes have real, directly-numbered
+    // 6-screen sets (Loan_Purposes/<Purpose>/1.png-6.png, folder number === strip slot number, no
+    // shift needed for any purpose - Vacation's folder was renumbered to match once its own
+    // Calculator shot was added), so purposeScreens is generated from a purpose->folder map instead
+    // of hand-written per purpose. Slot 4 (Calculator) reuses the same source image across every
+    // purpose (confirmed byte-identical via md5sum) - kept as-is rather than special-cased, since
+    // it renders correctly either way and Ofir can swap it later if that wasn't intentional.
+    (function () {
+      var menu = document.getElementById('loanPurposeMenu');
+      var strip = document.getElementById('loanPurposeStrip');
+      var purposeFolders = {
+        vacation: 'Vacation',
+        car: 'Car',
+        medical: 'Medical',
+        studies: 'Studies',
+        'debt-coverage': 'Debt',
+        shopping: 'Shopping'
+      };
+      var purposeScreens = {};
+      Object.keys(purposeFolders).forEach(function (purpose) {
+        var folder = purposeFolders[purpose];
+        var screens = {};
+        [1, 2, 3, 4, 5, 6].forEach(function (n) {
+          screens[n] = 'Loan_Purposes/' + folder + '/' + n + '.png';
+        });
+        purposeScreens[purpose] = screens;
+      });
+      function renderSlot(slotEl, src) {
+        var media = slotEl && slotEl.querySelector('[data-slot-media]');
+        if (!media) return;
+        if (src) {
+          media.classList.remove('border-dashed');
+          media.innerHTML = '<img src="' + src + '" alt="" class="h-full w-full object-cover object-top">';
+        } else {
+          media.classList.add('border-dashed');
+          media.innerHTML = '<span class="flex h-full items-center justify-center px-1 text-center type-label-sm text-muted">Coming soon.</span>';
+        }
+      }
+      var stripInner = document.getElementById('loanPurposeStripInner');
+      // 2026-08-14: replays the conveyor slide-in on demand by toggling `.strip-in-view` off then
+      // back on. Removing the class drops the animation rule entirely, so the inner row snaps back
+      // to its base translateX(-100%) - but the browser batches that with the next class change
+      // unless we force a reflow in between (reading offsetWidth), so re-adding the class in the
+      // same tick would be a no-op and the animation wouldn't restart. Guarded by prefersReducedMotion
+      // same as the initial entrance below.
+      function replayStripEntrance() {
+        if (!strip || !stripInner || prefersReducedMotion) return;
+        strip.classList.remove('strip-in-view');
+        void stripInner.offsetWidth; // force reflow between remove and re-add
+        strip.classList.add('strip-in-view');
+      }
+
+      // 2026-08-15 (Ofir's ask): mobile-only "peek carousel" scale effect - the two cards
+      // flanking the centered one sit smaller and grow to full size as they approach center.
+      // Centering itself is pure CSS (see #loanPurposeStripInner's mobile-only padding-inline and
+      // [data-slot]'s scroll-snap-align:center above), this only owns the scale. Checked at
+      // runtime via matchMedia rather than a one-time flag, so a resize/orientation change that
+      // crosses the breakpoint is picked up correctly instead of getting stuck on whatever was
+      // true at page load.
+      var stripSlots = strip ? Array.prototype.slice.call(strip.querySelectorAll('[data-slot]')) : [];
+      var isMobileStripQuery = window.matchMedia('(max-width: 639.98px)');
+      var STRIP_SCALE_MIN = 0.86;
+      var stripScaleRaf = null;
+      function updateStripScale() {
+        if (!strip || !stripSlots.length) return;
+        if (!isMobileStripQuery.matches) {
+          // not mobile (or resized back out of it): clear any leftover inline scale so desktop's
+          // original left-aligned layout is never touched by this.
+          stripSlots.forEach(function (el) { el.style.transform = ''; });
+          return;
+        }
+        var stripRect = strip.getBoundingClientRect();
+        var stripCenter = stripRect.left + stripRect.width / 2;
+        stripSlots.forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          var cardCenter = r.left + r.width / 2;
+          var maxDist = stripRect.width / 2 + r.width / 2;
+          var t = maxDist > 0 ? Math.min(Math.abs(cardCenter - stripCenter) / maxDist, 1) : 0;
+          var scale = 1 - t * (1 - STRIP_SCALE_MIN);
+          // no CSS transition on this: setting it directly every scroll frame is what makes it
+          // track the finger 1:1 during a drag instead of animating in discrete steps.
+          el.style.transform = 'scale(' + scale.toFixed(3) + ')';
+        });
+      }
+      function scheduleStripScale() {
+        if (stripScaleRaf) return;
+        stripScaleRaf = requestAnimationFrame(function () {
+          stripScaleRaf = null;
+          updateStripScale();
+        });
+      }
+      if (strip && stripSlots.length) {
+        strip.addEventListener('scroll', scheduleStripScale, { passive: true });
+        window.addEventListener('resize', scheduleStripScale);
+        // recompute once the conveyor entrance (initial or replayed) actually settles, since the
+        // whole row is mid-transform until then and card positions are transient during the
+        // slide; under reduced motion the animation never plays at all so nothing would ever call
+        // this without the explicit call below.
+        if (stripInner) stripInner.addEventListener('animationend', updateStripScale);
+        updateStripScale();
+      }
+
+      if (menu && strip) {
+        var buttons = menu.querySelectorAll('.nav-item');
+        menu.addEventListener('click', function (e) {
+          var btn = e.target.closest('.nav-item');
+          if (!btn) return;
+          buttons.forEach(function (b) {
+            var active = b === btn;
+            b.classList.toggle('is-active', active);
+            if (active) b.setAttribute('aria-current', 'page');
+            else b.removeAttribute('aria-current');
+          });
+          // 2026-08-14: on mobile the menu itself is a horizontal scroll strip (flex-row +
+          // overflow-x-auto below sm), so the tapped pill can land partially off-screen. Center it
+          // in the visible strip so both neighbors peek in as a "there's more to scroll" cue, per
+          // Ofir's ask (confirmed against his own phone test: at 360px only Vacation/Car/Medical
+          // show before the cut). Guarded by an actual overflow check (scrollWidth > clientWidth),
+          // not a hardcoded breakpoint, so desktop's sm:flex-col/sm:overflow-visible layout - which
+          // never overflows - is untouched and this can never trigger a stray page-level scroll.
+          if (menu.scrollWidth > menu.clientWidth) {
+            btn.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+          }
+          var purpose = btn.getAttribute('data-purpose');
+          var screens = purposeScreens[purpose] || {};
+          [1, 2, 3, 4, 5, 6].forEach(function (n) {
+            renderSlot(strip.querySelector('[data-slot="' + n + '"]'), screens[n]);
+          });
+          // 2026-08-14: always jump back to screen 1 on purpose switch, so a visitor who scrolled
+          // the strip to see screen 5/6 for one purpose doesn't land mid-strip when they pick a
+          // different one - every switch should start the story over from the beginning.
+          strip.scrollLeft = 0;
+          // 2026-08-14: every purpose switch replays the conveyor slide-in too, not just the very
+          // first time the strip scrolls into view - Ofir's ask, so the "6 enters first, then 5,
+          // 4...1" motion re-plays as a mini transition every time the screens actually change.
+          replayStripEntrance();
+        });
+      }
+      // 2026-08-14: conveyor entrance for the strip's 6 cards (CSS transform/keyframes live in the
+      // stylesheet block above) - fires the first time the strip scrolls into view, same "observe once
+      // then unobserve" pattern used for challengeMedia/strategyMedia's video-autoplay triggers below
+      // (this only controls the FIRST play; every later purpose switch replays it via
+      // replayStripEntrance() above, called from the nav click handler). Skipped entirely under
+      // reduced motion, consistent with those same triggers - the CSS reduced-motion block
+      // separately forces the cards to their final visible state regardless, so nothing is lost by
+      // not attaching this.
+      if (strip && !prefersReducedMotion) {
+        var stripIo = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              stripIo.unobserve(entry.target);
+              entry.target.classList.add('strip-in-view');
+            }
+          });
+        }, { threshold: 0.2 });
+        stripIo.observe(strip);
+      }
+
+      // B73, 2026-09-01: the purpose strip's staggered "landing" entrance, moved out of page-load
+      // timing. It used to live in the hero with `land` baked into the markup and load-time delays,
+      // which was correct above the fold. Down here in "happy flow" those animations would all have
+      // finished about three seconds after load, long before anyone scrolled to them, so the
+      // entrance was being spent on an empty screen. The class is now added when the strip actually
+      // comes into view. The CSS is untouched: .conveyor-card.land still owns the animation, and the
+      // per-card delays still come from each card's own inline style, just shifted 1.4s earlier.
+      // unobserve on first hit, so this plays once and the sideways loop takes over, matching how
+      // every other reveal on this page behaves. Skipped under reduced motion, where the CSS block
+      // already forces the cards to their final visible state, so nothing is lost by not attaching.
+      var purposeStrip = document.getElementById('purposeStrip');
+      if (purposeStrip && !prefersReducedMotion) {
+        var purposeStripIo = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              purposeStripIo.unobserve(entry.target);
+              entry.target.querySelectorAll('[data-land]').forEach(function (card) {
+                card.classList.add('land');
+              });
+            }
+          });
+        }, { threshold: 0.2 });
+        purposeStripIo.observe(purposeStrip);
+      }
+    })();
+
+    // PARTNER DEMO: swap tokens, not structure.
+    (function () {
+      var menu = document.getElementById('partnerMenu');
+      var screen = document.getElementById('partnerScreen');
+      var wall = document.getElementById('partnerWallpaper');
+      var note = document.getElementById('partnerNote');
+      if (!menu || !screen) return;
+      var en = { trivia: '<b>Daily Trivia</b> <span class="pd-soft">&middot; 5 Questions</span>', title: 'Your Daily News Brief', sub: '10 News Updates From Around The World', meta: 'From 5 Publishers &middot; 4 Min', cta: 'Read' };
+      var he = { trivia: '<b>טריוויה יומית</b> <span class="pd-soft">&middot; 5 שאלות</span>', title: 'הבריף היומי שלך', sub: '10 עדכונים מכל העולם', meta: 'מ-5 מוציאים לאור &middot; 4 דק׳', cta: 'לקריאה' };
+      var notes = {
+        a: "Taboola's structure in one partner's type, color and corners.",
+        b: 'Same structure, another partner: squarer corners, a different accent and typeface.',
+        rtl: 'Same structure, mirrored: Hebrew copy and right-to-left reading.',
+        light: 'Same structure on a light wallpaper: surfaces and text flip so contrast holds.'
+      };
+      function setCopy(dict) {
+        screen.querySelectorAll('[data-t]').forEach(function (el) { el.innerHTML = dict[el.getAttribute('data-t')]; });
+      }
+      menu.addEventListener('click', function (e) {
+        var btn = e.target.closest('.nav-item');
+        if (!btn) return;
+        menu.querySelectorAll('.nav-item').forEach(function (b) {
+          var on = b === btn;
+          b.classList.toggle('is-active', on);
+          if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+        });
+        var t = btn.getAttribute('data-theme');
+        screen.setAttribute('data-theme', t);
+        var rtl = t === 'rtl';
+        screen.setAttribute('dir', rtl ? 'rtl' : 'ltr');
+        screen.setAttribute('lang', rtl ? 'he' : 'en');
+        setCopy(rtl ? he : en);
+        wall.src = t === 'light' ? 'assets/phone-light.webp' : 'assets/phone-dark.webp';
+        note.textContent = notes[t];
+      });
+    })();
+  </script>
+
+  </div><!-- /.page-shift -->
+</body>
+</html>
