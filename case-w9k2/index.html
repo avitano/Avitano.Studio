@@ -23,7 +23,8 @@
 <meta name="theme-color" content="#022c22">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <style type="text/tailwindcss">
 @import "tailwindcss";
@@ -1246,6 +1247,540 @@ a:hover .arrow { transform: translateX(4px); }
   #loanPurposeStrip.strip-in-view #loanPurposeStripInner { animation: none; }
   .footer-glow { transition: none; opacity: 1; transform: none; }
 }
+
+/* MORE UI EXAMPLES (round 2). A live match screen for the sports and video brief, shown inside the
+   dark phone frame with its own inner scroll so the page stays short. The screen was designed at 390
+   wide, so every length is a multiple of --u (one design pixel), which keeps it exact at any phone
+   size. Its classes are prefixed lv- so nothing here collides with the page's own classes. Team
+   crests are real club marks supplied by Ofir; players, publishers and the sponsor are invented. */
+.ui-hint { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem; }
+.lv-app { --u: calc(100cqw / 390); background: #101215; color: #f4f2ef; container-type: inline-size; font-family: "DM Sans", sans-serif; -webkit-font-smoothing: antialiased; }
+.lv-app * { box-sizing: border-box; }
+.lv-scroll { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
+.lv-scroll::-webkit-scrollbar { display: none; }
+.lv-scroll h2, .lv-scroll h3 { margin: 0; }
+
+
+.lv-app{
+  --bg:#101215; --card:#191C22; --card-hi:#1F232A; --card-2:#262A33;
+  --line:rgba(255,255,255,.07);
+  --ink:#F4F2EF; --soft:#A7ADB6; --mute:#6F767F;
+  --acc:#f28b5b; --live:#FF453A; --yellow:#F5C518;
+  --home:#E8343A; --home-t:#FF7A7F; --away:#3A6FE0; --away-t:#8FB0FF;
+  --r-card:calc(16 * var(--u)); --r-block:calc(12 * var(--u)); --r-tile:calc(9 * var(--u));
+  --elev:0 calc(1 * var(--u)) 0 rgba(255,255,255,.05) inset, 0 calc(18 * var(--u)) calc(40 * var(--u)) calc(-16 * var(--u)) rgba(0,0,0,.75), 0 calc(2 * var(--u)) calc(6 * var(--u)) rgba(0,0,0,.25);
+}
+.lv-tnum{font-variant-numeric:tabular-nums}
+
+.lv-status{position:absolute;top:0;left:0;right:0;z-index:4;display:flex;justify-content:flex-end;align-items:center;gap:calc(6 * var(--u));padding:calc(12 * var(--u)) calc(22 * var(--u)) 0;font-size:calc(13 * var(--u));font-weight:500;text-shadow:0 calc(1 * var(--u)) calc(4 * var(--u)) rgba(0,0,0,.4)}
+.lv-status svg{width:calc(13 * var(--u));height:calc(13 * var(--u));filter:drop-shadow(0 calc(1 * var(--u)) calc(3 * var(--u)) rgba(0,0,0,.4))}
+
+
+.lv-video{position:relative;height:calc(452 * var(--u));background:#000}
+.lv-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.lv-video .lv-shade{position:absolute;inset:0;background:
+   linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 20%),
+   linear-gradient(0deg,var(--bg) 0%,rgba(16,18,21,.92) 16%,rgba(16,18,21,.55) 34%,rgba(16,18,21,0) 58%)}
+.lv-glass{background:rgba(16,18,21,.5);-webkit-backdrop-filter:blur(calc(14 * var(--u))) saturate(140%);backdrop-filter:blur(calc(14 * var(--u))) saturate(140%);border:calc(1 * var(--u)) solid rgba(255,255,255,.1)}
+.lv-xbtn{position:absolute;top:calc(42 * var(--u));right:calc(16 * var(--u));z-index:3;width:calc(36 * var(--u));height:calc(36 * var(--u));border-radius:calc(999 * var(--u));display:grid;place-items:center}
+.lv-moment{position:absolute;left:calc(16 * var(--u));right:calc(16 * var(--u));bottom:calc(72 * var(--u));z-index:3;display:flex;justify-content:space-between;align-items:flex-end;gap:calc(12 * var(--u))}
+.lv-tag{display:inline-flex;align-items:center;gap:calc(7 * var(--u));height:calc(26 * var(--u));padding:0 calc(10 * var(--u)) 0 calc(4 * var(--u));border-radius:calc(999 * var(--u));font-size:calc(12 * var(--u));font-weight:600;letter-spacing:.02em;margin-bottom:calc(10 * var(--u))}
+.lv-tag .lv-ball{width:calc(18 * var(--u));height:calc(18 * var(--u));border-radius:calc(999 * var(--u));background:#fff;color:#111;display:grid;place-items:center;font-size:calc(11 * var(--u))}
+.lv-tag em{font-style:normal;color:var(--soft);font-weight:500}
+.lv-moment h2{font-size:calc(22 * var(--u));font-weight:700;line-height:1.18;letter-spacing:-.015em;text-shadow:0 calc(2 * var(--u)) calc(14 * var(--u)) rgba(0,0,0,.55)}
+.lv-mute{flex:none;width:calc(36 * var(--u));height:calc(36 * var(--u));border-radius:calc(999 * var(--u));display:grid;place-items:center}
+
+
+.lv-score{position:relative;z-index:3;margin:calc(-50 * var(--u)) calc(16 * var(--u)) 0;background:linear-gradient(180deg,var(--card-hi),var(--card) 60%);border:calc(1 * var(--u)) solid var(--line);border-radius:var(--r-card);box-shadow:var(--elev);overflow:hidden}
+.lv-s-head{display:flex;justify-content:space-between;align-items:center;padding:calc(12 * var(--u)) calc(12 * var(--u)) calc(12 * var(--u)) calc(16 * var(--u));font-size:calc(12.5 * var(--u));color:var(--soft)}
+.lv-follow{display:inline-flex;align-items:center;gap:calc(6 * var(--u));height:calc(28 * var(--u));padding:0 calc(11 * var(--u));border-radius:calc(999 * var(--u));background:rgba(242,139,91,.14);color:var(--acc);font-weight:600;font-size:calc(12 * var(--u))}
+.lv-board{display:grid;grid-template-columns:1fr calc(92 * var(--u)) 1fr;align-items:center;padding:calc(6 * var(--u)) calc(16 * var(--u)) calc(4 * var(--u))}
+.lv-side{display:flex;flex-direction:column;align-items:center;gap:calc(10 * var(--u))}
+.lv-crest{position:relative;width:calc(54 * var(--u));height:calc(54 * var(--u));border-radius:calc(999 * var(--u));background:#fff;display:grid;place-items:center;font-weight:700;font-size:calc(12 * var(--u));letter-spacing:.04em}
+.lv-crest::before{content:"";position:absolute;inset:calc(-14 * var(--u));border-radius:calc(999 * var(--u));background:radial-gradient(closest-side,var(--glow),transparent);opacity:.55;z-index:-1}
+.lv-crest img{width:calc(36 * var(--u));height:calc(36 * var(--u));object-fit:contain;display:block}
+.lv-side .lv-nm{font-size:calc(14 * var(--u));font-weight:600}
+.lv-num{font-size:calc(54 * var(--u));font-weight:600;line-height:1;letter-spacing:-.02em;margin-top:calc(6 * var(--u))}
+.lv-clock{display:flex;flex-direction:column;align-items:center;gap:calc(7 * var(--u));align-self:end;padding-bottom:calc(4 * var(--u))}
+.lv-lv{display:inline-flex;align-items:center;gap:calc(6 * var(--u));color:var(--live);font-size:calc(11 * var(--u));font-weight:700;letter-spacing:.08em}
+.lv-dot{width:calc(6 * var(--u));height:calc(6 * var(--u));border-radius:calc(999 * var(--u));background:var(--live);animation:lv-pulse 1.6s ease-in-out infinite}
+@keyframes lv-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,69,58,.5)}50%{box-shadow:0 0 0 calc(5 * var(--u)) rgba(255,69,58,0)}}
+.lv-clock .lv-box{background:var(--card-2);border-radius:var(--r-tile);padding:calc(6 * var(--u)) calc(14 * var(--u)) calc(7 * var(--u));text-align:center;box-shadow:0 calc(1 * var(--u)) 0 rgba(255,255,255,.05) inset}
+.lv-clock .lv-box b{display:block;font-size:calc(18 * var(--u));font-weight:600;line-height:1.15}
+.lv-clock .lv-box span{font-size:calc(11 * var(--u));color:var(--soft)}
+
+.lv-poss{padding:calc(16 * var(--u)) calc(16 * var(--u)) calc(16 * var(--u))}
+.lv-poss .lv-lab{display:flex;justify-content:space-between;font-size:calc(11.5 * var(--u));color:var(--soft);margin-bottom:calc(6 * var(--u))}
+.lv-poss .lv-lab b{color:var(--ink);font-weight:600}
+.lv-poss .lv-trk{display:flex;gap:calc(3 * var(--u));height:calc(4 * var(--u))}
+.lv-poss .lv-trk i{display:block;border-radius:calc(999 * var(--u))}
+
+
+.lv-events{border-top:calc(1 * var(--u)) solid var(--line)}
+.lv-ev{position:relative;display:grid;grid-template-columns:calc(30 * var(--u)) calc(26 * var(--u)) 1fr auto;align-items:center;gap:calc(12 * var(--u));padding:calc(10 * var(--u)) calc(16 * var(--u));font-size:calc(13 * var(--u))}
+.lv-ev + .lv-ev{border-top:calc(1 * var(--u)) solid var(--line)}
+.lv-ev .lv-m{color:var(--mute);font-weight:500;text-align:right;font-size:calc(12.5 * var(--u))}
+.lv-ev .lv-ic{width:calc(26 * var(--u));height:calc(26 * var(--u));border-radius:calc(999 * var(--u));display:grid;place-items:center;background:var(--card-2);font-size:calc(12 * var(--u))}
+.lv-ev .lv-ic i{display:block;width:calc(9 * var(--u));height:calc(12 * var(--u));border-radius:calc(2 * var(--u))}
+.lv-ev b{display:block;font-size:calc(14 * var(--u));font-weight:600}
+.lv-ev small{display:block;color:var(--soft);font-size:calc(12 * var(--u));margin-top:calc(1 * var(--u))}
+.lv-ev .lv-sc{font-weight:600;font-size:calc(13.5 * var(--u))}
+.lv-ev.lv-playing{background:linear-gradient(90deg,rgba(232,52,58,.14),rgba(232,52,58,0) 70%)}
+.lv-ev.lv-playing::before{content:"";position:absolute;left:0;top:calc(10 * var(--u));bottom:calc(10 * var(--u));width:calc(3 * var(--u));border-radius:0 calc(3 * var(--u)) calc(3 * var(--u)) 0;background:var(--home)}
+.lv-ev.lv-playing .lv-ic{background:#fff;color:#111}
+.lv-ev.lv-playing small{color:var(--ink)}
+.lv-ev.lv-playing small span{color:var(--soft)}
+.lv-eq{display:inline-flex;gap:calc(2 * var(--u));align-items:flex-end;height:calc(9 * var(--u));margin-right:calc(5 * var(--u));vertical-align:calc(-1 * var(--u))}
+.lv-eq i{display:block;width:calc(2 * var(--u));background:var(--home-t);border-radius:calc(1 * var(--u));animation:lv-eq 900ms ease-in-out infinite}
+.lv-eq i:nth-child(2){animation-delay:-300ms}.lv-eq i:nth-child(3){animation-delay:-600ms}
+@keyframes lv-eq{0%,100%{height:calc(3 * var(--u))}50%{height:calc(9 * var(--u))}}
+.lv-prog{position:absolute;left:calc(16 * var(--u));right:calc(16 * var(--u));bottom:0;height:calc(2 * var(--u));background:rgba(255,255,255,.06)}
+.lv-prog i{display:block;height:100%;width:0;background:var(--home-t)}
+
+
+.lv-sec{padding:calc(30 * var(--u)) calc(16 * var(--u)) 0}
+.lv-sec h3{display:flex;justify-content:space-between;align-items:baseline;font-size:calc(16 * var(--u));font-weight:700;letter-spacing:-.01em;margin-bottom:calc(12 * var(--u))}
+.lv-sec h3 small{font-size:calc(12 * var(--u));font-weight:500;color:var(--mute)}
+.lv-panel{background:var(--card);border:calc(1 * var(--u)) solid var(--line);border-radius:var(--r-card);box-shadow:var(--elev)}
+
+
+.lv-stats{padding:calc(16 * var(--u));display:grid;gap:calc(16 * var(--u))}
+.lv-legend{display:flex;justify-content:space-between;font-size:calc(12 * var(--u));font-weight:600;color:var(--soft)}
+.lv-legend span{display:inline-flex;align-items:center;gap:calc(6 * var(--u))}
+.lv-legend span::before{content:"";width:calc(8 * var(--u));height:calc(8 * var(--u));border-radius:calc(999 * var(--u));background:var(--c)}
+.lv-st .lv-row{display:grid;grid-template-columns:calc(40 * var(--u)) 1fr calc(40 * var(--u));font-size:calc(13 * var(--u));margin-bottom:calc(7 * var(--u))}
+.lv-st .lv-row b{font-weight:600} .lv-st .lv-row b:last-child{text-align:right}
+.lv-st .lv-row span{color:var(--mute);text-align:center;font-size:calc(12.5 * var(--u))}
+.lv-bars{display:grid;grid-template-columns:1fr 1fr;gap:calc(4 * var(--u))}
+.lv-bar{height:calc(6 * var(--u));border-radius:calc(999 * var(--u));background:var(--card-2);overflow:hidden;display:flex}
+.lv-bar.lv-l{justify-content:flex-end}
+.lv-bar i{display:block;height:100%;border-radius:calc(999 * var(--u));width:0;transition:width 900ms cubic-bezier(.2,.8,.2,1)}
+.lv-bar.lv-l i{background:linear-gradient(270deg,var(--home),#FF6B70)} .lv-bar.lv-r i{background:linear-gradient(90deg,var(--away),#6E97F5)}
+.lv-stats.lv-on .lv-bar i{width:var(--w)}
+.lv-bar.lv-lead i{box-shadow:0 0 calc(10 * var(--u)) rgba(255,255,255,.12)}
+
+
+.lv-stories{padding:calc(2 * var(--u)) calc(14 * var(--u))}
+.lv-story{display:flex;align-items:center;gap:calc(14 * var(--u));padding:calc(13 * var(--u)) 0}
+.lv-story + .lv-story{border-top:calc(1 * var(--u)) solid var(--line)}
+.lv-story > div{flex:1;min-width:0}
+.lv-story b{display:block;font-size:calc(14 * var(--u));line-height:1.3;font-weight:600}
+.lv-story .lv-meta{display:flex;align-items:center;gap:calc(6 * var(--u));font-size:calc(12 * var(--u));color:var(--soft);margin-top:calc(5 * var(--u))}
+.lv-tile{flex:none;width:calc(52 * var(--u));height:calc(52 * var(--u));border-radius:var(--r-tile);display:grid;place-items:center;box-shadow:0 calc(1 * var(--u)) 0 rgba(255,255,255,.06) inset}
+.lv-tile svg{width:calc(22 * var(--u));height:calc(22 * var(--u))}
+.lv-t-sport{background:linear-gradient(145deg,rgba(232,52,58,.28),rgba(232,52,58,.1));color:var(--home-t)}
+.lv-t-tac{background:linear-gradient(145deg,rgba(58,111,224,.3),rgba(58,111,224,.1));color:var(--away-t)}
+.lv-t-spon{background:linear-gradient(145deg,rgba(242,139,91,.28),rgba(242,139,91,.1));color:var(--acc)}
+.lv-spon{display:inline-block;padding:calc(1 * var(--u)) calc(7 * var(--u));border-radius:calc(999 * var(--u));background:var(--card-2);font-size:calc(11 * var(--u));font-weight:500;color:var(--soft)}
+.lv-src{text-align:center;font-size:calc(12 * var(--u));color:var(--mute);padding:calc(22 * var(--u)) calc(16 * var(--u)) calc(36 * var(--u))}
+
+.lv-app > .lv-status { transition: background-color 200ms ease; height: calc(34 * var(--u)); padding-top: 0; }
+.lv-app.is-scrolled > .lv-status { background-color: rgba(16,18,21,0.94); text-shadow: none; }
+/* Event icons: no grey disc, the card itself is the icon, drawn larger and tilted like a real card. */
+.lv-ev .lv-ic { background: none; }
+.lv-ev .lv-ic svg { width: calc(22 * var(--u)); height: calc(22 * var(--u)); display: block; }
+.lv-ev .lv-ic i { width: calc(13 * var(--u)); height: calc(18 * var(--u)); border-radius: calc(3 * var(--u)); transform: rotate(-10deg); box-shadow: 0 calc(1 * var(--u)) calc(3 * var(--u)) rgba(0,0,0,0.45), 0 0 0 calc(1 * var(--u)) rgba(255,255,255,0.15) inset; }
+.lv-ev.lv-playing .lv-ic { background: none; }
+.lv-ev.lv-playing .lv-ic svg { border-radius: 999px; box-shadow: 0 0 0 calc(2 * var(--u)) var(--home); }
+.lv-tag .lv-ball { background: none; }
+.lv-tag .lv-ball svg { width: calc(18 * var(--u)); height: calc(18 * var(--u)); display: block; }
+/* Seals the video's bottom edge: at fractional sizes a one-pixel row of footage showed below the fade. */
+.lv-video::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: calc(4 * var(--u)); background: var(--bg); z-index: 2; }
+/* Score block: one centred unit (state, minute, score) between two crests that sit straight on the
+   card, after the reference Ofir picked. Crests are transparent PNGs, so no disc behind them. */
+.lv-board { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: calc(8 * var(--u)) calc(12 * var(--u)) calc(4 * var(--u)); }
+.lv-team { display: flex; flex-direction: column; align-items: center; gap: calc(10 * var(--u)); }
+.lv-team .lv-crest { width: calc(52 * var(--u)); height: calc(52 * var(--u)); background: none; border-radius: 0; }
+.lv-team .lv-crest::before { display: none; }
+.lv-team .lv-crest img { width: 100%; height: 100%; object-fit: contain; }
+.lv-team .lv-nm { font-size: calc(14 * var(--u)); font-weight: 600; }
+.lv-score { background:
+  radial-gradient(62% 30% at 0% 17%, rgba(232,52,58,0.20), rgba(232,52,58,0) 72%),
+  radial-gradient(62% 30% at 100% 17%, rgba(58,111,224,0.22), rgba(58,111,224,0) 72%),
+  linear-gradient(180deg, var(--card-hi), var(--card) 60%); }
+/* Optical balance: both crests measure 52 tall, but a solid red shield carries more visual weight than a
+   ringed roundel, so the shield is drawn slightly smaller. */
+.lv-team .lv-crest img.lv-shield { width: 92%; height: 92%; }
+.lv-mid { display: flex; flex-direction: column; align-items: center; gap: calc(4 * var(--u)); }
+.lv-mid .lv-time { font-size: calc(12 * var(--u)); color: var(--soft); }
+.lv-mid .lv-score-n { font-size: calc(44 * var(--u)); font-weight: 600; line-height: 1.05; letter-spacing: -0.01em; margin-top: calc(2 * var(--u)); }
+.lv-mid .lv-score-n i { font-style: normal; color: var(--mute); margin: 0 calc(6 * var(--u)); font-weight: 500; }
+/* Quieter details */
+.lv-ev.lv-playing { background: none; }
+.lv-ev.lv-playing .lv-ic svg { box-shadow: none; }
+.lv-follow { background: transparent; color: var(--ink); box-shadow: 0 0 0 calc(1 * var(--u)) rgba(255,255,255,0.16) inset; }
+.lv-follow svg { color: var(--acc); }
+/* FULL TIME screen (round 2). Same tokens and --u scale as the live screen. Each tile carries its own
+   texture: mowed-grass stripes on the result, halftone on the player of the match, stadium light on the
+   next fixture. Highlights are portrait clips, so the player is square rather than 16:9. */
+.ft-hero{position:relative;padding:calc(50 * var(--u)) calc(16 * var(--u)) calc(22 * var(--u));background:
+  radial-gradient(60% 55% at 0% 45%,rgba(232,52,58,.22),rgba(232,52,58,0) 72%),
+  radial-gradient(60% 55% at 100% 45%,rgba(58,111,224,.24),rgba(58,111,224,0) 72%),
+  repeating-linear-gradient(112deg,rgba(255,255,255,.035) 0 calc(26 * var(--u)),rgba(255,255,255,0) calc(26 * var(--u)) calc(52 * var(--u))),
+  linear-gradient(180deg,#171a1f,var(--bg))}
+.ft-hero::after{content:"";position:absolute;left:0;right:0;bottom:calc(-1 * var(--u));height:calc(40 * var(--u));background:linear-gradient(180deg,rgba(16,18,21,0),var(--bg))}
+.ft-top{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;margin-top:calc(4 * var(--u))}
+.ft-top .ft-league{font-size:calc(12.5 * var(--u));color:var(--soft)}
+.ft-x{width:calc(34 * var(--u));height:calc(34 * var(--u));border-radius:calc(999 * var(--u));display:grid;place-items:center;background:rgba(255,255,255,.08)}
+.ft-ft{position:relative;z-index:1;display:flex;justify-content:center;margin-top:calc(14 * var(--u))}
+.ft-ft span{font-size:calc(11 * var(--u));font-weight:700;letter-spacing:.1em;padding:calc(5 * var(--u)) calc(10 * var(--u));border-radius:calc(999 * var(--u));background:rgba(255,255,255,.09);color:var(--ink)}
+.ft-board{position:relative;z-index:1;display:grid;grid-template-columns:1fr auto 1fr;align-items:start;margin-top:calc(14 * var(--u))}
+.ft-team{display:flex;flex-direction:column;align-items:center;gap:calc(8 * var(--u));text-align:center}
+.ft-crest{width:calc(56 * var(--u));height:calc(56 * var(--u));display:grid;place-items:center}
+.ft-crest img{width:100%;height:100%;object-fit:contain}
+.ft-crest img.lv-shield{width:92%;height:92%}
+.ft-nm{font-size:calc(14 * var(--u));font-weight:600;display:inline-flex;align-items:center;gap:calc(6 * var(--u))}
+.ft-win{font-size:calc(10 * var(--u));font-weight:700;letter-spacing:.06em;padding:calc(2 * var(--u)) calc(6 * var(--u));border-radius:calc(999 * var(--u));background:rgba(255,255,255,.12)}
+.ft-score{font-size:calc(52 * var(--u));font-weight:600;line-height:1;letter-spacing:-.01em;padding-top:calc(4 * var(--u))}
+.ft-score i{font-style:normal;color:var(--mute);margin:0 calc(6 * var(--u));font-weight:500}
+.ft-scorers{display:grid;gap:calc(3 * var(--u));margin-top:calc(2 * var(--u));font-size:calc(12 * var(--u));color:var(--soft)}
+.ft-scorers span{display:inline-flex;align-items:center;justify-content:center;gap:calc(5 * var(--u))}
+.ft-scorers svg{width:calc(11 * var(--u));height:calc(11 * var(--u))}
+.ft-scorers i{display:inline-block;width:calc(8 * var(--u));height:calc(11 * var(--u));border-radius:calc(2 * var(--u));background:var(--live);transform:rotate(-10deg)}
+
+.ft-sec{padding:calc(22 * var(--u)) calc(16 * var(--u)) 0}
+.ft-sec h3{display:flex;justify-content:space-between;align-items:baseline;font-size:calc(16 * var(--u));font-weight:700;letter-spacing:-.01em;margin-bottom:calc(12 * var(--u))}
+.ft-sec h3 small{font-size:calc(12 * var(--u));font-weight:500;color:var(--mute)}
+
+.ft-player{position:relative;overflow:hidden;border-radius:var(--r-card) var(--r-card) 0 0;aspect-ratio:1/1;background:#000}
+.ft-player video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ft-player::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(16,18,21,.85),rgba(16,18,21,0) 45%)}
+.ft-player .ft-cap{position:absolute;left:calc(14 * var(--u));right:calc(14 * var(--u));bottom:calc(12 * var(--u));z-index:1}
+.ft-cap .ft-k{font-size:calc(11.5 * var(--u));color:var(--soft);font-weight:500}
+.ft-cap b{display:block;font-size:calc(17 * var(--u));font-weight:700;line-height:1.2;margin-top:calc(2 * var(--u))}
+.ft-rail{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(8 * var(--u));padding:calc(12 * var(--u))}
+.ft-mo{display:flex;flex-direction:column;gap:calc(6 * var(--u));padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.ft-mo .ft-th{position:relative;aspect-ratio:16/10;border-radius:var(--r-tile);overflow:hidden;background:var(--card-2);box-shadow:0 0 0 calc(1 * var(--u)) rgba(255,255,255,.06) inset}
+.ft-mo .ft-th img{width:100%;height:100%;object-fit:cover;opacity:.7;transition:opacity 200ms ease}
+.ft-mo .ft-th::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 calc(2 * var(--u)) transparent inset;transition:box-shadow 200ms ease}
+.ft-mo.is-on .ft-th img{opacity:1}
+.ft-mo.is-on .ft-th::after{box-shadow:0 0 0 calc(2 * var(--u)) var(--ink) inset}
+.ft-mo small{font-size:calc(11.5 * var(--u));color:var(--soft);line-height:1.25}
+.ft-mo small b{color:var(--ink);font-weight:600}
+.ft-all{display:flex;align-items:center;justify-content:center;gap:calc(8 * var(--u));margin:0 calc(12 * var(--u)) calc(12 * var(--u));height:calc(40 * var(--u));border-radius:calc(999 * var(--u));background:rgba(255,255,255,.08);font-size:calc(13 * var(--u));font-weight:600}
+
+.ft-potm{position:relative;overflow:hidden;padding:calc(16 * var(--u));background:
+  radial-gradient(rgba(255,255,255,.10) calc(1.1 * var(--u)),transparent calc(1.5 * var(--u))) 0 0/calc(7 * var(--u)) calc(7 * var(--u)),
+  linear-gradient(135deg,rgba(232,52,58,.20),rgba(232,52,58,0) 60%),var(--card)}
+.ft-potm::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--card) 30%,rgba(25,28,34,0) 100%);pointer-events:none}
+.ft-potm > *{position:relative}
+.ft-potm .ft-eb{font-size:calc(11 * var(--u));font-weight:700;letter-spacing:.1em;color:var(--acc)}
+.ft-potm .ft-row{display:flex;justify-content:space-between;align-items:center;margin-top:calc(8 * var(--u))}
+.ft-potm .ft-who b{display:block;font-size:calc(24 * var(--u));font-weight:700;letter-spacing:-.01em;line-height:1.1}
+.ft-potm .ft-who span{font-size:calc(12.5 * var(--u));color:var(--soft)}
+.ft-rate{width:calc(56 * var(--u));height:calc(56 * var(--u));border-radius:calc(14 * var(--u));display:grid;place-items:center;background:var(--ink);color:var(--bg);font-size:calc(22 * var(--u));font-weight:700}
+.ft-pstats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:calc(14 * var(--u));padding-top:calc(12 * var(--u));border-top:calc(1 * var(--u)) solid var(--line)}
+.ft-pstats div{text-align:center}
+.ft-pstats div + div{border-left:calc(1 * var(--u)) solid var(--line)}
+.ft-pstats b{display:block;font-size:calc(18 * var(--u));font-weight:600}
+.ft-pstats span{font-size:calc(11.5 * var(--u));color:var(--soft)}
+
+.ft-next{position:relative;overflow:hidden;padding:calc(16 * var(--u));background:
+  radial-gradient(70% 90% at 15% -30%,rgba(255,255,255,.16),rgba(255,255,255,0) 60%),
+  radial-gradient(70% 90% at 85% -30%,rgba(255,255,255,.12),rgba(255,255,255,0) 60%),
+  linear-gradient(180deg,#1d2128,var(--card))}
+.ft-next::before{content:"";position:absolute;left:-20%;right:-20%;top:-40%;height:120%;background:
+  linear-gradient(105deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.05) 36%,rgba(255,255,255,0) 42%),
+  linear-gradient(75deg,rgba(255,255,255,0) 58%,rgba(255,255,255,.05) 64%,rgba(255,255,255,0) 70%);pointer-events:none}
+.ft-next > *{position:relative}
+.ft-next .ft-eb{font-size:calc(11 * var(--u));font-weight:700;letter-spacing:.1em;color:var(--soft)}
+.ft-next .ft-fx{display:flex;align-items:center;gap:calc(12 * var(--u));margin-top:calc(10 * var(--u))}
+.ft-next .ft-fx img{width:calc(36 * var(--u));height:calc(42 * var(--u));object-fit:contain}
+.ft-next .ft-fx b{display:block;font-size:calc(18 * var(--u));font-weight:700}
+.ft-next .ft-fx span{font-size:calc(12.5 * var(--u));color:var(--soft)}
+.ft-remind{display:flex;align-items:center;justify-content:center;gap:calc(8 * var(--u));margin-top:calc(14 * var(--u));height:calc(42 * var(--u));border-radius:calc(999 * var(--u));background:var(--acc);color:#1d2126;font-size:calc(14 * var(--u));font-weight:700}
+/* Highlights reel, second pass: clips play through in order, the active thumbnail fills like a story,
+   each thumbnail carries its minute and a line in the scoring team's colour, and "full highlights" is a
+   quiet text link rather than a second button. */
+.ft-mo .ft-th em { position: absolute; left: calc(5 * var(--u)); top: calc(5 * var(--u)); z-index: 1; font-style: normal; font-size: calc(10.5 * var(--u)); font-weight: 700; padding: calc(1 * var(--u)) calc(5 * var(--u)); border-radius: 999px; background: rgba(16,18,21,0.72); color: var(--ink); }
+.ft-mo .ft-th::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: calc(3 * var(--u)); background: var(--tc); z-index: 1; }
+.ft-mo .ft-pg { position: absolute; left: 0; right: 0; bottom: 0; height: calc(3 * var(--u)); z-index: 2; display: none; background: rgba(255,255,255,0.25); }
+.ft-mo .ft-pg i { display: block; height: 100%; width: 0; background: var(--ink); }
+.ft-mo.is-on .ft-pg { display: block; }
+.ft-mo:not(.is-on) .ft-th img { opacity: 0.55; filter: saturate(0.7); }
+.ft-mo small { color: var(--mute); }
+.ft-mo small b { color: var(--ink); }
+.ft-all { height: auto; background: none; margin: 0; padding: calc(4 * var(--u)) calc(12 * var(--u)) calc(14 * var(--u)); justify-content: flex-start; color: var(--soft); font-weight: 600; font-size: calc(12.5 * var(--u)); }
+/* More UI examples: three phones in flow order (lock screen, live, full time). The lock screen reuses
+   the page's own widget component; only its content changes. */
+.ui-trio { display: grid; grid-template-columns: 1fr; gap: 3rem; align-items: start; }
+@media (min-width: 1024px) { .ui-trio { grid-template-columns: repeat(3, 1fr); gap: 2rem; } }
+.pd-live-src { display: inline-flex; align-items: center; gap: 1.2cqw; }
+.pd-live { display: inline-flex; align-items: center; gap: 1.2cqw; color: #ff6b62; font-weight: 600; }
+.pd-live i { width: 1.8cqw; height: 1.8cqw; border-radius: 999px; background: #ff453a; }
+/* BRIEF HI-FI, second pass (round 2): same reading surface, now with depth and content. Every topic gets a
+   cover (colour plus its own texture) instead of a flat icon tile, the list sits in a card, and progress
+   is visible from the first glance. Lengths are design pixels on a 390-wide screen via --p. */
+.hf2 { --p: calc(100cqw * 0.9462 / 390); --acc: #f28b5b; --ink: #1d2126; --soft: #6b7178; --mute: #9aa0a6; --line: #eef0f1; --paper: #fbfaf8; }
+.hf2 .fl-app { background: var(--paper); color: var(--ink); }
+.hf2 .fl-app > * { flex-shrink: 0; }
+.hf2-top{display:flex;align-items:center;justify-content:space-between;padding:calc(6 * var(--p)) calc(20 * var(--p)) 0}
+.hf2-date{font-size:calc(13 * var(--p));color:var(--soft);font-weight:500}
+.hf2-x{width:calc(30 * var(--p));height:calc(30 * var(--p));border-radius:calc(999 * var(--p));display:grid;place-items:center;background:#fff;box-shadow:0 calc(1 * var(--p)) calc(2 * var(--p)) rgba(29,33,38,.08),0 0 0 calc(1 * var(--p)) rgba(29,33,38,.06);font-size:calc(15 * var(--p));color:var(--ink)}
+.hf2-prog{display:grid;grid-template-columns:repeat(10,1fr);gap:calc(3 * var(--p));margin:calc(14 * var(--p)) calc(20 * var(--p)) 0}
+.hf2-prog i{height:calc(3 * var(--p));border-radius:calc(99 * var(--p));background:#e7e5e1}
+.hf2-prog i.on{background:var(--acc)}
+.hf2-progl{display:flex;justify-content:space-between;margin:calc(6 * var(--p)) calc(20 * var(--p)) 0;font-size:calc(11 * var(--p));color:var(--mute);font-weight:500}
+.hf2-h1{margin:calc(14 * var(--p)) calc(20 * var(--p)) 0;font-size:calc(27 * var(--p));font-weight:700;line-height:1.08;letter-spacing:-.02em}
+.hf2-sub{margin:calc(6 * var(--p)) calc(20 * var(--p)) 0;font-size:calc(13 * var(--p));color:var(--soft)}
+.hf2-topics{display:flex;align-items:center;gap:calc(6 * var(--p));margin:calc(14 * var(--p)) calc(20 * var(--p)) 0;font-size:calc(12 * var(--p))}
+.hf2-topics em{font-style:normal;color:var(--mute);margin-right:calc(2 * var(--p))}
+.hf2-chip{display:inline-flex;align-items:center;gap:calc(4 * var(--p));padding:calc(4 * var(--p)) calc(9 * var(--p)) calc(4 * var(--p)) calc(7 * var(--p));border-radius:calc(999 * var(--p));background:#fff;box-shadow:0 0 0 calc(1 * var(--p)) rgba(29,33,38,.07),0 calc(1 * var(--p)) calc(2 * var(--p)) rgba(29,33,38,.05);font-weight:600}
+.hf2-chip svg{width:calc(12 * var(--p));height:calc(12 * var(--p))}
+.hf2-card{background:#fff;border-radius:calc(16 * var(--p));box-shadow:0 0 0 calc(1 * var(--p)) rgba(29,33,38,.05),0 calc(2 * var(--p)) calc(4 * var(--p)) rgba(29,33,38,.04),0 calc(12 * var(--p)) calc(28 * var(--p)) calc(-10 * var(--p)) rgba(29,33,38,.14);overflow:hidden}
+.hf2-lead{margin:calc(16 * var(--p)) calc(16 * var(--p)) 0}
+.hf2-cover{position:relative;display:block;overflow:hidden}
+.hf2-cover .hf2-ic{position:absolute;left:calc(8 * var(--p));bottom:calc(8 * var(--p));width:calc(26 * var(--p));height:calc(26 * var(--p));border-radius:calc(8 * var(--p));background:rgba(255,255,255,.88);display:grid;place-items:center;box-shadow:0 calc(1 * var(--p)) calc(3 * var(--p)) rgba(0,0,0,.08)}
+.hf2-cover .hf2-ic svg{width:calc(15 * var(--p));height:calc(15 * var(--p))}
+.hf2-lead .hf2-cover{height:calc(150 * var(--p))}
+.hf2-lead .hf2-cover .hf2-ic{left:calc(14 * var(--p));bottom:calc(14 * var(--p));width:calc(34 * var(--p));height:calc(34 * var(--p));border-radius:calc(10 * var(--p))}
+.hf2-lead .hf2-cover .hf2-ic svg{width:calc(19 * var(--p));height:calc(19 * var(--p))}
+.hf2-pill{position:absolute;white-space:nowrap;top:calc(12 * var(--p));left:calc(12 * var(--p));font-size:calc(11 * var(--p));font-weight:600;padding:calc(3 * var(--p)) calc(8 * var(--p));border-radius:calc(999 * var(--p));background:rgba(255,255,255,.88);color:var(--ink)}
+.hf2-lead-b{padding:calc(13 * var(--p)) calc(15 * var(--p)) calc(15 * var(--p))}
+.hf2-lead-b b{display:block;font-size:calc(19 * var(--p));font-weight:700;line-height:1.2;letter-spacing:-.01em}
+.hf2-src{display:flex;align-items:center;gap:calc(6 * var(--p));margin-top:calc(7 * var(--p));font-size:calc(12 * var(--p));color:var(--soft)}
+.hf2-av{width:calc(18 * var(--p));height:calc(18 * var(--p));border-radius:calc(999 * var(--p));display:grid;place-items:center;font-size:calc(8 * var(--p));font-weight:700;color:#fff;flex:none}
+.hf2-list{margin:calc(12 * var(--p)) calc(16 * var(--p)) 0;padding:calc(2 * var(--p)) calc(14 * var(--p))}
+.hf2-row{display:flex;align-items:center;gap:calc(12 * var(--p));padding:calc(12 * var(--p)) 0}
+.hf2-row + .hf2-row{border-top:calc(1 * var(--p)) solid var(--line)}
+.hf2-num{flex:none;width:calc(18 * var(--p));font-size:calc(12 * var(--p));font-weight:700;color:#c3c6ca}
+.hf2-row > div{flex:1;min-width:0}
+.hf2-row b{display:block;font-size:calc(14.5 * var(--p));font-weight:600;line-height:1.25}
+.hf2-row .hf2-cover{flex:none;width:calc(56 * var(--p));height:calc(56 * var(--p));border-radius:calc(10 * var(--p))}
+.hf2-row .hf2-cover .hf2-ic{left:calc(5 * var(--p));bottom:calc(5 * var(--p));width:calc(20 * var(--p));height:calc(20 * var(--p));border-radius:calc(6 * var(--p))}
+.hf2-row .hf2-cover .hf2-ic svg{width:calc(12 * var(--p));height:calc(12 * var(--p))}
+.hf2-spon{display:inline-block;padding:calc(1 * var(--p)) calc(7 * var(--p));border-radius:calc(999 * var(--p));background:#f3f1ef;font-size:calc(10.5 * var(--p));font-weight:600;color:var(--soft)}
+.hf2-foot{position:absolute;left:0;right:0;bottom:0;padding:calc(34 * var(--p)) calc(20 * var(--p)) calc(22 * var(--p));background:linear-gradient(to top,var(--paper) 55%,rgba(251,250,248,0))}
+.hf2-btn{display:flex;align-items:center;justify-content:center;gap:calc(8 * var(--p));height:calc(50 * var(--p));border-radius:calc(999 * var(--p));background:var(--acc);color:#fff;font-size:calc(16 * var(--p));font-weight:700;box-shadow:0 calc(10 * var(--p)) calc(24 * var(--p)) calc(-8 * var(--p)) rgba(242,139,91,.65),0 calc(2 * var(--p)) calc(4 * var(--p)) rgba(242,139,91,.25),inset 0 calc(1 * var(--p)) 0 rgba(255,255,255,.25)}
+.hf2-btn small{font-size:calc(12 * var(--p));font-weight:600;padding:calc(2 * var(--p)) calc(8 * var(--p));border-radius:calc(999 * var(--p));background:rgba(255,255,255,.22)}
+/* covers: colour plus a texture that says the topic */
+.cv-eco{background:linear-gradient(135deg,#dfe8fb,#c9d8f8);background-image:repeating-linear-gradient(0deg,rgba(58,99,200,.10) 0 calc(1 * var(--p)),transparent calc(1 * var(--p)) calc(18 * var(--p))),linear-gradient(135deg,#e3ebfc,#c7d6f7)}
+.cv-city{background-image:repeating-linear-gradient(0deg,rgba(47,138,87,.14) 0 calc(1 * var(--p)),transparent calc(1 * var(--p)) calc(12 * var(--p))),repeating-linear-gradient(90deg,rgba(47,138,87,.14) 0 calc(1 * var(--p)),transparent calc(1 * var(--p)) calc(12 * var(--p))),linear-gradient(135deg,#e4f4ea,#cdebd8)}
+.cv-wx{background-image:repeating-conic-gradient(from 0deg at 100% 0%,rgba(255,255,255,.55) 0deg 6deg,transparent 6deg 14deg),radial-gradient(circle at 100% 0%,#ffe08a,#fff1d1 70%)}
+.cv-tech{background-image:radial-gradient(rgba(107,75,200,.22) calc(1.2 * var(--p)),transparent calc(1.6 * var(--p))),linear-gradient(135deg,#efe8ff,#ddd0ff);background-size:calc(8 * var(--p)) calc(8 * var(--p)),100% 100%}
+.cv-sport{background-image:repeating-linear-gradient(115deg,rgba(200,67,90,.10) 0 calc(9 * var(--p)),transparent calc(9 * var(--p)) calc(18 * var(--p))),linear-gradient(135deg,#ffe9ec,#ffd3da)}
+.cv-spon{background-image:radial-gradient(circle at 30% 30%,rgba(255,255,255,.7),transparent 45%),linear-gradient(135deg,#ffe6d8,#fbd0b8)}
+.hf2-chart{position:absolute;inset:0;width:100%;height:100%}
+
+/* Brief done screen, second pass: the summary's progress bar returns as a completed ring, the next brief
+   gets the same card pattern as "Next for Arsenal", and the feedback reads as two choices, not a form. */
+.hf2d .fl-app{background:linear-gradient(to bottom,#fde3d4 0%,#fdeee5 26%,var(--paper) 46%)}
+.hf2d-sun{position:absolute;left:50%;top:calc(-120 * var(--p));width:calc(420 * var(--p));height:calc(420 * var(--p));transform:translateX(-50%);border-radius:calc(999 * var(--p));background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.35) 0deg 4deg,transparent 4deg 12deg);-webkit-mask-image:radial-gradient(closest-side,#000 30%,transparent);mask-image:radial-gradient(closest-side,#000 30%,transparent);pointer-events:none}
+.hf2d-top{position:relative;display:flex;justify-content:flex-end;padding:calc(6 * var(--p)) calc(20 * var(--p)) 0}
+.hf2d-hero{position:relative;text-align:center;padding-top:calc(2 * var(--p))}
+.hf2-ring{position:relative;z-index:1;width:calc(92 * var(--p));height:calc(92 * var(--p));margin:0 auto;display:grid;place-items:center}
+.hf2-ring svg.r{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.hf2-ring .c{position:relative;width:calc(64 * var(--p));height:calc(64 * var(--p));border-radius:calc(999 * var(--p));background:var(--acc);display:grid;place-items:center;box-shadow:0 calc(10 * var(--p)) calc(24 * var(--p)) calc(-8 * var(--p)) rgba(242,139,91,.7),inset 0 calc(1 * var(--p)) 0 rgba(255,255,255,.3)}
+.hf2-ring .c svg{width:calc(30 * var(--p));height:calc(30 * var(--p))}
+.hf2-burst{position:absolute;left:50%;top:calc(46 * var(--p));width:0;height:0}
+.hf2-burst i{position:absolute;width:calc(8 * var(--p));height:calc(8 * var(--p));border-radius:calc(999 * var(--p));background:var(--c,#f28b5b);opacity:0}
+.in-view .hf2-ring{animation:hf-pop 700ms cubic-bezier(0.2,0.9,0.3,1.3) 200ms both}
+.in-view .hf2-burst i{animation:hf-fly 900ms cubic-bezier(0.15,0.7,0.3,1) 350ms both}
+.hf2d-h1{position:relative;margin:calc(14 * var(--p)) calc(20 * var(--p)) 0;text-align:center;font-size:calc(27 * var(--p));font-weight:700;letter-spacing:-.02em}
+.hf2d-sub{position:relative;margin:calc(4 * var(--p)) calc(20 * var(--p)) 0;text-align:center;font-size:calc(13 * var(--p));color:var(--soft)}
+.hf2-tiles{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:calc(8 * var(--p));margin:calc(16 * var(--p)) calc(16 * var(--p)) 0}
+.hf2-tile{background:rgba(255,255,255,.85);border-radius:calc(12 * var(--p));padding:calc(9 * var(--p)) calc(6 * var(--p)) calc(8 * var(--p));text-align:center;box-shadow:0 0 0 calc(1 * var(--p)) rgba(29,33,38,.05),0 calc(2 * var(--p)) calc(6 * var(--p)) calc(-2 * var(--p)) rgba(29,33,38,.08)}
+.hf2-tile b{display:block;font-size:calc(18 * var(--p));font-weight:700;line-height:1.1}
+.hf2-tile span{font-size:calc(11 * var(--p));color:var(--soft)}
+.hf2-next{position:relative;margin:calc(12 * var(--p)) calc(16 * var(--p)) 0;padding:calc(14 * var(--p));display:flex;align-items:center;gap:calc(12 * var(--p));overflow:hidden;background:radial-gradient(120% 140% at 100% 120%,#ffd9a8 0%,rgba(255,217,168,0) 55%),linear-gradient(135deg,#fff7ef,#fff)}
+.hf2-next::before{content:"";position:absolute;right:calc(-30 * var(--p));bottom:calc(-60 * var(--p));width:calc(160 * var(--p));height:calc(160 * var(--p));border-radius:calc(999 * var(--p));background:repeating-radial-gradient(circle,rgba(242,139,91,.16) 0 calc(1 * var(--p)),transparent calc(1 * var(--p)) calc(10 * var(--p)));pointer-events:none}
+.hf2-next .ico{position:relative;flex:none;width:calc(40 * var(--p));height:calc(40 * var(--p));border-radius:calc(12 * var(--p));background:#fde9df;display:grid;place-items:center}
+.hf2-next .ico svg{width:calc(20 * var(--p));height:calc(20 * var(--p))}
+.hf2-next > div{position:relative;flex:1;min-width:0}
+.hf2-next small{display:block;font-size:calc(10.5 * var(--p));font-weight:700;letter-spacing:.1em;color:#c0673d}
+.hf2-next b{display:block;font-size:calc(16 * var(--p));font-weight:700;margin-top:calc(1 * var(--p))}
+.hf2-next em{font-style:normal;font-size:calc(11.5 * var(--p));color:var(--soft)}
+.hf2-rem{position:relative;flex:none;display:inline-flex;align-items:center;gap:calc(5 * var(--p));padding:calc(7 * var(--p)) calc(11 * var(--p));border-radius:calc(999 * var(--p));background:var(--ink);color:#fff;font-size:calc(12 * var(--p));font-weight:600}
+.hf2-rem svg{width:calc(13 * var(--p));height:calc(13 * var(--p))}
+.hf2-sec{margin:calc(16 * var(--p)) calc(20 * var(--p)) calc(8 * var(--p));font-size:calc(14 * var(--p));font-weight:700;display:flex;justify-content:space-between;align-items:baseline}
+.hf2-sec span{font-size:calc(11.5 * var(--p));font-weight:500;color:var(--mute)}
+.hf2d .hf2-list{margin-top:0}
+.hf2d .hf2-row{padding:calc(9 * var(--p)) 0;gap:calc(10 * var(--p))}
+.hf2d .hf2-row .hf2-cover{width:calc(46 * var(--p));height:calc(46 * var(--p));border-radius:calc(9 * var(--p))}
+.hf2d .hf2-row b{font-size:calc(14 * var(--p))}
+.hf2-fb{display:flex;align-items:center;gap:calc(8 * var(--p));margin:calc(12 * var(--p)) calc(16 * var(--p)) 0}
+.hf2-fb > span{flex:1;font-size:calc(12.5 * var(--p));font-weight:600}
+.hf2-fb em{font-style:normal;display:inline-flex;align-items:center;gap:calc(5 * var(--p));padding:calc(7 * var(--p)) calc(11 * var(--p));border-radius:calc(999 * var(--p));background:#fff;font-size:calc(12 * var(--p));font-weight:600;box-shadow:0 0 0 calc(1 * var(--p)) rgba(29,33,38,.07),0 calc(1 * var(--p)) calc(2 * var(--p)) rgba(29,33,38,.05)}
+.hf2-fb em svg{width:calc(13 * var(--p));height:calc(13 * var(--p))}
+.hf2d .hf2-foot{padding-top:calc(28 * var(--p))}
+.hf2-ghost{display:flex;align-items:center;justify-content:center;height:calc(46 * var(--p));border-radius:calc(999 * var(--p));background:#fff;color:var(--ink);font-size:calc(15 * var(--p));font-weight:600;box-shadow:0 0 0 calc(1 * var(--p)) rgba(29,33,38,.08),0 calc(4 * var(--p)) calc(12 * var(--p)) calc(-4 * var(--p)) rgba(29,33,38,.12)}
+@media (prefers-reduced-motion: reduce){.in-view .hf2-ring,.in-view .hf2-burst i{animation:none}.hf2-burst i{opacity:.9;transform:translate(var(--x),var(--y))}}
+
+/* Brief hi-fi, third pass: every story is its own white tile with a real photo, a soft shadow and the
+   partner's orange as the only accent (kicker, progress, chips, button). No numbers, no icons on images. */
+.hf3-chip{display:inline-flex;align-items:center;padding:calc(4 * var(--p)) calc(10 * var(--p));border-radius:calc(999 * var(--p));background:#fde9df;color:#b85a2f;font-weight:600}
+.hf3-stack{display:grid;gap:calc(10 * var(--p));margin:calc(14 * var(--p)) calc(16 * var(--p)) 0}
+.hf3-tile{background:#fff;border-radius:calc(16 * var(--p));box-shadow:0 calc(1 * var(--p)) calc(2 * var(--p)) rgba(29,33,38,.05),0 calc(6 * var(--p)) calc(16 * var(--p)) calc(-6 * var(--p)) rgba(29,33,38,.12)}
+.hf3-lead{overflow:hidden}
+.hf3-lead img{display:block;width:100%;height:calc(165 * var(--p));object-fit:cover}
+.hf3-lead .b{padding:calc(12 * var(--p)) calc(14 * var(--p)) calc(14 * var(--p))}
+.hf3-k{display:block;font-size:calc(10.5 * var(--p));font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#d9713f}
+.hf3-k.s{color:var(--mute)}
+.hf3-lead b{display:block;margin-top:calc(4 * var(--p));font-size:calc(19 * var(--p));font-weight:700;line-height:1.2;letter-spacing:-.01em}
+.hf3-m{display:block;margin-top:calc(6 * var(--p));font-size:calc(12 * var(--p));color:var(--soft)}
+.hf3-row{display:flex;align-items:center;gap:calc(12 * var(--p));padding:calc(10 * var(--p))}
+.hf3-row img{flex:none;display:block;width:calc(84 * var(--p));height:calc(84 * var(--p));border-radius:calc(12 * var(--p));object-fit:cover}
+.hf3-row > div{flex:1;min-width:0}
+.hf3-row b{display:block;margin-top:calc(3 * var(--p));font-size:calc(15 * var(--p));font-weight:600;line-height:1.25}
+.hf3-row .hf3-m{margin-top:calc(4 * var(--p))}
+
+/* Brief done screen, drawer version: the moment lives in a full-bleed peach drawer that runs up behind
+   the status bar and ends in a soft arc, so it reads as a moment rather than one more tile. Title left,
+   check and confetti right, next brief inside. Content below is the same tile system as the summary. */
+.hf4 .fl-app{background:linear-gradient(to bottom,#fcd9c6 0,#fcd9c6 calc(60 * var(--p)),var(--paper) calc(60 * var(--p)))}
+.hf4 .fl-status{position:relative;z-index:2}
+.hf4-drawer{position:relative;margin-top:calc(-60 * var(--p));padding:calc(60 * var(--p)) calc(20 * var(--p)) calc(52 * var(--p));background:linear-gradient(180deg,#fcd9c6 0%,#fde6da 55%,#feefe7 100%);border-radius:0 0 50% 50% / 0 0 calc(64 * var(--p)) calc(64 * var(--p));box-shadow:0 calc(12 * var(--p)) calc(26 * var(--p)) calc(-14 * var(--p)) rgba(208,106,58,.30)}
+.hf4-x{display:flex;justify-content:flex-end;margin-top:calc(4 * var(--p))}
+.hf4-x span{width:calc(30 * var(--p));height:calc(30 * var(--p));border-radius:calc(999 * var(--p));display:grid;place-items:center;background:rgba(255,255,255,.7);font-size:calc(15 * var(--p))}
+.hf4-head{display:flex;align-items:center;justify-content:space-between;gap:calc(12 * var(--p));margin-top:calc(6 * var(--p))}
+.hf4-h1{margin:0;font-size:calc(32 * var(--p));font-weight:700;line-height:1.02;letter-spacing:-.03em}
+.hf4-meta{margin:calc(10 * var(--p)) 0 0;font-size:calc(13 * var(--p));color:#8a6a5c}
+.hf4-check{position:relative;flex:none;width:calc(78 * var(--p));height:calc(78 * var(--p));display:grid;place-items:center}
+.hf4-check .c{position:relative;z-index:1;width:calc(62 * var(--p));height:calc(62 * var(--p));border-radius:calc(999 * var(--p));background:var(--acc);display:grid;place-items:center;box-shadow:0 calc(12 * var(--p)) calc(22 * var(--p)) calc(-8 * var(--p)) rgba(242,139,91,.75),inset 0 calc(1 * var(--p)) 0 rgba(255,255,255,.3)}
+.hf4-check .c svg{width:calc(28 * var(--p));height:calc(28 * var(--p))}
+.hf4-check .hf2-burst{left:50%;top:50%}
+.hf4-dot{position:absolute;width:calc(6 * var(--p));height:calc(6 * var(--p));border-radius:calc(999 * var(--p));background:var(--c)}
+.hf4-next{display:flex;align-items:center;gap:calc(12 * var(--p));margin-top:calc(20 * var(--p));padding:calc(12 * var(--p));border-radius:calc(14 * var(--p));background:#fff;box-shadow:0 calc(1 * var(--p)) calc(2 * var(--p)) rgba(29,33,38,.06),0 calc(8 * var(--p)) calc(20 * var(--p)) calc(-8 * var(--p)) rgba(208,106,58,.28)}
+.hf4-next .ico{flex:none;width:calc(34 * var(--p));height:calc(34 * var(--p));border-radius:calc(10 * var(--p));background:var(--acc);box-shadow:inset 0 1px 0 rgba(255,255,255,.3);display:grid;place-items:center}
+.hf4-next .ico svg{width:calc(16 * var(--p));height:calc(16 * var(--p))}
+.hf4-next div{flex:1;min-width:0;font-size:calc(15 * var(--p));font-weight:700}
+.hf4-next div small{display:block;font-size:calc(10 * var(--p));font-weight:700;letter-spacing:.08em;color:var(--mute)}
+.hf4-next em{font-style:normal;font-size:calc(12.5 * var(--p));font-weight:700;color:#d9713f}
+.hf4-sec{margin:calc(20 * var(--p)) calc(20 * var(--p)) calc(10 * var(--p));font-size:calc(15 * var(--p));font-weight:700}
+.hf4 .hf3-stack{margin-top:0;gap:calc(8 * var(--p))}
+.hf4 .hf3-row{padding:calc(8 * var(--p))}
+.hf4 .hf3-row img{width:calc(64 * var(--p));height:calc(64 * var(--p));border-radius:calc(10 * var(--p))}
+.hf4 .hf3-row b{font-size:calc(14 * var(--p))}
+.hf4-fb{margin:calc(12 * var(--p)) calc(16 * var(--p)) 0;padding:calc(12 * var(--p));border-radius:calc(16 * var(--p));background:#f3f1ef}
+.hf4-fb p{margin:0 0 calc(10 * var(--p));font-size:calc(13 * var(--p));font-weight:600}
+.hf4-fb div{display:grid;grid-template-columns:1fr 1fr;gap:calc(8 * var(--p))}
+.hf4-fb span{display:flex;align-items:center;justify-content:center;gap:calc(6 * var(--p));height:calc(36 * var(--p));border-radius:calc(999 * var(--p));background:#fff;font-size:calc(12.5 * var(--p));font-weight:600;box-shadow:0 calc(1 * var(--p)) calc(2 * var(--p)) rgba(29,33,38,.06)}
+.hf4-fb span svg{width:calc(13 * var(--p));height:calc(13 * var(--p))}
+.hf4-close{display:flex;align-items:center;justify-content:center;margin:auto calc(16 * var(--p)) calc(22 * var(--p));height:calc(44 * var(--p));border-radius:calc(999 * var(--p));background:#fff;font-size:calc(15 * var(--p));font-weight:600;box-shadow:0 0 0 calc(1 * var(--p)) rgba(29,33,38,.08),0 calc(4 * var(--p)) calc(12 * var(--p)) calc(-6 * var(--p)) rgba(29,33,38,.12)}
+
+/* Done drawer, fireworks: four-point sparkles fly out from the check, twist and fade, once. */
+.hf4-fx{position:absolute;left:50%;top:50%;width:0;height:0}
+.hf4-fx i{position:absolute;left:0;top:0;width:var(--s);height:var(--s);margin:calc(var(--s) / -2) 0 0 calc(var(--s) / -2);background:var(--c);clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);opacity:0}
+.hf4-fx i.d{clip-path:circle(50%)}
+.hf4-check::after{content:"";position:absolute;inset:calc(8 * var(--p));border-radius:999px;border:calc(2 * var(--p)) solid rgba(242,139,91,.5);opacity:0}
+@keyframes hf4-spark{0%{transform:translate(0,0) scale(.2) rotate(0deg);opacity:0}20%{opacity:1}55%{transform:translate(var(--x),var(--y)) scale(1) rotate(45deg);opacity:1}100%{transform:translate(calc(var(--x) * 1.18),calc(var(--y) * 1.18 + calc(8 * var(--p)))) scale(.3) rotate(110deg);opacity:0}}
+@keyframes hf4-ring{0%{transform:scale(.7);opacity:.8}100%{transform:scale(1.45);opacity:0}}
+/* Brief screens, entrance: plays once, the first time a phone scrolls into view.
+   Nothing moves for the first second so the reader is already looking. Summary: tiles rise one by one.
+   Done: the drawer drops in with its content, then the check pops with sparkles, then the tiles rise.
+   The script adds .anim (so without JS nothing is hidden) and toggles .play. */
+.hf2{--b:1000ms}
+.hf4{--b:1000ms}
+.anim:not(.play) .hf3-tile,.anim:not(.play) .hf4-sec,.anim:not(.play) .hf4-fb,.anim:not(.play) .hf4-close,.anim:not(.play) .hf4-drawer,.anim:not(.play) .hf4-check .c{opacity:0}
+.play .hf3-tile,.play .hf4-sec,.play .hf4-fb,.play .hf4-close{animation:hf5-up 600ms cubic-bezier(.2,.7,.3,1) calc(var(--b) + var(--i,0) * 80ms) both}
+.play.hf4 .hf3-tile,.play.hf4 .hf4-sec,.play.hf4 .hf4-fb,.play.hf4 .hf4-close{animation-delay:calc(var(--b) + 1300ms + var(--i,0) * 80ms)}
+.play .hf4-drawer{animation:hf5-drop 750ms cubic-bezier(.2,.8,.2,1) var(--b) both}
+.play .hf4-check .c{animation:hf-pop 700ms cubic-bezier(0.2,0.9,0.3,1.3) calc(var(--b) + 650ms) both}
+.play .hf4-check::after{animation:hf4-ring 1100ms ease-out calc(var(--b) + 800ms) both}
+.play .hf4-fx i{animation:hf4-spark 1500ms cubic-bezier(.2,.7,.3,1) calc(var(--b) + 550ms + var(--d)) both}
+@keyframes hf5-up{from{opacity:0;transform:translateY(calc(12 * var(--p)))}to{opacity:1;transform:none}}
+@keyframes hf5-drop{from{opacity:0;transform:translateY(-55%)}to{opacity:1;transform:none}}
+
+/* Trivia, second pass: a game, not a reading surface. Full colour (indigo, coral, mint, yellow), a chunky
+   display face (Lilita One) over Nunito, tilted cards with thick white borders, buttons with a pressed
+   bottom edge. Stills of Aladdin supplied by Ofir. */
+.tv2{--p:calc(100cqw * 0.9462 / 390);--ind:#2a2d7c;--ind2:#1b1d55;--coral:#ff6b6b;--coral2:#d94f4f;--mint:#5ee6b8;--mint2:#2fb98c;--yel:#ffd34d;--yel2:#f2a83a;--white:#fff;font-family:"Nunito",sans-serif}
+.tv2 .fl-app{color:#fff;background:radial-gradient(120% 70% at 50% 0%,#3d41b0 0%,var(--ind) 45%,var(--ind2) 100%)}
+.tv2 .fl-app::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.035) 0 calc(18 * var(--p)),transparent calc(18 * var(--p)) calc(36 * var(--p)));pointer-events:none}
+.tv2 .fl-app > *{position:relative;flex-shrink:0}
+.tv2 .fl-status{color:#fff}
+.tv2 .lil{font-family:"Lilita One","Nunito",sans-serif;font-weight:400;letter-spacing:.01em}
+.tv2-top{display:flex;align-items:center;justify-content:space-between;padding:calc(6 * var(--p)) calc(16 * var(--p)) 0}
+.tv2-x{width:calc(32 * var(--p));height:calc(32 * var(--p));border-radius:calc(999 * var(--p));background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:calc(16 * var(--p));font-weight:800}
+.tv2-title{font-size:calc(25 * var(--p));line-height:1;text-shadow:0 calc(3 * var(--p)) 0 rgba(0,0,0,.18)}
+.tv2-pts{padding:calc(6 * var(--p)) calc(10 * var(--p)) calc(5 * var(--p));border-radius:calc(12 * var(--p));background:var(--coral);font-size:calc(17 * var(--p));line-height:1;box-shadow:0 calc(4 * var(--p)) 0 var(--coral2);transform:rotate(4deg)}
+.tv2-meta{display:flex;align-items:center;justify-content:space-between;margin:calc(16 * var(--p)) calc(16 * var(--p)) 0}
+.tv2-badges{position:relative;display:flex;align-items:center}
+.tv2-num{width:calc(52 * var(--p));height:calc(52 * var(--p));border-radius:calc(999 * var(--p));background:var(--coral);display:grid;place-items:center;font-size:calc(24 * var(--p));box-shadow:0 calc(4 * var(--p)) 0 var(--coral2)}
+.tv2-of{margin-left:calc(-10 * var(--p));margin-top:calc(22 * var(--p));width:calc(34 * var(--p));height:calc(34 * var(--p));border-radius:calc(999 * var(--p));background:var(--mint);color:var(--ind2);display:grid;place-items:center;font-size:calc(14 * var(--p));box-shadow:0 calc(3 * var(--p)) 0 var(--mint2)}
+.tv2-partner{display:inline-flex;align-items:center;gap:calc(6 * var(--p));padding:calc(6 * var(--p)) calc(11 * var(--p));border-radius:calc(999 * var(--p));background:rgba(255,255,255,.12);font-size:calc(11.5 * var(--p));font-weight:800}
+.tv2-partner em{font-style:normal;font-weight:700;opacity:.65}
+.tv2-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(10 * var(--p));margin:calc(22 * var(--p)) calc(18 * var(--p)) 0}
+.tv2-card{position:relative;aspect-ratio:3/4;perspective:700px;padding:0;border:0;background:none;cursor:pointer}
+.tv2-card:nth-child(1){transform:rotate(-5deg)}
+.tv2-card:nth-child(2){transform:rotate(2deg) translateY(calc(-6 * var(--p)))}
+.tv2-card:nth-child(3){transform:rotate(6deg)}
+.tv2-in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform 650ms cubic-bezier(.3,.7,.3,1.2)}
+.tv2-card.open .tv2-in{transform:rotateY(180deg)}
+.tv2-face{position:absolute;inset:0;border-radius:calc(14 * var(--p));border:calc(4 * var(--p)) solid #fff;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 calc(10 * var(--p)) calc(20 * var(--p)) calc(-6 * var(--p)) rgba(0,0,0,.45)}
+.tv2-front{transform:rotateY(180deg);background:#fff}
+.tv2-card.up .tv2-in,.tv2-card.up .tv2-front{transform:none}
+.tv2-front img{display:block;width:100%;height:100%;object-fit:cover}
+.tv2-front b{position:absolute;top:calc(5 * var(--p));left:calc(5 * var(--p));width:calc(20 * var(--p));height:calc(20 * var(--p));border-radius:calc(999 * var(--p));background:var(--yel);color:var(--ind2);display:grid;place-items:center;font-size:calc(12 * var(--p))}
+.tv2-back{display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.18),transparent 55%),repeating-linear-gradient(45deg,rgba(255,255,255,.12) 0 calc(7 * var(--p)),transparent calc(7 * var(--p)) calc(16 * var(--p))),var(--coral)}
+.tv2-back i{font-style:normal;font-size:calc(46 * var(--p));line-height:1;color:#fff;text-shadow:0 calc(4 * var(--p)) 0 var(--coral2)}
+.tv2-back small{position:absolute;bottom:calc(8 * var(--p));left:50%;transform:translateX(-50%) rotate(-4deg);padding:calc(3 * var(--p)) calc(7 * var(--p)) calc(2 * var(--p));border-radius:calc(8 * var(--p));background:var(--yel);color:var(--ind2);font-size:calc(12 * var(--p));white-space:nowrap;box-shadow:0 calc(2 * var(--p)) 0 var(--yel2)}
+.tv2-hint{margin:calc(18 * var(--p)) calc(16 * var(--p)) 0;text-align:center;font-size:calc(13 * var(--p));font-weight:700;color:rgba(255,255,255,.72)}
+.tv2-q{margin:calc(18 * var(--p)) calc(16 * var(--p)) 0;text-align:center;font-size:calc(27 * var(--p));line-height:1.05;text-shadow:0 calc(3 * var(--p)) 0 rgba(0,0,0,.18)}
+.tv2-ans{display:grid;gap:calc(12 * var(--p));margin:calc(16 * var(--p)) calc(18 * var(--p)) 0}
+.tv2-a{display:flex;align-items:center;gap:calc(12 * var(--p));padding:calc(11 * var(--p)) calc(14 * var(--p));border-radius:calc(16 * var(--p));border:0;background:#fff;color:var(--ind2);cursor:pointer;box-shadow:0 calc(5 * var(--p)) 0 #b9bce6;transition:transform 120ms ease,box-shadow 120ms ease,background-color 200ms ease}
+.tv2-a:active{transform:translateY(calc(3 * var(--p)));box-shadow:0 calc(2 * var(--p)) 0 #b9bce6}
+.tv2-a i{flex:none;width:calc(30 * var(--p));height:calc(30 * var(--p));border-radius:calc(10 * var(--p));display:grid;place-items:center;font-style:normal;font-size:calc(16 * var(--p));color:#fff}
+.tv2-a:nth-child(1) i{background:var(--coral)}.tv2-a:nth-child(2) i{background:var(--mint2)}.tv2-a:nth-child(3) i{background:var(--yel2)}
+.tv2-a span{font-size:calc(19 * var(--p))}
+.tv2-a.ok{background:var(--mint);box-shadow:0 calc(5 * var(--p)) 0 var(--mint2)}
+.tv2-a.no{background:var(--coral);color:#fff;box-shadow:0 calc(5 * var(--p)) 0 var(--coral2)}
+/* results */
+.tv2r .fl-app{background:radial-gradient(120% 60% at 50% 30%,#2e2370 0%,#1c1446 70%)}
+.tv2-rhead{display:grid;grid-template-columns:calc(32 * var(--p)) 1fr calc(32 * var(--p));align-items:center;padding:calc(6 * var(--p)) calc(16 * var(--p)) 0}
+.tv2-rhead b{text-align:center;font-size:calc(22 * var(--p));color:var(--mint)}
+.tv2-rl{margin:calc(18 * var(--p)) calc(20 * var(--p)) 0;font-size:calc(14 * var(--p));font-weight:700;color:rgba(255,255,255,.8)}
+.tv2-rv{margin:calc(2 * var(--p)) calc(20 * var(--p)) 0;font-size:calc(19 * var(--p));color:var(--mint)}
+.tv2-box{position:relative;margin:calc(18 * var(--p)) calc(18 * var(--p)) 0;padding:calc(22 * var(--p)) calc(16 * var(--p)) calc(26 * var(--p));border-radius:calc(28 * var(--p));text-align:center;background:linear-gradient(180deg,#7b5cf5,#4b38b5);box-shadow:0 calc(18 * var(--p)) calc(30 * var(--p)) calc(-14 * var(--p)) rgba(0,0,0,.6),inset 0 calc(1 * var(--p)) 0 rgba(255,255,255,.25)}
+.tv2-box h3{margin:0;font-family:"Lilita One",sans-serif;font-weight:400;font-size:calc(28 * var(--p));text-shadow:0 calc(3 * var(--p)) 0 rgba(0,0,0,.18)}
+.tv2-coin{position:relative;width:calc(160 * var(--p));height:calc(160 * var(--p));margin:calc(18 * var(--p)) auto 0;border-radius:calc(999 * var(--p));display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#ffe58a,var(--yel) 45%,var(--yel2));box-shadow:0 calc(8 * var(--p)) 0 #d98d22,0 calc(22 * var(--p)) calc(30 * var(--p)) calc(-10 * var(--p)) rgba(0,0,0,.5),inset 0 calc(-6 * var(--p)) 0 rgba(0,0,0,.06)}
+.tv2-coin::before{content:"";position:absolute;inset:calc(10 * var(--p));border-radius:calc(999 * var(--p));border:calc(3 * var(--p)) dashed rgba(255,255,255,.55)}
+.tv2-coin span{font-family:"Lilita One",sans-serif;font-size:calc(66 * var(--p));line-height:1;color:#fff;text-shadow:0 calc(4 * var(--p)) 0 #d98d22}
+.tv2-coin small{display:block;font-family:"Lilita One",sans-serif;font-size:calc(14 * var(--p));letter-spacing:.08em;color:#fff;text-shadow:0 calc(2 * var(--p)) 0 #d98d22}
+.tv2-conf{position:absolute;width:var(--s);height:var(--s);left:var(--l);top:var(--t);background:var(--c);border-radius:var(--r,calc(999 * var(--p)));transform:rotate(var(--a,0deg))}
+.tv2-sum{display:grid;grid-template-columns:repeat(5,1fr);gap:calc(6 * var(--p));margin:calc(16 * var(--p)) calc(18 * var(--p)) 0}
+.tv2-sum div{display:flex;flex-direction:column;align-items:center;gap:calc(6 * var(--p));padding:calc(8 * var(--p)) 0;border-radius:calc(12 * var(--p));background:rgba(255,255,255,.07)}
+.tv2-sum small{font-family:"Lilita One",sans-serif;font-size:calc(12 * var(--p));opacity:.7}
+.tv2-pips{display:flex;gap:calc(3 * var(--p))}
+.tv2-pips i{width:calc(8 * var(--p));height:calc(11 * var(--p));border-radius:calc(2 * var(--p));background:rgba(255,255,255,.18)}
+.tv2-pips i.on{background:var(--coral)}
+.tv2-res{width:calc(20 * var(--p));height:calc(20 * var(--p));border-radius:calc(999 * var(--p));display:grid;place-items:center;font-size:calc(12 * var(--p));font-weight:900;color:var(--ind2)}
+.tv2-res.y{background:var(--mint)}.tv2-res.n{background:var(--coral);color:#fff}
+.tv2-next{margin:calc(14 * var(--p)) calc(18 * var(--p)) 0;text-align:center;font-size:calc(13 * var(--p));font-weight:700;color:rgba(255,255,255,.75)}
+.tv2-next b{color:var(--yel)}
+.tv2-btn{display:flex;align-items:center;justify-content:center;margin:auto calc(18 * var(--p)) calc(10 * var(--p));height:calc(54 * var(--p));border-radius:calc(18 * var(--p));background:#6a4cff;font-family:"Lilita One",sans-serif;font-size:calc(21 * var(--p));box-shadow:0 calc(6 * var(--p)) 0 #4a2fd1}
+.tv2-by{margin:0 0 calc(20 * var(--p));text-align:center;font-size:calc(11 * var(--p));font-weight:700;color:rgba(255,255,255,.5)}
+
+.tv2-band{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding:calc(16 * var(--p)) calc(20 * var(--p)) calc(22 * var(--p));background:var(--mint);color:var(--ind2);font-size:calc(16 * var(--p));box-shadow:inset 0 calc(3 * var(--p)) 0 rgba(255,255,255,.35)}
+.tv2-band b{font-weight:400;color:var(--ind2)}
+/* Trivia, third pass: centred pair under its own heading, one points count per place, a next-set card
+   and a labeled partner unit that fills the results screen with the business half of the game. */
+.tv2-row{margin-top:5rem}
+.tv2-pair{display:grid;grid-template-columns:1fr;gap:3rem;margin-top:2.5rem;align-items:start}
+@media (min-width:768px){.tv2-pair{grid-template-columns:repeat(2,minmax(0,20rem));justify-content:center;gap:5rem}}
+.tv2 .tv2-cards{margin:calc(26 * var(--p)) calc(14 * var(--p)) 0;gap:calc(8 * var(--p))}
+.tv2 .tv2-card{aspect-ratio:3/4.2}
+.tv2 .tv2-hint{margin-top:calc(20 * var(--p))}
+.tv2 .tv2-q{margin-top:calc(22 * var(--p))}
+.tv2 .tv2-ans{margin-top:calc(18 * var(--p));gap:calc(14 * var(--p))}
+.tv2 .tv2-a{padding:calc(13 * var(--p)) calc(14 * var(--p))}
+.tv2-bp{font-size:calc(12.5 * var(--p));font-weight:800}
+.tv2-bp em{font-style:normal;font-weight:700;opacity:.6}
+.tv2r .tv2-rv{margin-top:calc(10 * var(--p));font-size:calc(22 * var(--p))}
+.tv2r .tv2-box{margin-top:calc(14 * var(--p));padding:calc(18 * var(--p)) calc(16 * var(--p)) calc(22 * var(--p))}
+.tv2r .tv2-coin{width:calc(146 * var(--p));height:calc(146 * var(--p))}
+.tv2-nx{display:flex;align-items:center;justify-content:space-between;gap:calc(10 * var(--p));margin:calc(14 * var(--p)) calc(18 * var(--p)) 0;padding:calc(10 * var(--p)) calc(10 * var(--p)) calc(10 * var(--p)) calc(14 * var(--p));border-radius:calc(16 * var(--p));background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.tv2-nx small{display:block;font-size:calc(10.5 * var(--p));font-weight:800;letter-spacing:.08em;opacity:.6}
+.tv2-nx b{display:block;font-size:calc(18 * var(--p));color:var(--yel)}
+.tv2-rem{display:inline-flex;align-items:center;gap:calc(5 * var(--p));padding:calc(8 * var(--p)) calc(11 * var(--p));border-radius:calc(12 * var(--p));background:var(--yel);color:var(--ind2);font-size:calc(13 * var(--p));box-shadow:0 calc(3 * var(--p)) 0 var(--yel2)}
+.tv2-rem svg{width:calc(13 * var(--p));height:calc(13 * var(--p))}
+.tv2-sp{display:flex;align-items:center;gap:calc(12 * var(--p));margin:calc(10 * var(--p)) calc(18 * var(--p)) 0;padding:calc(8 * var(--p));border-radius:calc(16 * var(--p));background:#fff;color:var(--ind2);box-shadow:0 calc(4 * var(--p)) 0 #b9bce6}
+.tv2-sp img{flex:none;width:calc(48 * var(--p));height:calc(48 * var(--p));border-radius:calc(10 * var(--p));object-fit:cover}
+.tv2-sp div{flex:1;min-width:0}
+.tv2-sp small{display:block;font-size:calc(10.5 * var(--p));font-weight:800;color:#8a8db8}
+.tv2-sp b{display:block;font-size:calc(17 * var(--p));line-height:1.1}
+.tv2-go{flex:none;width:calc(36 * var(--p));height:calc(36 * var(--p));border-radius:999px;background:#6a4cff;display:grid;place-items:center;box-shadow:0 calc(3 * var(--p)) 0 #4a2fd1}
+.tv2-go svg{width:calc(14 * var(--p));height:calc(14 * var(--p));margin-left:calc(2 * var(--p))}
 </style>
 </head>
 <body class="antialiased">
@@ -1755,47 +2290,266 @@ a:hover .arrow { transform: translateX(4px); }
            by Ofir. Publishers, brands and headlines are invented. -->
       <div class="hf-pair mt-12">
         <figure class="hf-fig reveal">
-          <div class="fl-phone hf">
+          <div class="fl-phone hf hf2">
               <img src="assets/phone-light.webp" width="576" height="1206" alt="" decoding="async">
               <div class="fl-app"><div class="fl-status"><span></span><span class="fl-si"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3v19H3z" fill="currentColor" opacity=".45"/><path d="M22 10v12H11z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="19" rx="2" fill="currentColor"/><rect x="10" y="1" width="4" height="3" rx="1" fill="currentColor"/></svg><span>08:24</span></span></div>
-                <div class="hf-top"><span>Tuesday, Oct 20</span><span class="hf-x">&times;</span></div>
-                <p class="hf-h1">Your Daily News Brief</p>
-                <p class="hf-sub">10 stories &middot; 4 min &middot; 5 publishers</p>
-                <div class="hf-topics"><span>Picked for you:</span><span class="on">Tech</span><span class="on">City</span><span class="on">Economy</span></div>
-                <div class="hf-lead"><div class="hf-tile t-eco" style="width:auto"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg></div><div class="hf-lead-b"><b>Rates stay put for a third month</b><span class="hf-meta">The Daily Ledger &middot; 2 min</span></div></div>
-                <div class="hf-list">
-                  <div class="hf-row"><span class="hf-num">02</span><div><b>New metro line opens ahead of schedule</b><span class="hf-meta">Metro Times &middot; 1 min</span></div><span class="hf-tile t-city"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg></span></div>
-                  <div class="hf-row"><span class="hf-num">03</span><div><b>Heatwave eases by the weekend</b><span class="hf-meta">Northwind News &middot; 1 min</span></div><span class="hf-tile t-wx"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span></div>
-                  <div class="hf-row"><span class="hf-num">04</span><div><b>Smarter savings for weekend trips</b><span class="hf-meta">Wayfare</span><span class="hf-spon">Sponsored</span></div><span class="hf-tile t-spon"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></span></div>
-                  <div class="hf-row"><span class="hf-num">05</span><div><b>Startup raises $40M to recycle batteries</b><span class="hf-meta">Signal Post &middot; 2 min</span></div><span class="hf-tile t-tech"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"/><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"/></svg></span></div>
-                  <div class="hf-row"><span class="hf-num">06</span><div><b>What to expect from the cup draw</b><span class="hf-meta">Field Report &middot; 1 min</span></div><span class="hf-tile t-sport"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg></span></div>
-                  <div class="hf-row"><span class="hf-num">07</span><div><b>Museum reopens after two years</b><span class="hf-meta">Metro Times &middot; 1 min</span></div><span class="hf-tile t-city"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></span></div>
-                </div>
-                <div class="hf-foot"><div class="hf-btn">Read in sequence <small>&middot; 4 min</small></div></div>
+                <div class="hf2-top"><span class="hf2-date">Tuesday, Oct 20</span><span class="hf2-x">&times;</span></div>
+                <div class="hf2-prog" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="hf2-progl"><span>0 of 10 read</span><span>4 min</span></div>
+                <p class="hf2-h1">Your Daily News Brief</p>
+                <p class="hf2-sub">10 stories &middot; 5 publishers</p>
+                <div class="hf2-topics"><em>Picked for you</em><span class="hf3-chip">Tech</span><span class="hf3-chip">City</span><span class="hf3-chip">Economy</span></div>
+                <div class="hf3-stack"><div class="hf3-tile hf3-lead"><img src="assets/brief-01-rates.webp" width="716" height="330" alt=""><div class="b"><span class="hf3-k">Economy</span><b>Rates stay put for a third month</b><span class="hf3-m">The Daily Ledger &middot; 2 min</span></div></div><div class="hf3-tile hf3-row"><img src="assets/brief-02-metro.webp" width="168" height="168" alt=""><div><span class="hf3-k">City</span><b>New metro line opens ahead of schedule</b><span class="hf3-m">Metro Times &middot; 1 min</span></div></div><div class="hf3-tile hf3-row"><img src="assets/brief-03-heatwave.webp" width="168" height="168" alt=""><div><span class="hf3-k">Weather</span><b>Heatwave eases by the weekend</b><span class="hf3-m">Northwind News &middot; 1 min</span></div></div><div class="hf3-tile hf3-row"><img src="assets/brief-04-travel.webp" width="168" height="168" alt=""><div><span class="hf3-k s">Sponsored</span><b>Smarter savings for weekend trips</b><span class="hf3-m">Wayfare</span></div></div><div class="hf3-tile hf3-row"><img src="assets/brief-05-batteries.webp" width="168" height="168" alt=""><div><span class="hf3-k">Tech</span><b>Startup raises $40M to recycle batteries</b><span class="hf3-m">Signal Post &middot; 2 min</span></div></div><div class="hf3-tile hf3-row"><img src="assets/brief-06-cup-draw.webp" width="168" height="168" alt=""><div><span class="hf3-k">Sport</span><b>What to expect from the cup draw</b><span class="hf3-m">Field Report &middot; 1 min</span></div></div><div class="hf3-tile hf3-row"><img src="assets/brief-07-museum.webp" width="168" height="168" alt=""><div><span class="hf3-k">Culture</span><b>Museum reopens after two years</b><span class="hf3-m">Metro Times &middot; 1 min</span></div></div></div>
+                <div class="hf2-foot"><div class="hf2-btn">Read in sequence <small>4 min</small></div></div>
               </div>
             </div>
           <figcaption class="type-body-md mt-5 max-w-[20rem] mx-auto text-secondary"><span class="font-medium text-default">The brief.</span> White, because this is a reading surface: color only arrives with the content. Topics say why these stories, and the one sponsored story sits fourth, labeled.</figcaption>
         </figure>
         <figure class="hf-fig reveal">
-          <div class="fl-phone hf hf-done">
+          <div class="fl-phone hf hf2 hf4">
               <img src="assets/phone-light.webp" width="576" height="1206" alt="" decoding="async">
               <div class="fl-app"><div class="fl-status"><span></span><span class="fl-si"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3v19H3z" fill="currentColor" opacity=".45"/><path d="M22 10v12H11z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="19" rx="2" fill="currentColor"/><rect x="10" y="1" width="4" height="3" rx="1" fill="currentColor"/></svg><span>08:24</span></span></div>
-                <div class="hf-top"><span></span><span class="hf-x">&times;</span></div>
-                <div class="hf-hero"><span class="hf-burst" aria-hidden="true"><i style="--x:-24cqw;--y:-10cqw;--c:#f28b5b"></i><i style="--x:22cqw;--y:-12cqw;--c:#f6c64a"></i><i style="--x:-22cqw;--y:6cqw;--c:#8fc7a7"></i><i style="--x:23cqw;--y:5cqw;--c:#f28b5b"></i><i style="--x:-6cqw;--y:-18cqw;--c:#9db7f2"></i><i style="--x:8cqw;--y:-19cqw;--c:#f28b5b"></i><i style="--x:-28cqw;--y:0cqw;--c:#f6c64a"></i><i style="--x:28cqw;--y:-2cqw;--c:#9db7f2"></i><i style="--x:-15cqw;--y:10cqw;--c:#f28b5b"></i><i style="--x:15cqw;--y:10cqw;--c:#f6c64a"></i></span><div class="hf-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div></div>
-                <p class="hf-h1">You&#39;re up to date</p>
-                <p class="hf-sub">10 of 10 stories &middot; 4 min</p>
-                <span class="hf-next">Next brief: tomorrow, 07:30</span>
-                <p class="hf-sec">More on Tech</p>
-                <div class="hf-list">
-                  <div class="hf-row"><div><b>Why battery prices keep falling</b><span class="hf-meta">Signal Post &middot; 2 min</span></div><span class="hf-tile t-tech"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09"/><path d="M9 12a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.4 22.4 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 .05 5 .05"/></svg></span></div>
-                  <div class="hf-row"><div><b>The laptop built for long days</b><span class="hf-meta">Brightline</span><span class="hf-spon">Sponsored</span></div><span class="hf-tile t-spon"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></span></div>
-                  <div class="hf-row"><div><b>Three startups to watch this year</b><span class="hf-meta">The Daily Ledger &middot; 3 min</span></div><span class="hf-tile t-tech"><svg class="hf-ic" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span></div>
+                <div class="hf4-drawer">
+                  <div class="hf4-x"><span>&times;</span></div>
+                  <div class="hf4-head"><div><p class="hf4-h1">You&#39;re up<br>to date</p><p class="hf4-meta">10 of 10 stories &middot; 4 min</p></div>
+                    <div class="hf4-check"><span class="hf4-fx" aria-hidden="true"><i style="--x:calc(0 * var(--p));--y:calc(-64 * var(--p));--s:calc(14 * var(--p));--c:#f28b5b;--d:200ms"></i><i style="--x:calc(33 * var(--p));--y:calc(-45 * var(--p));--s:calc(9 * var(--p));--c:#f6c64a;--d:260ms"></i><i style="--x:calc(57 * var(--p));--y:calc(-19 * var(--p));--s:calc(12 * var(--p));--c:#f28b5b;--d:220ms"></i><i style="--x:calc(49 * var(--p));--y:calc(16 * var(--p));--s:calc(8 * var(--p));--c:#9db7f2;--d:290ms"></i><i style="--x:calc(36 * var(--p));--y:calc(50 * var(--p));--s:calc(13 * var(--p));--c:#f6c64a;--d:240ms"></i><i style="--x:calc(0 * var(--p));--y:calc(56 * var(--p));--s:calc(9 * var(--p));--c:#f28b5b;--d:310ms"></i><i style="--x:calc(-35 * var(--p));--y:calc(49 * var(--p));--s:calc(12 * var(--p));--c:#f6c64a;--d:230ms"></i><i style="--x:calc(-49 * var(--p));--y:calc(16 * var(--p));--s:calc(8 * var(--p));--c:#8fc7a7;--d:280ms"></i><i style="--x:calc(-59 * var(--p));--y:calc(-19 * var(--p));--s:calc(13 * var(--p));--c:#f28b5b;--d:250ms"></i><i style="--x:calc(-32 * var(--p));--y:calc(-44 * var(--p));--s:calc(9 * var(--p));--c:#9db7f2;--d:300ms"></i><i class="d" style="--x:calc(14 * var(--p));--y:calc(-42 * var(--p));--s:calc(5 * var(--p));--c:#f28b5b;--d:340ms"></i><i class="d" style="--x:calc(32 * var(--p));--y:calc(24 * var(--p));--s:calc(5 * var(--p));--c:#f6c64a;--d:370ms"></i><i class="d" style="--x:calc(-14 * var(--p));--y:calc(44 * var(--p));--s:calc(5 * var(--p));--c:#9db7f2;--d:320ms"></i><i class="d" style="--x:calc(-34 * var(--p));--y:calc(-25 * var(--p));--s:calc(5 * var(--p));--c:#f28b5b;--d:360ms"></i></span><span class="c"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span></div></div>
+                  <div class="hf4-next"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 6 4-4 4 4"/><path d="M16 18a4 4 0 0 0-8 0"/></svg></span><div><small>NEXT BRIEF</small>Tomorrow, 07:30</div><em>Remind me</em></div>
                 </div>
-                <div class="hf-fb"><span>How was today&#39;s brief?</span><span><em>More like this</em><em>Less</em></span></div>
-                <div class="hf-foot"><div class="hf-btn hf-btn--ghost">Close</div></div>
+                <p class="hf4-sec">More on Tech</p>
+                <div class="hf3-stack" style="margin-top:0"><div class="hf3-tile hf3-row"><img src="assets/brief-08-battery-prices.webp" width="168" height="168" alt=""><div><span class="hf3-k">Tech</span><b>Why battery prices keep falling</b><span class="hf3-m">Signal Post &middot; 2 min</span></div></div><div class="hf3-tile hf3-row"><img src="assets/brief-09-laptop.webp" width="168" height="168" alt=""><div><span class="hf3-k s">Sponsored</span><b>The laptop built for long days</b><span class="hf3-m">Brightline</span></div></div><div class="hf3-tile hf3-row"><img src="assets/brief-10-startups.webp" width="168" height="168" alt=""><div><span class="hf3-k">Tech</span><b>Three startups to watch this year</b><span class="hf3-m">The Daily Ledger &middot; 3 min</span></div></div></div>
+                <div class="hf4-fb"><p>How was today&#39;s brief?</p><div><span><svg viewBox="0 0 24 24" fill="none" stroke="#1d2126" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>More like this</span><span><svg viewBox="0 0 24 24" fill="none" stroke="#1d2126" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/></svg>Less</span></div></div>
+                <div class="hf4-close">Close</div>
               </div>
             </div>
           <figcaption class="type-body-md mt-5 max-w-[20rem] mx-auto text-secondary"><span class="font-medium text-default">Up to date.</span> The one screen that changes color, because it is a moment, not a page. The next brief&#39;s time is the reason to return, and the two buttons are how the next one gets better.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="more-ui" class="px-4 lg:px-20 bg-surface-alt">
+    <div class="case-scope mx-auto max-w-7xl pt-10 pb-20 sm:pt-20 lg:pb-28 lg:pt-28">
+      <span class="reveal type-label-sm text-muted">Part 2 &middot; More UI examples</span>
+      <h2 class="reveal type-headline-md mt-4 max-w-2xl">more UI examples<span class="brand-dot">.</span></h2>
+      <p class="reveal type-body-lg mt-4 max-w-prose text-secondary">The same rule, beyond the brief: when a team someone follows is playing, the match takes the focus, the way rain does.</p>
+      <!-- Three screens for the sports and video brief: lock screen, live and full time. Each phone scrolls inside so the
+           page stays short. Players, publishers and the sponsor are invented; crests are real. -->
+      <div class="ui-trio mt-12">
+        <figure class="hf-fig reveal">
+          <div class="pd-screen" data-theme="a" style="max-width:20rem">
+            <img src="assets/phone-dark.webp" width="576" height="1206" alt="" decoding="async" loading="lazy">
+            <div class="pd-widgets">
+              <div class="pd-chips">
+                <div class="pd-chip"><svg class="pd-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="10" r="7" fill="#f6d34a"/><path d="M6 20h11a4 4 0 0 0 0-8 5 5 0 0 0-9.6 1.5A3.3 3.3 0 0 0 6 20z" fill="#ffffff"/></svg><b>27&deg;</b></div>
+              </div>
+              <div class="pd-card"><h4>Arsenal 2 : 1 Chelsea &middot; 72&#39;</h4><p>Goal 69&#39; &middot; Okafor curls it in from 25 yards</p><div class="pd-card-foot"><span class="pd-live-src">Field Report &middot; <span class="pd-live"><i aria-hidden="true"></i>Live</span></span><span class="pd-cta"><span>Watch</span><i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></i></span></div></div>
+            </div>
+          </div>
+          <figcaption class="type-body-md mt-5 max-w-[20rem] mx-auto text-secondary"><span class="font-medium text-default">Lock screen.</span> The match takes the focus the way rain does: score, minute and the latest moment, with a live dot beside the source. Trivia steps back until the final whistle.</figcaption>
+        </figure>
+        <figure class="hf-fig reveal">
+          <div class="fl-phone">
+            <img src="assets/phone-dark.webp" alt="" width="576" height="1206">
+            <div class="fl-app lv-app">
+
+  <div class="lv-status">
+    <svg viewBox="0 0 24 24"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0z" fill="currentColor"/></svg>
+    <svg viewBox="0 0 24 24"><path d="M22 3v19H3z" fill="currentColor" opacity=".45"/><path d="M22 10v12H11z" fill="currentColor"/></svg>
+    <svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="19" rx="2" fill="currentColor"/><rect x="10" y="1" width="4" height="3" rx="1" fill="currentColor"/></svg>
+    <span>20:41</span>
+  </div>
+              <div class="lv-scroll" tabindex="0" aria-label="Live match screen, scrollable">
+
+  <!-- 1. GOAL CLIP -->
+  <div class="lv-video">
+    <video preload="metadata" aria-label="Goal clip, looping and muted" id="lvClip" autoplay muted loop playsinline><source src="assets/live-goal-loop.mp4" type="video/mp4"><source src="assets/live-goal-loop.webm" type="video/webm"></video>
+    <div class="lv-shade"></div>
+    <div class="lv-xbtn lv-glass"><svg width="13" height="13" viewBox="0 0 14 14" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg></div>
+    <div class="lv-moment">
+      <div>
+        <span class="lv-tag lv-glass"><span class="lv-ball"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M12 7.3l4.4 3.2-1.7 5.1H9.3L7.6 10.5z" fill="#15171b"/><path d="M12 1.4v5.9M2.2 9.1l5.4 1.4M21.8 9.1l-5.4 1.4M6 20.6l3.3-5M18 20.6l-3.3-5" stroke="#15171b" stroke-width="1.3" stroke-linecap="round"/></svg></span>Goal <em>· 69'</em></span>
+        <h2>Okafor curls it in<br>from 25 yards</h2>
+      </div>
+      <div class="lv-mute lv-glass"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6M16 9l6 6"/></svg></div>
+    </div>
+  </div>
+
+  <!-- 2. SCORE CARD -->
+  <div class="lv-score">
+    <div class="lv-s-head">
+      <span>Premier League · Matchweek 7</span>
+      <span class="lv-follow"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M11.5 2.3a.6.6 0 0 1 1 0l2.3 4.7 5.2.8a.6.6 0 0 1 .3 1l-3.7 3.6.9 5.1a.6.6 0 0 1-.8.6L12 15.7l-4.6 2.4a.6.6 0 0 1-.8-.6l.9-5.1L3.7 8.8a.6.6 0 0 1 .3-1l5.2-.8z"/></svg>Following</span>
+    </div>
+    <div class="lv-board">
+      <div class="lv-team"><div class="lv-crest"><img class="lv-shield" src="assets/crest-arsenal.png" width="109" height="128" alt="Arsenal"></div><span class="lv-nm">Arsenal</span></div>
+      <div class="lv-mid">
+        <span class="lv-lv"><span class="lv-dot"></span>LIVE</span>
+        <span class="lv-time lv-tnum">72' &middot; 2nd half</span>
+        <span class="lv-score-n lv-tnum">2<i>:</i>1</span>
+      </div>
+      <div class="lv-team"><div class="lv-crest"><img src="assets/crest-chelsea.png" width="128" height="128" alt="Chelsea"></div><span class="lv-nm">Chelsea</span></div>
+    </div>
+    <div class="lv-poss">
+      <div class="lv-lab"><b class="lv-tnum">58%</b><span>Possession</span><b class="lv-tnum">42%</b></div>
+      <div class="lv-trk"><i style="flex:58;background:var(--home)"></i><i style="flex:42;background:var(--away)"></i></div>
+    </div>
+    <div class="lv-events">
+      <div class="lv-ev lv-playing"><span class="lv-m lv-tnum">69'</span><span class="lv-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M12 7.3l4.4 3.2-1.7 5.1H9.3L7.6 10.5z" fill="#15171b"/><path d="M12 1.4v5.9M2.2 9.1l5.4 1.4M21.8 9.1l-5.4 1.4M6 20.6l3.3-5M18 20.6l-3.3-5" stroke="#15171b" stroke-width="1.3" stroke-linecap="round"/></svg></span><div><b>Okafor</b><small><span class="lv-eq"><i></i><i></i><i></i></span>Now playing <span>· Arsenal goal</span></small></div><span class="lv-sc lv-tnum" style="color:var(--home-t)">2–1</span><div class="lv-prog"><i id="lvProg"></i></div></div>
+      <div class="lv-ev"><span class="lv-m lv-tnum">63'</span><span class="lv-ic"><i style="background:var(--live)"></i></span><div><b>Diallo</b><small>Chelsea · Red card</small></div><span></span></div>
+      <div class="lv-ev"><span class="lv-m lv-tnum">41'</span><span class="lv-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M12 7.3l4.4 3.2-1.7 5.1H9.3L7.6 10.5z" fill="#15171b"/><path d="M12 1.4v5.9M2.2 9.1l5.4 1.4M21.8 9.1l-5.4 1.4M6 20.6l3.3-5M18 20.6l-3.3-5" stroke="#15171b" stroke-width="1.3" stroke-linecap="round"/></svg></span><div><b>Moretti</b><small>Chelsea · Goal</small></div><span class="lv-sc lv-tnum" style="color:var(--away-t)">1–1</span></div>
+      <div class="lv-ev"><span class="lv-m lv-tnum">27'</span><span class="lv-ic"><i style="background:var(--yellow)"></i></span><div><b>Diallo</b><small>Chelsea · Yellow card</small></div><span></span></div>
+      <div class="lv-ev"><span class="lv-m lv-tnum">12'</span><span class="lv-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M12 7.3l4.4 3.2-1.7 5.1H9.3L7.6 10.5z" fill="#15171b"/><path d="M12 1.4v5.9M2.2 9.1l5.4 1.4M21.8 9.1l-5.4 1.4M6 20.6l3.3-5M18 20.6l-3.3-5" stroke="#15171b" stroke-width="1.3" stroke-linecap="round"/></svg></span><div><b>Lindqvist</b><small>Arsenal · Penalty</small></div><span class="lv-sc lv-tnum" style="color:var(--home-t)">1–0</span></div>
+    </div>
+  </div>
+
+  <!-- 3. STATS -->
+  <div class="lv-sec">
+    <h3>Match stats <small>Updated live</small></h3>
+    <div class="lv-panel lv-stats" id="lvStats">
+      <div class="lv-legend"><span style="--c:var(--home)">Arsenal</span><span style="--c:var(--away)">Chelsea</span></div>
+      <div class="lv-st"><div class="lv-row lv-tnum"><b>14</b><span>Shots</span><b>7</b></div><div class="lv-bars"><div class="lv-bar lv-l lv-lead"><i style="--w:67%"></i></div><div class="lv-bar lv-r"><i style="--w:33%"></i></div></div></div>
+      <div class="lv-st"><div class="lv-row lv-tnum"><b>6</b><span>On target</span><b>3</b></div><div class="lv-bars"><div class="lv-bar lv-l lv-lead"><i style="--w:67%"></i></div><div class="lv-bar lv-r"><i style="--w:33%"></i></div></div></div>
+      <div class="lv-st"><div class="lv-row lv-tnum"><b>1.84</b><span>Expected goals</span><b>0.72</b></div><div class="lv-bars"><div class="lv-bar lv-l lv-lead"><i style="--w:72%"></i></div><div class="lv-bar lv-r"><i style="--w:28%"></i></div></div></div>
+      <div class="lv-st"><div class="lv-row lv-tnum"><b>7</b><span>Corners</span><b>2</b></div><div class="lv-bars"><div class="lv-bar lv-l lv-lead"><i style="--w:78%"></i></div><div class="lv-bar lv-r"><i style="--w:22%"></i></div></div></div>
+      <div class="lv-st"><div class="lv-row lv-tnum"><b>9</b><span>Fouls</span><b>13</b></div><div class="lv-bars"><div class="lv-bar lv-l"><i style="--w:41%"></i></div><div class="lv-bar lv-r lv-lead"><i style="--w:59%"></i></div></div></div>
+    </div>
+  </div>
+
+  <!-- 4. TABOOLA LAYER -->
+  <div class="lv-sec">
+    <h3>Around the match</h3>
+    <div class="lv-panel lv-stories">
+      <div class="lv-story"><div><b>How ten men changed Chelsea's second half</b><span class="lv-meta">Field Report · 2 min</span></div><span class="lv-tile lv-t-tac"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/><circle cx="12" cy="12" r="3"/></svg></span></div>
+      <div class="lv-story"><div><b>Okafor's third goal from distance this season</b><span class="lv-meta">Signal Post · 1 min</span></div><span class="lv-tile lv-t-sport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 2.3a.6.6 0 0 1 1 0l2.3 4.7 5.2.8a.6.6 0 0 1 .3 1l-3.7 3.6.9 5.1a.6.6 0 0 1-.8.6L12 15.7l-4.6 2.4a.6.6 0 0 1-.8-.6l.9-5.1L3.7 8.8a.6.6 0 0 1 .3-1l5.2-.8z"/></svg></span></div>
+      <div class="lv-story"><div><b>Matchday gear that lasts the whole season</b><span class="lv-meta">Kitline <span class="lv-spon">Sponsored</span></span></div><span class="lv-tile lv-t-spon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/></svg></span></div>
+      <div class="lv-story"><div><b>Five numbers that explain the title race</b><span class="lv-meta">The Daily Ledger · 3 min</span></div><span class="lv-tile lv-t-tac"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span></div>
+    </div>
+  </div>
+  <div class="lv-src">Live data and clips by Field Report</div>
+
+              </div>
+            </div>
+          </div>
+          <p class="ui-hint type-label-sm text-muted"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>Scroll inside</p>
+          <figcaption class="type-body-md mt-3 max-w-[20rem] mx-auto text-secondary"><span class="font-medium text-default">Live match.</span> The goal that made someone tap loops at the top, muted. The score comes first, and team color appears only where it carries data. Every moment in the list is a clip, and publisher stories sit below, one sponsored and labeled.</figcaption>
+        </figure>
+        <figure class="hf-fig reveal">
+          <div class="fl-phone">
+            <img src="assets/phone-dark.webp" alt="" width="576" height="1206">
+            <div class="fl-app lv-app"><div class="lv-status">
+    <svg viewBox="0 0 24 24"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0z" fill="currentColor"/></svg>
+    <svg viewBox="0 0 24 24"><path d="M22 3v19H3z" fill="currentColor" opacity=".45"/><path d="M22 10v12H11z" fill="currentColor"/></svg>
+    <svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="19" rx="2" fill="currentColor"/><rect x="10" y="1" width="4" height="3" rx="1" fill="currentColor"/></svg>
+    <span>22:04</span>
+  </div>
+              <div class="lv-scroll" tabindex="0" aria-label="Full time screen, scrollable">
+                <div class="ft-hero">
+                  <div class="ft-top"><span class="ft-league">Premier League &middot; Matchweek 7</span><span class="ft-x"><svg width="12" height="12" viewBox="0 0 14 14" stroke="#fff" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12"/></svg></span></div>
+                  <div class="ft-ft"><span>FULL TIME</span></div>
+                  <div class="ft-board">
+                    <div class="ft-team"><div class="ft-crest"><img class="lv-shield" src="assets/crest-arsenal.png" width="109" height="128" alt="Arsenal"></div><span class="ft-nm">Arsenal <span class="ft-win">WIN</span></span>
+                      <div class="ft-scorers"><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M12 7.3l4.4 3.2-1.7 5.1H9.3L7.6 10.5z" fill="#15171b"/><path d="M12 1.4v5.9M2.2 9.1l5.4 1.4M21.8 9.1l-5.4 1.4M6 20.6l3.3-5M18 20.6l-3.3-5" stroke="#15171b" stroke-width="1.3" stroke-linecap="round"/></svg>Lindqvist 12' (pen)</span><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M12 7.3l4.4 3.2-1.7 5.1H9.3L7.6 10.5z" fill="#15171b"/><path d="M12 1.4v5.9M2.2 9.1l5.4 1.4M21.8 9.1l-5.4 1.4M6 20.6l3.3-5M18 20.6l-3.3-5" stroke="#15171b" stroke-width="1.3" stroke-linecap="round"/></svg>Okafor 69'</span></div></div>
+                    <div class="ft-score lv-tnum">2<i>:</i>1</div>
+                    <div class="ft-team"><div class="ft-crest"><img src="assets/crest-chelsea.png" width="128" height="128" alt="Chelsea"></div><span class="ft-nm">Chelsea</span>
+                      <div class="ft-scorers"><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M12 7.3l4.4 3.2-1.7 5.1H9.3L7.6 10.5z" fill="#15171b"/><path d="M12 1.4v5.9M2.2 9.1l5.4 1.4M21.8 9.1l-5.4 1.4M6 20.6l3.3-5M18 20.6l-3.3-5" stroke="#15171b" stroke-width="1.3" stroke-linecap="round"/></svg>Moretti 41'</span><span><i></i>Diallo 63'</span></div></div>
+                  </div>
+                </div>
+
+                <div class="ft-sec">
+                  <h3>Highlights <small>3 goals</small></h3>
+                  <div class="lv-panel">
+                    <div class="ft-player"><video id="ftClip" autoplay muted playsinline preload="metadata" aria-label="Goal clip, looping and muted"><source src="assets/ft-clip-lindqvist.mp4" type="video/mp4"><source src="assets/ft-clip-lindqvist.webm" type="video/webm"></video>
+                      <div class="ft-cap"><span class="ft-k" id="ftK">Penalty &middot; 12'</span><b id="ftT">Lindqvist sends the keeper the wrong way</b></div></div>
+                    <div class="ft-rail">
+                      <button class="ft-mo is-on" type="button" style="--tc:var(--home)" data-clip="ft-clip-lindqvist" data-k="Penalty &middot; 12'" data-t="Lindqvist sends the keeper the wrong way"><span class="ft-th"><img src="assets/ft-thumb-lindqvist.jpg" width="160" height="248" alt=""><em class="lv-tnum">12'</em><span class="ft-pg"><i></i></span></span><small><b>Lindqvist</b> Penalty</small></button>
+                      <button class="ft-mo" type="button" style="--tc:var(--away)" data-clip="ft-clip-moretti" data-k="Goal &middot; 41'" data-t="Moretti heads Chelsea level"><span class="ft-th"><img src="assets/ft-thumb-moretti.jpg" width="160" height="248" alt=""><em class="lv-tnum">41'</em><span class="ft-pg"><i></i></span></span><small><b>Moretti</b> Header</small></button>
+                      <button class="ft-mo" type="button" style="--tc:var(--home)" data-clip="live-goal-loop" data-k="Goal &middot; 69'" data-t="Okafor curls in the winner"><span class="ft-th"><img src="assets/ft-thumb-okafor.jpg" width="160" height="248" alt=""><em class="lv-tnum">69'</em><span class="ft-pg"><i></i></span></span><small><b>Okafor</b> Curler</small></button>
+                    </div>
+                    <div class="ft-all">Full highlights &middot; 3 min <span aria-hidden="true">&rsaquo;</span></div>
+                  </div>
+                </div>
+
+                <div class="ft-sec">
+                  <div class="lv-panel ft-potm">
+                    <span class="ft-eb">PLAYER OF THE MATCH</span>
+                    <div class="ft-row"><div class="ft-who"><b>Okafor</b><span>Arsenal &middot; Forward</span></div><span class="ft-rate lv-tnum">8.6</span></div>
+                    <div class="ft-pstats lv-tnum"><div><b>1</b><span>Goal</span></div><div><b>4</b><span>Shots</span></div><div><b>3</b><span>Chances</span></div></div>
+                  </div>
+                </div>
+
+                <div class="ft-sec">
+                  <h3>Final stats</h3>
+                  <div class="lv-panel lv-stats">
+                    <div class="lv-legend"><span style="--c:var(--home)">Arsenal</span><span style="--c:var(--away)">Chelsea</span></div>
+                    <div class="lv-st"><div class="lv-row lv-tnum"><b>57%</b><span>Possession</span><b>43%</b></div><div class="lv-bars"><div class="lv-bar lv-l lv-lead"><i style="--w:57%"></i></div><div class="lv-bar lv-r"><i style="--w:43%"></i></div></div></div>
+                    <div class="lv-st"><div class="lv-row lv-tnum"><b>17</b><span>Shots</span><b>8</b></div><div class="lv-bars"><div class="lv-bar lv-l lv-lead"><i style="--w:68%"></i></div><div class="lv-bar lv-r"><i style="--w:32%"></i></div></div></div>
+                    <div class="lv-st"><div class="lv-row lv-tnum"><b>2.21</b><span>Expected goals</span><b>0.84</b></div><div class="lv-bars"><div class="lv-bar lv-l lv-lead"><i style="--w:72%"></i></div><div class="lv-bar lv-r"><i style="--w:28%"></i></div></div></div>
+                    <div class="lv-st"><div class="lv-row lv-tnum"><b>11</b><span>Fouls</span><b>15</b></div><div class="lv-bars"><div class="lv-bar lv-l"><i style="--w:42%"></i></div><div class="lv-bar lv-r lv-lead"><i style="--w:58%"></i></div></div></div>
+                  </div>
+                </div>
+
+                <div class="ft-sec">
+                  <div class="lv-panel ft-next">
+                    <span class="ft-eb">NEXT FOR ARSENAL</span>
+                    <div class="ft-fx"><img src="assets/crest-arsenal.png" width="109" height="128" alt=""><div><b>Newcastle (away)</b><span>Sat &middot; 17:30 &middot; St James' Park</span></div></div>
+                    <div class="ft-remind"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>Remind me</div>
+                  </div>
+                </div>
+
+                <div class="lv-sec">
+                  <h3>After the match</h3>
+                  <div class="lv-panel lv-stories">
+                    <div class="lv-story"><div><b>Okafor's winner, frame by frame</b><span class="lv-meta">Field Report &middot; 2 min</span></div><span class="lv-tile lv-t-sport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 2.3a.6.6 0 0 1 1 0l2.3 4.7 5.2.8a.6.6 0 0 1 .3 1l-3.7 3.6.9 5.1a.6.6 0 0 1-.8.6L12 15.7l-4.6 2.4a.6.6 0 0 1-.8-.6l.9-5.1L3.7 8.8a.6.6 0 0 1 .3-1l5.2-.8z"/></svg></span></div>
+                    <div class="lv-story"><div><b>Five takeaways from a tense London derby</b><span class="lv-meta">Signal Post &middot; 3 min</span></div><span class="lv-tile lv-t-tac"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/><circle cx="12" cy="12" r="3"/></svg></span></div>
+                    <div class="lv-story"><div><b>Matchday gear that lasts the whole season</b><span class="lv-meta">Kitline <span class="lv-spon">Sponsored</span></span></div><span class="lv-tile lv-t-spon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/></svg></span></div>
+                  </div>
+                </div>
+                <div class="lv-src">Clips and data by Field Report</div>
+              </div>
+            </div>
+          </div>
+          <p class="ui-hint type-label-sm text-muted"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>Scroll inside</p>
+          <figcaption class="type-body-md mt-3 max-w-[20rem] mx-auto text-secondary"><span class="font-medium text-default">Full time.</span> The result, then the three goals as clips to switch between. Each tile carries its own texture, grass, halftone and stadium light, and the next fixture is the reason to come back.</figcaption>
+        </figure>
+      </div>
+      <div class="tv2-row">
+        <h3 class="reveal type-title-md">Play, when there&#39;s time.</h3>
+        <p class="reveal type-body-md mt-2 max-w-prose text-secondary">The same rule brings a game when this person is usually free: a daily Guess the movie set, made with a partner brand.</p>
+      </div>
+      <div class="tv2-pair">
+        <figure class="hf-fig reveal">
+          <div class="fl-phone tv2">
+              <img src="assets/phone-dark.webp" width="576" height="1206" alt="" decoding="async">
+              <div class="fl-app"><div class="fl-status"><span></span><span class="fl-si"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3v19H3z" fill="currentColor" opacity=".45"/><path d="M22 10v12H11z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="19" rx="2" fill="currentColor"/><rect x="10" y="1" width="4" height="3" rx="1" fill="currentColor"/></svg><span>08:24</span></span></div>
+                <div class="tv2-top"><span class="tv2-x">&times;</span><span class="tv2-title lil">GUESS THE MOVIE</span><span class="tv2-pts lil">WORTH 3</span></div>
+                <div class="tv2-meta"><div class="tv2-badges"><span class="tv2-num lil">#3</span><span class="tv2-of lil">/5</span></div></div>
+                <div class="tv2-cards"><button class="tv2-card up" type="button" aria-label="Card 1"><span class="tv2-in"><span class="tv2-face tv2-front"><img src="assets/tv-card1.webp" width="240" height="320" alt="Still 1"><b class="lil">1</b></span></span></button><button class="tv2-card" type="button" aria-label="Flip card 2, costs 1 point"><span class="tv2-in"><span class="tv2-face tv2-front"><img src="assets/tv-card2.webp" width="240" height="320" alt="Still 2"><b class="lil">2</b></span><span class="tv2-face tv2-back"><i class="lil">?</i><small class="lil">&minus;1 PT</small></span></span></button><button class="tv2-card" type="button" aria-label="Flip card 3, costs 1 point"><span class="tv2-in"><span class="tv2-face tv2-front"><img src="assets/tv-card3.webp" width="240" height="320" alt="Still 3"><b class="lil">3</b></span><span class="tv2-face tv2-back"><i class="lil">?</i><small class="lil">&minus;1 PT</small></span></span></button></div>
+                <p class="tv2-hint">Stuck? Flip a card. Each one costs a point.</p>
+                <p class="tv2-q lil">Which movie is it?</p>
+                <div class="tv2-ans">
+                  <button class="tv2-a" type="button"><i class="lil">A</i><span class="lil">Hercules</span></button>
+                  <button class="tv2-a" type="button" data-ok="1"><i class="lil">B</i><span class="lil">Aladdin</span></button>
+                  <button class="tv2-a" type="button"><i class="lil">C</i><span class="lil">Mulan</span></button>
+                </div>
+                <div class="tv2-band"><span class="tv2-bp">with Disney <em>&middot; Partner</em></span><b class="lil">6 PTS SO FAR</b></div>
+              </div>
+          </div>
+          <figcaption class="type-body-md mt-5 max-w-[20rem] mx-auto text-secondary"><span class="font-medium text-default">Guess the movie.</span> One still is free. Every extra card is a hint that costs a point, so the game rewards knowing it early. Tap a card to flip it.</figcaption>
+        </figure>
+        <figure class="hf-fig reveal">
+          <div class="fl-phone tv2 tv2r">
+              <img src="assets/phone-dark.webp" width="576" height="1206" alt="" decoding="async">
+              <div class="fl-app"><div class="fl-status"><span></span><span class="fl-si"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20 1.5 8.5a15 15 0 0 1 21 0z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3v19H3z" fill="currentColor" opacity=".45"/><path d="M22 10v12H11z" fill="currentColor"/></svg><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="19" rx="2" fill="currentColor"/><rect x="10" y="1" width="4" height="3" rx="1" fill="currentColor"/></svg><span>08:24</span></span></div>
+                <div class="tv2-rhead"><span class="tv2-x">&times;</span><b class="lil">Results</b><span></span></div>
+                <p class="tv2-rv lil">4 out of 5 movies</p>
+                <div class="tv2-box"><span class="tv2-conf" style="--l:12%;--t:38%;--s:calc(9 * var(--p));--c:#5ee6b8;--r:999px;--a:0deg"></span><span class="tv2-conf" style="--l:84%;--t:34%;--s:calc(8 * var(--p));--c:#ff6b6b;--r:2px;--a:30deg"></span><span class="tv2-conf" style="--l:18%;--t:72%;--s:calc(7 * var(--p));--c:#ffd34d;--r:999px;--a:0deg"></span><span class="tv2-conf" style="--l:80%;--t:70%;--s:calc(10 * var(--p));--c:#5ee6b8;--r:2px;--a:-20deg"></span><span class="tv2-conf" style="--l:28%;--t:52%;--s:calc(6 * var(--p));--c:#ffffff;--r:999px;--a:0deg"></span><span class="tv2-conf" style="--l:72%;--t:50%;--s:calc(7 * var(--p));--c:#ffd34d;--r:999px;--a:0deg"></span><span class="tv2-conf" style="--l:8%;--t:58%;--s:calc(7 * var(--p));--c:#ff6b6b;--r:2px;--a:45deg"></span><span class="tv2-conf" style="--l:90%;--t:56%;--s:calc(6 * var(--p));--c:#ffffff;--r:999px;--a:0deg"></span><span class="tv2-conf" style="--l:50%;--t:93%;--s:calc(8 * var(--p));--c:#ff6b6b;--r:999px;--a:0deg"></span><span class="tv2-conf" style="--l:62%;--t:88%;--s:calc(6 * var(--p));--c:#5ee6b8;--r:2px;--a:15deg"></span><h3>Your final score</h3><div class="tv2-coin"><div><span>11</span><small>POINTS</small></div></div></div>
+                <div class="tv2-sum"><div><small>Q1</small><span class="tv2-pips"><i class="on"></i><i></i><i></i></span><span class="tv2-res y">&#10003;</span></div><div><small>Q2</small><span class="tv2-pips"><i class="on"></i><i></i><i></i></span><span class="tv2-res y">&#10003;</span></div><div><small>Q3</small><span class="tv2-pips"><i class="on"></i><i class="on"></i><i></i></span><span class="tv2-res y">&#10003;</span></div><div><small>Q4</small><span class="tv2-pips"><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="tv2-res n">&#10005;</span></div><div><small>Q5</small><span class="tv2-pips"><i class="on"></i><i></i><i></i></span><span class="tv2-res y">&#10003;</span></div></div>
+                <div class="tv2-nx"><div><small>NEXT SET</small><b class="lil">Tomorrow, 18:00</b></div><span class="tv2-rem lil"><svg viewBox="0 0 24 24" fill="none" stroke="#1b1d55" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>Remind me</span></div><div class="tv2-sp"><img src="assets/tv-card2.webp" width="240" height="320" alt=""><div><small>Sponsored &middot; Disney+</small><b class="lil">Watch Aladdin tonight</b></div><span class="tv2-go"><svg viewBox="0 0 24 24" fill="#ffffff" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg></span></div>
+                <div class="tv2-btn">Share score</div>
+                <p class="tv2-by">Presented with Disney</p>
+              </div>
+          </div>
+          <figcaption class="type-body-md mt-5 max-w-[20rem] mx-auto text-secondary"><span class="font-medium text-default">Set complete.</span> The score, then how each answer was earned: coral marks show how many cards it took. The next set gives a reason to come back.</figcaption>
         </figure>
       </div>
     </div>
@@ -2413,5 +3167,78 @@ a:hover .arrow { transform: translateX(4px); }
   </script>
 
   </div><!-- /.page-shift -->
+
+  <script>
+    /* More UI examples: progress bar on the playing row follows the clip, stats bars fill on view. */
+    (function () {
+      var v = document.getElementById('lvClip'), p = document.getElementById('lvProg'), s = document.getElementById('lvStats');
+      if (v && p) { (function tick() { if (v.duration) p.style.width = (v.currentTime / v.duration * 100) + '%'; requestAnimationFrame(tick); })(); }
+      /* Per phone: the status bar gets a surface once scrolled, and the stats bars fill when they scroll
+         into the phone's own screen. Observers arm on the first inner scroll, because Tailwind compiles
+         this page's CSS at runtime and before that every bar would count as visible. */
+      document.querySelectorAll('.lv-app').forEach(function (app) {
+        var sc = app.querySelector('.lv-scroll'); if (!sc) return;
+        sc.addEventListener('scroll', function () { app.classList.toggle('is-scrolled', sc.scrollTop > 300); }, { passive: true });
+        var stats = sc.querySelectorAll('.lv-stats');
+        if (!('IntersectionObserver' in window)) { stats.forEach(function (x) { x.classList.add('lv-on'); }); return; }
+        sc.addEventListener('scroll', function arm() {
+          sc.removeEventListener('scroll', arm);
+          var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('lv-on'); io.unobserve(e.target); } }); }, { root: sc, threshold: 0.35 });
+          stats.forEach(function (x) { io.observe(x); });
+        }, { passive: true });
+      });
+      /* Full time: the reel plays the moments in order and wraps; tapping a moment jumps to it. The active
+         thumbnail's bar follows the clip. */
+      var fv = document.getElementById('ftClip'), fk = document.getElementById('ftK'), ft = document.getElementById('ftT');
+      var mos = Array.prototype.slice.call(document.querySelectorAll('.ft-mo')), cur = 0;
+      function show(i) {
+        cur = i;
+        mos.forEach(function (o, j) { o.classList.toggle('is-on', j === i); o.querySelector('.ft-pg i').style.width = '0'; });
+        var b = mos[i], n = 'assets/' + b.dataset.clip;
+        fv.innerHTML = '<source src="' + n + '.mp4" type="video/mp4"><source src="' + n + '.webm" type="video/webm">';
+        fv.load(); var pr = fv.play(); if (pr && pr.catch) pr.catch(function () {});
+        fk.innerHTML = b.dataset.k; ft.textContent = b.dataset.t;
+      }
+      if (fv && mos.length) {
+        mos.forEach(function (b, i) { b.addEventListener('click', function () { show(i); }); });
+        fv.addEventListener('ended', function () { show((cur + 1) % mos.length); });
+        /* Browsers may hold back autoplay on a video that starts out of view, so play it when it shows up. */
+        if ('IntersectionObserver' in window) { new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && fv.paused) { var q = fv.play(); if (q && q.catch) q.catch(function () {}); } }); }, { threshold: 0.4 }).observe(fv); }
+        (function tickFt() { if (fv.duration) mos[cur].querySelector('.ft-pg i').style.width = (fv.currentTime / fv.duration * 100) + '%'; requestAnimationFrame(tickFt); })();
+      }
+    })();
+  </script>
+
+  <script>
+    /* Brief screens: play the entrance once, the first time a phone is in view. */
+    (function () {
+      if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      document.querySelectorAll('#screens .fl-phone.hf2').forEach(function (ph) {
+        var i = 0;
+        ph.querySelectorAll('.hf3-tile, .hf4-sec, .hf4-fb, .hf4-close').forEach(function (t) { t.style.setProperty('--i', i++); });
+        ph.classList.add('anim');
+        new IntersectionObserver(function (es, o) {
+          if (es[0].intersectionRatio >= 0.4) { ph.classList.add('play'); o.disconnect(); }
+        }, { threshold: [0.4] }).observe(ph);
+      });
+    })();
+  </script>
+
+  <script>
+    /* Trivia: cards flip on tap (each flip costs a point), answers mark right or wrong. */
+    (function () {
+      document.querySelectorAll('.tv2-card:not(.up)').forEach(function (c) { c.addEventListener('click', function () {
+        if (c.classList.contains('open')) return; c.classList.add('open');
+        var pts = c.closest('.fl-app').querySelector('.tv2-pts'); if (pts) pts.textContent = 'WORTH ' + Math.max(1, parseInt(pts.textContent.replace(/\D/g, ''), 10) - 1);
+      }); });
+      document.querySelectorAll('.tv2-ans').forEach(function (g) {
+        g.querySelectorAll('.tv2-a').forEach(function (b) { b.addEventListener('click', function () {
+          g.querySelectorAll('.tv2-a').forEach(function (x) { x.classList.remove('ok', 'no'); });
+          b.classList.add(b.dataset.ok ? 'ok' : 'no');
+          if (!b.dataset.ok) g.querySelector('[data-ok]').classList.add('ok');
+        }); });
+      });
+    })();
+  </script>
 </body>
 </html>
