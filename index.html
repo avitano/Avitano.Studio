@@ -842,7 +842,7 @@ a:hover .arrow { transform: translateX(4px); }
           See the work
           <svg aria-hidden="true" class="arrow size-[1em] rtl:-scale-x-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </a>
-        <a href="#contact" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2" style="border-color:rgba(255,255,255,0.35); color:#fff;">Get in touch</a>
+        <a href="assets/Ofir_Avitan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2" style="border-color:rgba(255,255,255,0.35); color:#fff;"><svg aria-hidden="true" class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>Resume</a>
       </div>
       <div class="enter footer-text-soft inline-flex items-center gap-2 type-body-md" style="animation-delay:560ms">
         <span class="size-2 rounded-full bg-green-500"></span>
@@ -1064,7 +1064,13 @@ a:hover .arrow { transform: translateX(4px); }
            in a section where they are the most important. They are separate soft grey tags now. -->
 
         <div class="lg:col-span-4 lg:col-start-9">
-          <span class="reveal type-label-sm text-muted">Track record</span>
+          <!-- Resume link sits on the eyebrow row, at the eyebrow's own size and colour, so it reads as
+               a margin note rather than another call to action (the Hero already carries a Resume
+               button). External Link icon from the Design System page's curated set. -->
+          <div class="reveal flex items-baseline justify-between gap-4">
+            <span class="type-label-sm text-muted">Track record</span>
+            <a href="assets/Ofir_Avitan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="type-label-sm text-muted inline-flex items-center gap-1 whitespace-nowrap underline-offset-4 transition-colors duration-150 ease-out hover:text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 rounded-sm">Full resume<svg aria-hidden="true" class="size-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
+          </div>
           <!-- reveal, NOT reveal-stagger: the four entries are one career, and staggering them
                made the spine build a segment at a time, which read as four separate arrivals. -->
           <div class="reveal rec-spine mt-6">
@@ -1509,8 +1515,9 @@ a:hover .arrow { transform: translateX(4px); }
       <h2 class="reveal hero-dark-on-primary type-display-sm mt-4">Let's build the future<span class="hero-dark-gold">.</span></h2>
       <p class="reveal footer-text-soft type-body-lg mx-auto mt-4 max-w-lg">Open to design leadership roles, partnerships, and ambitious product bets.</p>
       <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-3">
-        <a href="mailto:avitano@gmail.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-button);">Email me</a>
-        <a href="https://linkedin.com/in/avitano" target="_blank" rel="noopener noreferrer" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="border-color:rgba(255,255,255,0.35); color:#fff;">LinkedIn</a>
+        <a href="mailto:avitano@gmail.com" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 items-center justify-center gap-2 rounded-full px-6 text-sm font-medium shadow-md btn-glow-accent transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="background:#fff; color:var(--color-button);"><svg aria-hidden="true" class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>Email me</a>
+        <a href="https://linkedin.com/in/avitano" target="_blank" rel="noopener noreferrer" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="border-color:rgba(255,255,255,0.35); color:#fff;"><svg aria-hidden="true" class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>LinkedIn</a>
+        <a href="assets/Ofir_Avitan_Resume.pdf" download="Ofir_Avitan_Resume.pdf" aria-label="Download resume, PDF" class="btn-on-primary inline-flex h-10 items-center justify-center gap-2 rounded-full border px-6 text-sm font-medium transition-colors duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-primary" style="border-color:rgba(255,255,255,0.35); color:#fff;"><svg aria-hidden="true" class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>Resume</a>
       </div>
       <div class="footer-text-soft mt-10 flex flex-wrap items-center justify-center gap-3 type-body-md">
         <span>+972-54-429-6353</span>
